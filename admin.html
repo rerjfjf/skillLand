@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SkillLand — Панель администратора</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh;
+  background:#0a0a0f;
+  color:#e8e8f0;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  font-size:14px;
+}
+
+/* ── HEADER ── */
+.header{
+  background:linear-gradient(135deg,#1a1a2e,#16213e);
+  padding:20px 32px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;gap:16px;
+}
+.header h1{font-size:22px;font-weight:700;letter-spacing:-.5px}
+.badge{
+  background:#e53935;color:#fff;
+  border-radius:6px;padding:3px 10px;
+  font-size:11px;font-weight:700;letter-spacing:.5px;
+}
+.header-sub{margin-left:auto;font-size:12px;color:rgba(255,255,255,.4)}
+
+/* ── NAV TABS ── */
+.nav{
+  display:flex;gap:2px;
+  padding:16px 32px 0;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  background:#0d0d18;
+}
+.nav-tab{
+  padding:10px 22px;border:none;border-radius:8px 8px 0 0;
+  background:transparent;color:rgba(255,255,255,.45);
+  font-size:14px;font-weight:600;cursor:pointer;
+  transition:all .2s;border-bottom:2px solid transparent;
+}
+.nav-tab:hover{color:rgba(255,255,255,.8)}
+.nav-tab.active{
+  background:rgba(255,255,255,.05);
+  color:#fff;border-bottom:2px solid #4c6ef5;
+}
+
+/* ── CONTENT ── */
+.content{padding:28px 32px;max-width:1400px}
+
+/* ── STATS ROW ── */
+.stats-row{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:14px;margin-bottom:28px;
+}
+.stat-card{
+  background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:18px 20px;
+}
+.stat-val{font-size:32px;font-weight:800;color:#fff;line-height:1}
+.stat-label{font-size:12px;color:rgba(255,255,255,.45);margin-top:6px}
+
+/* ── TABLE ── */
+.section-title{
+  font-size:16px;font-weight:700;margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+}
+.count-badge{
+  background:rgba(255,255,255,.08);
+  border-radius:999px;padding:2px 10px;
+  font-size:12px;font-weight:600;color:rgba(255,255,255,.6);
+}
+.table-wrap{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;overflow:hidden;
+  margin-bottom:32px;overflow-x:auto;
+}
+table{width:100%;border-collapse:collapse}
+th{
+  background:rgba(255,255,255,.05);
+  padding:11px 16px;text-align:left;
+  font-size:11px;font-weight:700;letter-spacing:.6px;
+  color:rgba(255,255,255,.4);text-transform:uppercase;
+  white-space:nowrap;
+}
+td{
+  padding:11px 16px;
+  border-top:1px solid rgba(255,255,255,.05);
+  color:rgba(255,255,255,.82);
+  vertical-align:middle;
+}
+tr:hover td{background:rgba(255,255,255,.025)}
+
+.nick-cell{font-weight:700;color:#a5b4fc}
+.score-bar-wrap{display:flex;align-items:center;gap:10px;min-width:120px}
+.score-bar{
+  flex:1;height:6px;background:rgba(255,255,255,.1);
+  border-radius:999px;overflow:hidden;
+}
+.score-fill{
+  height:100%;border-radius:999px;
+  background:linear-gradient(90deg,#4c6ef5,#74c0fc);
+  transition:width .4s ease;
+}
+.score-num{font-size:12px;font-weight:700;color:#74c0fc;min-width:32px}
+
+.stars-cell{color:#f5c518;letter-spacing:1px}
+.review-text{
+  max-width:300px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+  color:rgba(255,255,255,.6);
+}
+.game-badge{
+  display:inline-flex;align-items:center;
+  background:rgba(76,110,245,.2);color:#a5b4fc;
+  border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700;
+}
+
+.btn-del{
+  padding:5px 12px;border:1px solid rgba(229,57,53,.4);
+  border-radius:8px;background:rgba(229,57,53,.1);
+  color:#ef9a9a;font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.btn-del:hover{background:rgba(229,57,53,.3);color:#fff;border-color:#e53935}
+
+.empty-row td{text-align:center;color:rgba(255,255,255,.25);padding:28px}
+
+/* ── LOADING / ERROR ── */
+.loading{
+  text-align:center;padding:60px;
+  color:rgba(255,255,255,.3);font-size:15px;
+}
+.error-box{
+  background:rgba(229,57,53,.12);border:1px solid rgba(229,57,53,.3);
+  border-radius:12px;padding:16px 20px;color:#ef9a9a;
+  margin-bottom:20px;font-size:14px;
+}
+
+/* ── REFRESH ── */
+.refresh-btn{
+  margin-left:auto;
+  padding:8px 18px;border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;background:rgba(255,255,255,.05);
+  color:rgba(255,255,255,.7);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.refresh-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* ── SCREEN TABS ── */
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+@media (max-width:760px){
+  body{font-size:13px}
+  .header{
+    padding:16px;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .header h1{font-size:20px}
+  .header-sub{
+    width:100%;
+    margin-left:0;
+  }
+  .nav{
+    padding:10px 12px 0;
+    gap:6px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .nav-tab{
+    flex:0 0 auto;
+    padding:10px 14px;
+    font-size:13px;
+  }
+  .refresh-btn{
+    flex:0 0 auto;
+    margin-left:0;
+    padding:10px 14px;
+  }
+  .content{padding:18px 12px}
+  .stats-row{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+  .stat-card{padding:14px}
+  .stat-val{font-size:26px}
+  .section-title{
+    align-items:flex-start;
+    font-size:15px;
+  }
+  .table-wrap{
+    border-radius:10px;
+    margin-bottom:24px;
+  }
+  th,td{padding:10px 12px}
+  .review-text{
+    max-width:220px;
+    white-space:normal;
+  }
+}
+
+@media (max-width:420px){
+  .stats-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>SkillLand</h1>
+  <span class="badge">ADMIN</span>
+  <span class="header-sub" id="lastUpdate">Загрузка...</span>
+</div>
+
+<div class="nav">
+  <button class="nav-tab active" data-tab="overview">Обзор</button>
+  <button class="nav-tab" data-tab="accounts">Аккаунты</button>
+  <button class="nav-tab" data-tab="scores">Результаты</button>
+  <button class="nav-tab" data-tab="reviews">Отзывы</button>
+  <button class="refresh-btn" onclick="loadData()">↻ Обновить</button>
+</div>
+
+<div class="content">
+  <div id="errorBox" class="error-box" style="display:none"></div>
+  <div id="loadingBox" class="loading">Загрузка данных...</div>
+  <div id="mainContent" style="display:none">
+
+    <!-- OVERVIEW -->
+    <div class="tab-pane active" id="tab-overview">
+      <div class="stats-row" id="statsRow"></div>
+
+      <div class="section-title">Последние регистрации <span class="count-badge" id="accCountBadge">0</span></div>
+      <div class="table-wrap">
+        <table id="accPreviewTable">
+          <thead><tr><th>#</th><th>Ник</th><th>Зарегистрирован</th></tr></thead>
+          <tbody id="accPreviewBody"></tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Топ результатов по играм <span class="count-badge" id="scoresCountBadge">0</span></div>
+      <div class="table-wrap">
+        <table id="scoresPreviewTable">
+          <thead><tr><th>Ник</th><th>Игра</th><th>Результат</th><th>Обновлено</th></tr></thead>
+          <tbody id="scoresPreviewBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ACCOUNTS -->
+    <div class="tab-pane" id="tab-accounts">
+      <div class="section-title">Все аккаунты <span class="count-badge" id="accFullCount">0</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Ник</th><th>Дата регистрации</th><th>Действия</th></tr></thead>
+          <tbody id="accFullBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SCORES -->
+    <div class="tab-pane" id="tab-scores">
+      <div class="section-title">Все результаты <span class="count-badge" id="scoresFullCount">0</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Ник</th><th>Игра</th><th>Результат</th><th>Обновлено</th></tr></thead>
+          <tbody id="scoresFullBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div class="tab-pane" id="tab-reviews">
+      <div class="section-title">Все отзывы <span class="count-badge" id="reviewsFullCount">0</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Ник</th><th>Игра</th><th>Оценка</th><th>Отзыв</th><th>Дата</th><th>Действия</th></tr></thead>
+          <tbody id="reviewsFullBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const API = '';
+const GAME_LABELS = {
+  programmer:'Программист', economist:'Экономист',
+  chef:'Повар', miner:'Шахтёр', medic:'Медик'
+};
+
+let DATA = { accounts: [], scores: [], reviews: [] };
+let activeTab = 'overview';
+
+// ── Tabs ──────────────────────────────────────────────────
+document.querySelectorAll('.nav-tab[data-tab]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    activeTab = btn.dataset.tab;
+    document.getElementById('tab-' + activeTab).classList.add('active');
+  });
+});
+
+// ── Load data ─────────────────────────────────────────────
+async function loadData() {
+  document.getElementById('loadingBox').style.display = 'block';
+  document.getElementById('mainContent').style.display = 'none';
+  document.getElementById('errorBox').style.display = 'none';
+  try {
+    const res  = await fetch('/api/admin/stats');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    DATA = await res.json();
+    render();
+    document.getElementById('lastUpdate').textContent =
+      'Обновлено: ' + new Date().toLocaleTimeString('ru');
+    document.getElementById('loadingBox').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+  } catch(e) {
+    document.getElementById('loadingBox').style.display = 'none';
+    showError('Не удалось загрузить данные: ' + e.message);
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorBox');
+  el.textContent = '⚠ ' + msg;
+  el.style.display = 'block';
+  document.getElementById('mainContent').style.display = 'block';
+}
+
+// ── Render ────────────────────────────────────────────────
+function render() {
+  renderStats();
+  renderAccPreview();
+  renderScoresPreview();
+  renderAccFull();
+  renderScoresFull();
+  renderReviewsFull();
+}
+
+function renderStats() {
+  const uniquePlayers = new Set(DATA.scores.map(s => s.nick.toLowerCase())).size;
+  const avgScore = DATA.scores.length
+    ? Math.round(DATA.scores.reduce((a,s) => a + s.score, 0) / DATA.scores.length)
+    : 0;
+
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card"><div class="stat-val">${DATA.accounts.length}</div><div class="stat-label">Аккаунтов</div></div>
+    <div class="stat-card"><div class="stat-val">${uniquePlayers}</div><div class="stat-label">Игроков с результатами</div></div>
+    <div class="stat-card"><div class="stat-val">${DATA.scores.length}</div><div class="stat-label">Сыгранных игр</div></div>
+    <div class="stat-card"><div class="stat-val">${avgScore}%</div><div class="stat-label">Средний результат</div></div>
+    <div class="stat-card"><div class="stat-val">${DATA.reviews.length}</div><div class="stat-label">Отзывов</div></div>
+  `;
+}
+
+function renderAccPreview() {
+  document.getElementById('accCountBadge').textContent = DATA.accounts.length;
+  const body = document.getElementById('accPreviewBody');
+  const rows = DATA.accounts.slice(0, 10);
+  if (!rows.length) { body.innerHTML = `<tr class="empty-row"><td colspan="3">Нет аккаунтов</td></tr>`; return; }
+  body.innerHTML = rows.map((a, i) => `
+    <tr>
+      <td style="color:rgba(255,255,255,.3)">${i+1}</td>
+      <td class="nick-cell">${esc(a.nick)}</td>
+      <td style="color:rgba(255,255,255,.4)">${esc(a.created_at || '—')}</td>
+    </tr>`).join('');
+}
+
+function renderScoresPreview() {
+  document.getElementById('scoresCountBadge').textContent = DATA.scores.length;
+  const body = document.getElementById('scoresPreviewBody');
+  const sorted = [...DATA.scores].sort((a,b) => b.score - a.score).slice(0, 15);
+  if (!sorted.length) { body.innerHTML = `<tr class="empty-row"><td colspan="4">Нет результатов</td></tr>`; return; }
+  body.innerHTML = sorted.map(s => scoreRow(s)).join('');
+}
+
+function renderAccFull() {
+  document.getElementById('accFullCount').textContent = DATA.accounts.length;
+  const body = document.getElementById('accFullBody');
+  if (!DATA.accounts.length) { body.innerHTML = `<tr class="empty-row"><td colspan="4">Нет аккаунтов</td></tr>`; return; }
+  body.innerHTML = DATA.accounts.map(a => `
+    <tr>
+      <td style="color:rgba(255,255,255,.3)">${a.id}</td>
+      <td class="nick-cell">${esc(a.nick)}</td>
+      <td style="color:rgba(255,255,255,.4)">${esc(a.created_at || '—')}</td>
+      <td><button class="btn-del" onclick="deleteAccount('${esc(a.nick)}')">Удалить</button></td>
+    </tr>`).join('');
+}
+
+function renderScoresFull() {
+  document.getElementById('scoresFullCount').textContent = DATA.scores.length;
+  const body = document.getElementById('scoresFullBody');
+  if (!DATA.scores.length) { body.innerHTML = `<tr class="empty-row"><td colspan="4">Нет результатов</td></tr>`; return; }
+  body.innerHTML = DATA.scores.map(s => scoreRow(s)).join('');
+}
+
+function scoreRow(s) {
+  const label = GAME_LABELS[s.game] || s.game;
+  return `<tr>
+    <td class="nick-cell">${esc(s.nick)}</td>
+    <td><span class="game-badge">${label}</span></td>
+    <td>
+      <div class="score-bar-wrap">
+        <div class="score-bar"><div class="score-fill" style="width:${s.score}%"></div></div>
+        <div class="score-num">${s.score}%</div>
+      </div>
+    </td>
+    <td style="color:rgba(255,255,255,.4)">${esc(s.updated_at || '—')}</td>
+  </tr>`;
+}
+
+function renderReviewsFull() {
+  document.getElementById('reviewsFullCount').textContent = DATA.reviews.length;
+  const body = document.getElementById('reviewsFullBody');
+  if (!DATA.reviews.length) { body.innerHTML = `<tr class="empty-row"><td colspan="7">Нет отзывов</td></tr>`; return; }
+  body.innerHTML = DATA.reviews.map(r => `
+    <tr>
+      <td style="color:rgba(255,255,255,.3)">${r.id}</td>
+      <td class="nick-cell">${esc(r.nick)}</td>
+      <td><span class="game-badge">${GAME_LABELS[r.game] || r.game}</span></td>
+      <td class="stars-cell">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</td>
+      <td><div class="review-text" title="${esc(r.text)}">${esc(r.text)}</div></td>
+      <td style="color:rgba(255,255,255,.4)">${esc(r.date)}</td>
+      <td><button class="btn-del" onclick="deleteReview(${r.id})">Удалить</button></td>
+    </tr>`).join('');
+}
+
+// ── Actions ───────────────────────────────────────────────
+async function deleteAccount(nick) {
+  if (!confirm(`Удалить аккаунт «${nick}»?`)) return;
+  try {
+    await fetch('/api/admin/delete-account', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nick })
+    });
+    await loadData();
+  } catch(e) { showError('Ошибка удаления: ' + e.message); }
+}
+
+async function deleteReview(id) {
+  if (!confirm('Удалить этот отзыв?')) return;
+  try {
+    await fetch('/api/admin/delete-review', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    });
+    await loadData();
+  } catch(e) { showError('Ошибка удаления: ' + e.message); }
+}
+
+function esc(str) {
+  return String(str||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Auto-refresh every 60s ────────────────────────────────
+loadData();
+setInterval(loadData, 60000);
+</script>
+</body>
+</html>

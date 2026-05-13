@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRO Медик — Профориентационная игра</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root{
+      --bg:#f4f8ff;
+      --panel:#ffffff;
+      --line:#dbe6f4;
+      --text:#0f172a;
+      --muted:#64748b;
+      --blue:#2563eb;
+      --blue-soft:#eff6ff;
+      --green:#16a34a;
+      --red:#dc2626;
+      --orange:#f59e0b;
+      --shadow:0 18px 50px rgba(15,23,42,.10);
+      --radius:28px;
+    }
+
+    body{
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(96,165,250,.16), transparent 36%),
+        radial-gradient(circle at 88% 82%, rgba(16,185,129,.12), transparent 32%),
+        linear-gradient(180deg, #f8fbff, #edf4ff);
+      font-family:'Nunito',sans-serif;
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    .app{
+      width:min(1320px, 97vw);
+      height:min(820px, 96vh);
+      background:rgba(255,255,255,.72);
+      backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,.9);
+      border-radius:36px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      position:relative;
+    }
+
+    .left{
+      background:linear-gradient(180deg,#f8fbff,#eef5ff);
+      border-right:1px solid var(--line);
+      padding:22px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .topline{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    .headline{
+      font:900 24px 'Space Grotesk',sans-serif;
+      letter-spacing:-.4px;
+    }
+
+    .mini-stats{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .stat-pill{
+      background:rgba(255,255,255,.88);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:8px 12px;
+      font-size:13px;
+      font-weight:800;
+      color:#334155;
+      box-shadow:0 6px 14px rgba(15,23,42,.05);
+    }
+
+    .scene{
+      flex:1;
+      position:relative;
+      border:1px solid #d7e3f2;
+      border-radius:26px;
+      overflow:hidden;
+      background:
+        linear-gradient(180deg,#f4f9ff,#e6f0ff);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .scene::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(37,99,235,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37,99,235,.04) 1px, transparent 1px);
+      background-size:38px 38px;
+      pointer-events:none;
+    }
+
+    .monitor,.cross-box,.case-chip{
+      position:absolute;
+      z-index:2;
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--line);
+      box-shadow:0 8px 16px rgba(15,23,42,.05);
+    }
+
+    .monitor{
+      left:16px; top:16px; width:112px; height:74px;
+      border-radius:16px;
+    }
+
+    .monitor-label{
+      font-size:10px;
+      font-weight:900;
+      color:var(--muted);
+      letter-spacing:1px;
+      position:absolute;
+      top:8px; left:12px;
+    }
+
+    .ekg{ position:absolute; left:8px; right:8px; bottom:9px; height:26px; }
+    .ekg svg{ width:100%; height:100%; }
+    .ekg polyline{
+      fill:none; stroke:#22c55e; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round;
+      stroke-dasharray:220; stroke-dashoffset:220; animation:ekgMove 2.1s linear infinite;
+    }
+    @keyframes ekgMove{ to{ stroke-dashoffset:0; } }
+
+    .cross-box{
+      right:16px; top:16px; width:70px; height:70px;
+      border-radius:20px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .cross-decor{
+      position:relative; width:14px; height:42px; background:#22c55e; border-radius:6px;
+    }
+    .cross-decor::after{
+      content:""; position:absolute; width:42px; height:14px; left:-14px; top:14px; background:#22c55e; border-radius:6px;
+    }
+
+    .case-chip{
+      left:16px; bottom:16px; border-radius:16px; padding:10px 12px;
+      max-width:220px;
+      font-size:12px; font-weight:800; color:#334155;
+    }
+
+    .patient-card{
+      width:min(88%, 580px);
+      min-height:550px;
+      background:rgba(255,255,255,.90);
+      border:1px solid #dbe7f4;
+      border-radius:30px;
+      box-shadow:0 20px 40px rgba(15,23,42,.08);
+      padding:18px 18px 22px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      transition:.25s ease;
+      z-index:1;
+    }
+
+    .patient-card.shake{ animation:shake .42s ease; }
+    .patient-card.successPulse{ animation:goodPulse .55s ease; }
+    @keyframes shake{
+      0%,100%{ transform:translateX(0); }
+      20%{ transform:translateX(-10px); }
+      40%{ transform:translateX(10px); }
+      60%{ transform:translateX(-7px); }
+      80%{ transform:translateX(7px); }
+    }
+    @keyframes goodPulse{
+      0%{ transform:scale(1); }
+      50%{ transform:scale(1.026); }
+      100%{ transform:scale(1); }
+    }
+
+    .patient-figure{
+      width:250px;
+      height:310px;
+      position:relative;
+      margin-top:6px;
+      animation:floaty 3.4s ease-in-out infinite;
+    }
+    @keyframes floaty{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-8px) } }
+
+    .ph{ width:102px; height:102px; border-radius:50%; background:#ffd7b5; border:3px solid #efb58a; position:absolute; top:0; left:74px; z-index:3; }
+    .phair{ width:110px; height:48px; background:#334155; border-radius:54px 54px 20px 20px; position:absolute; top:-2px; left:70px; z-index:4; }
+    .peye{ width:10px; height:10px; background:#1f2937; border-radius:50%; position:absolute; top:40px; }
+    .peye.l{ left:26px; }
+    .peye.r{ right:26px; }
+    .pbrow{ position:absolute; width:16px; height:4px; background:#7c2d12; top:28px; border-radius:8px; }
+    .pbrow.l{ left:22px; transform:rotate(-10deg); }
+    .pbrow.r{ right:22px; transform:rotate(10deg); }
+    .pmouth{ width:30px; height:14px; position:absolute; left:35px; top:62px; border-bottom:3px solid #a16207; border-radius:0 0 20px 20px; transition:.25s ease; }
+    .pbody{ width:150px; height:150px; background:#dbeafe; border:3px solid #93c5fd; border-radius:28px 28px 24px 24px; position:absolute; top:96px; left:50px; z-index:2; }
+    .pcoat-line{ position:absolute; width:3.5px; height:102px; background:#93c5fd; left:72px; top:22px; border-radius:6px; }
+    .pcoat-pocket{ position:absolute; width:30px; height:26px; border:3px solid #93c5fd; border-top:none; border-radius:0 0 10px 10px; bottom:18px; right:16px; background:rgba(255,255,255,.4); }
+    .pcross-mini{ position:absolute; width:14px; height:38px; background:#ef4444; border-radius:5px; left:67px; top:26px; }
+    .pcross-mini::after{ content:""; position:absolute; width:38px; height:14px; left:-12px; top:12px; background:#ef4444; border-radius:5px; }
+    .parm{ width:30px; height:88px; background:#ffd7b5; border:3px solid #efb58a; border-radius:20px; position:absolute; top:108px; z-index:1; }
+    .parm.l{ left:20px; transform:rotate(16deg); transform-origin:top center; }
+    .parm.r{ right:20px; transform:rotate(-16deg); transform-origin:top center; }
+    .pleg{ width:32px; height:94px; background:#cbd5e1; border:3px solid #94a3b8; border-radius:20px; position:absolute; top:224px; }
+    .pleg.l{ left:72px; }
+    .pleg.r{ right:72px; }
+
+    .badge{
+      position:absolute;
+      min-width:110px;
+      max-width:176px;
+      padding:8px 11px;
+      background:rgba(255,255,255,.96);
+      border:1px solid var(--line);
+      border-radius:13px;
+      box-shadow:0 8px 20px rgba(15,23,42,.07);
+      font-size:12px;
+      font-weight:800;
+      color:#334155;
+      text-align:center;
+      transition:.25s ease;
+    }
+    .badge.locked{
+      color:#94a3b8;
+      border-style:dashed;
+      background:rgba(248,250,252,.96);
+      filter:saturate(.8);
+    }
+    .badge.revealed{
+      animation:badgePop .4s ease;
+      border-color:#93c5fd;
+      background:#f8fbff;
+    }
+    @keyframes badgePop{
+      0%{ transform:scale(.92); opacity:.5; }
+      100%{ transform:scale(1); opacity:1; }
+    }
+    .b1{ left:16px; top:80px; }
+    .b2{ right:14px; top:124px; }
+    .b3{ left:22px; bottom:104px; }
+    .b4{ right:18px; bottom:128px; }
+
+    .patient-name{
+      margin-top:10px;
+      font:900 26px 'Space Grotesk',sans-serif;
+      text-align:center;
+    }
+    .patient-desc{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+      text-align:center;
+      max-width:470px;
+    }
+
+    .flash{
+      position:absolute; inset:0; background:rgba(37,99,235,.08); opacity:0; pointer-events:none;
+    }
+    .flash.show{ animation:flashIn .45s ease; }
+    @keyframes flashIn{ 0%{opacity:0} 30%{opacity:1} 100%{opacity:0} }
+
+    .right{
+      background:#fff;
+      padding:18px 16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      overflow-y:auto;
+    }
+    .right::-webkit-scrollbar{ width:5px; }
+    .right::-webkit-scrollbar-thumb{ background:#dbe4ee; border-radius:5px; }
+
+    .card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:14px;
+      box-shadow:0 4px 12px rgba(15,23,42,.04);
+      flex-shrink:0;
+    }
+
+    .guide-card{
+      display:flex; gap:12px; align-items:center;
+      background:linear-gradient(135deg,#eff6ff,#f8fbff);
+      border-color:#bfd7ff;
+    }
+
+    .robot-wrap{ width:88px; height:88px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+    .robot-scene{ position:relative; width:76px; height:88px; animation:floatBot 3.2s ease-in-out infinite; }
+    @keyframes floatBot{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+    .rhat{ position:absolute; top:-16px; left:50%; transform:translateX(-50%); width:52px; height:22px; background:linear-gradient(145deg,#fff,#e0e0e0); border-radius:60% 60% 40% 40%; box-shadow:inset 0 4px 6px rgba(255,255,255,.9),0 4px 8px rgba(0,0,0,.12); z-index:6; }
+    .rhat::after{ content:""; position:absolute; bottom:-4px; left:50%; transform:translateX(-50%); width:34px; height:7px; background:#e8e8e8; border-radius:10px; }
+    .rcross-circle{ position:absolute; top:6px; left:50%; transform:translateX(-50%); width:12px; height:12px; background:#e53935; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+    .rcross{ position:relative; width:6px; height:6px; }
+    .rcross::before,.rcross::after{ content:""; position:absolute; background:#fff; }
+    .rcross::before{ width:6px; height:2px; top:2px; }
+    .rcross::after{ width:2px; height:6px; left:2px; }
+    .rhead{ position:absolute; top:8px; left:50%; transform:translateX(-50%); width:62px; height:38px; background:linear-gradient(145deg,#fff 0%,#e7e7e7 75%,#cfcfcf 100%); border-radius:52% 52% 48% 48% / 68% 68% 34% 34%; box-shadow:inset 4px 4px 8px rgba(255,255,255,.9), inset -4px -4px 8px rgba(0,0,0,.07), 0 6px 12px rgba(0,0,0,.06); z-index:4; }
+    .rface{ position:absolute; left:50%; top:6px; transform:translateX(-50%); width:44px; height:22px; background:linear-gradient(180deg,#101215,#050607); border-radius:22px; overflow:hidden; }
+    .reye{ position:absolute; width:10px; height:7px; background:radial-gradient(circle,#44c7ff,#003cff); border-radius:50%; top:7px; transition:transform .4s; }
+    .reye.l{ left:8px; } .reye.r{ right:8px; }
+    .rneck{ position:absolute; top:38px; left:50%; transform:translateX(-50%); width:24px; height:10px; background:linear-gradient(180deg,#f3f3f3,#d8d8d8); border-radius:0 0 12px 12px; }
+    .rbody{ position:absolute; left:50%; top:44px; transform:translateX(-50%); width:54px; height:36px; background:linear-gradient(145deg,#fff 0%,#ededed 60%,#cfcfcf 100%); border-radius:44% 44% 40% 40% / 20% 20% 78% 78%; box-shadow:inset 4px 4px 8px rgba(255,255,255,.9), inset -4px -4px 8px rgba(0,0,0,.06), 0 6px 12px rgba(0,0,0,.06); z-index:1; }
+    .rarm{ position:absolute; top:48px; width:14px; height:28px; background:linear-gradient(145deg,#fff,#e6e6e6 65%,#c9c9c9); border-radius:48% 48% 52% 52% / 18% 18% 82% 82%; box-shadow:inset 2px 2px 5px rgba(255,255,255,.8),0 3px 6px rgba(0,0,0,.07); }
+    .rarm.l{ left:4px; transform:rotate(18deg); animation:rarmLeft 3.2s ease-in-out infinite; }
+    .rarm.r{ right:4px; transform:rotate(-18deg); animation:rarmRight 3.2s ease-in-out infinite; }
+    @keyframes rarmLeft{ 0%,100%{transform:rotate(18deg)} 50%{transform:rotate(24deg) translateY(-3px)} }
+    @keyframes rarmRight{ 0%,100%{transform:rotate(-18deg)} 50%{transform:rotate(-24deg) translateY(-3px)} }
+
+    .guide-content{ flex:1; min-width:0; }
+    .guide-content h3{
+      font:900 15px 'Space Grotesk',sans-serif;
+      color:#1d4ed8;
+      margin-bottom:5px;
+    }
+    .guide-text{
+      font-size:13px; line-height:1.56; color:#475569; min-height:58px;
+    }
+
+    .section-title{
+      font-size:13px; font-weight:900;
+      color:#64748b; letter-spacing:.6px; text-transform:uppercase;
+      margin-bottom:9px;
+    }
+
+    .level-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .answers{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .controls{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+    .tools{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+
+    button{
+      border:none; cursor:pointer; border-radius:14px; padding:11px 12px;
+      font-size:13px; font-weight:800; font-family:'Nunito',sans-serif;
+      transition:.2s ease;
+    }
+    button:hover:not(:disabled){ transform:translateY(-2px); box-shadow:0 6px 14px rgba(15,23,42,.1); }
+    button:disabled{ cursor:not-allowed; opacity:.74; }
+
+    .level-btn{ background:#f8fafc; border:1px solid #e2e8f0; color:#0f172a; }
+    .level-btn.active{ background:linear-gradient(135deg,#dbeafe,#eff6ff); border-color:#93c5fd; color:#1d4ed8; box-shadow:0 6px 16px rgba(37,99,235,.1); }
+
+    .tool-btn,.control-btn,.answer-btn{ border:1px solid #dbe4ee; background:#fff; color:#0f172a; }
+    .tool-btn.used{ background:#f1f5f9; color:#94a3b8; }
+    .control-btn{ background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
+    .control-btn.primary{ background:linear-gradient(135deg,#2563eb,#3b82f6); color:#fff; border:none; }
+    .control-btn.good{ background:linear-gradient(135deg,#16a34a,#22c55e); color:#fff; border:none; }
+    .answer-btn{ min-height:56px; }
+    .answer-btn.selected{ border-color:#3b82f6; background:#eff6ff; color:#1d4ed8; box-shadow:inset 0 0 0 1px #93c5fd; }
+
+    .status{
+      min-height:60px; display:flex; align-items:center; justify-content:center; text-align:center;
+      border-radius:16px; font-size:13px; font-weight:800; padding:10px;
+      border:1px dashed #cbd5e1; background:#f8fafc; color:#334155;
+    }
+    .status.info{ background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8; }
+    .status.success{ background:#ecfdf5; border:1px solid #86efac; color:#166534; }
+    .status.error{ background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; }
+    .status.warning{ background:#fff7ed; border:1px solid #fdba74; color:#c2410c; }
+
+    .progress-wrap{ display:flex; flex-direction:column; gap:7px; }
+    .progress-top{ display:flex; justify-content:space-between; font-size:12px; font-weight:800; color:var(--muted); }
+    .bar{ width:100%; height:10px; background:#e5e7eb; border-radius:999px; overflow:hidden; }
+    .bar-fill{ width:0%; height:100%; border-radius:999px; background:linear-gradient(90deg,#22c55e,#3b82f6); transition:width .3s ease; }
+
+    .timer-wrap{ display:flex; align-items:center; gap:11px; }
+    .timer-circle{
+      width:58px; height:58px; border-radius:50%;
+      background:conic-gradient(#2563eb 100%, #e5e7eb 0);
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+      transition:background .2s ease;
+    }
+    .timer-inner{
+      width:43px; height:43px; background:#fff; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:14px; font-weight:900; color:var(--text);
+    }
+    .timer-text{ font-size:13px; color:var(--muted); line-height:1.5; }
+
+    .heart-row{ display:flex; gap:5px; align-items:center; }
+    .heart{ width:16px; height:16px; position:relative; transform:rotate(-45deg); background:#ef4444; border-radius:3px; }
+    .heart::before,.heart::after{ content:""; position:absolute; width:16px; height:16px; background:#ef4444; border-radius:50%; }
+    .heart::before{ top:-8px; left:0; }
+    .heart::after{ left:8px; top:0; }
+    .heart.off,.heart.off::before,.heart.off::after{ background:#cbd5e1; }
+
+    .findings-list{
+      display:flex; flex-direction:column; gap:8px; min-height:76px;
+    }
+    .finding{
+      border:1px solid #dbe6f4;
+      background:#f8fbff;
+      border-radius:12px;
+      padding:10px 11px;
+      font-size:12px;
+      line-height:1.5;
+      color:#334155;
+    }
+    .finding strong{ color:#1d4ed8; }
+
+    .overlay-screen{
+      position:absolute; inset:0; z-index:60;
+      background:rgba(240,244,255,.95);
+      backdrop-filter:blur(12px);
+      display:flex; align-items:center; justify-content:center;
+      padding:24px;
+    }
+    .overlay-card{
+      width:min(660px,100%);
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:28px;
+      box-shadow:0 30px 80px rgba(15,23,42,.12);
+      padding:32px 28px;
+      text-align:center;
+    }
+    .robot-big-wrap{ width:140px; height:140px; margin:0 auto 18px; display:flex; align-items:center; justify-content:center; }
+    .robot-big-scene{ position:relative; width:110px; height:130px; animation:floatBot 3.2s ease-in-out infinite; }
+    .rb-hat{ position:absolute; top:-22px; left:50%; transform:translateX(-50%); width:74px; height:30px; background:linear-gradient(145deg,#fff,#e0e0e0); border-radius:60% 60% 40% 40%; box-shadow:inset 0 6px 10px rgba(255,255,255,.9),0 6px 12px rgba(0,0,0,.12); z-index:6; }
+    .rb-hat::after{ content:""; position:absolute; bottom:-5px; left:50%; transform:translateX(-50%); width:50px; height:10px; background:#e8e8e8; border-radius:10px; }
+    .rb-cross-circle{ position:absolute; top:8px; left:50%; transform:translateX(-50%); width:18px; height:18px; background:#e53935; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+    .rb-cross{ position:relative; width:10px; height:10px; }
+    .rb-cross::before,.rb-cross::after{ content:""; position:absolute; background:#fff; }
+    .rb-cross::before{ width:10px; height:3px; top:3.5px; }
+    .rb-cross::after{ width:3px; height:10px; left:3.5px; }
+    .rb-head{ position:absolute; top:12px; left:50%; transform:translateX(-50%); width:90px; height:56px; background:linear-gradient(145deg,#fff 0%,#e7e7e7 75%,#cfcfcf 100%); border-radius:52% 52% 48% 48% / 68% 68% 34% 34%; box-shadow:inset 6px 6px 12px rgba(255,255,255,.9), inset -6px -6px 12px rgba(0,0,0,.07), 0 8px 16px rgba(0,0,0,.06); z-index:4; }
+    .rb-face{ position:absolute; left:50%; top:9px; transform:translateX(-50%); width:64px; height:32px; background:linear-gradient(180deg,#101215,#050607); border-radius:30px; overflow:hidden; }
+    .rb-eye{ position:absolute; width:15px; height:10px; background:radial-gradient(circle,#44c7ff,#003cff); border-radius:50%; top:11px; transition:transform .4s; }
+    .rb-eye.l{ left:12px; } .rb-eye.r{ right:12px; }
+    .rb-neck{ position:absolute; top:58px; left:50%; transform:translateX(-50%); width:34px; height:14px; background:linear-gradient(180deg,#f3f3f3,#d8d8d8); border-radius:0 0 16px 16px; }
+    .rb-body{ position:absolute; left:50%; top:66px; transform:translateX(-50%); width:78px; height:52px; background:linear-gradient(145deg,#fff 0%,#ededed 60%,#cfcfcf 100%); border-radius:44% 44% 40% 40% / 20% 20% 78% 78%; box-shadow:inset 5px 5px 10px rgba(255,255,255,.9),0 8px 16px rgba(0,0,0,.06); z-index:1; }
+    .rb-arm{ position:absolute; top:70px; width:20px; height:40px; background:linear-gradient(145deg,#fff,#e6e6e6 65%,#c9c9c9); border-radius:48% 48% 52% 52% / 18% 18% 82% 82%; box-shadow:0 4px 8px rgba(0,0,0,.07); }
+    .rb-arm.l{ left:6px; transform:rotate(18deg); animation:rarmLeft 3.2s ease-in-out infinite; }
+    .rb-arm.r{ right:6px; transform:rotate(-18deg); animation:rarmRight 3.2s ease-in-out infinite; }
+
+    .overlay-card h1,.overlay-card h2{
+      font:900 30px 'Space Grotesk',sans-serif;
+      margin-bottom:10px;
+    }
+    .overlay-card p{
+      color:var(--muted); line-height:1.7; font-size:14px; margin-bottom:20px;
+    }
+    .start-actions{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+    .hidden{ display:none !important; }
+    .info-row{ display:flex; gap:8px; flex-wrap:wrap; }
+
+    @media (max-width: 980px){
+      .app{ grid-template-columns:1fr; height:auto; max-height:96vh; overflow-y:auto; }
+      .left{ min-height:480px; border-right:none; border-bottom:1px solid var(--line); }
+      .answers,.controls,.tools,.level-grid{ grid-template-columns:1fr; }
+      .patient-card{ width:92%; min-height:520px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="overlay-screen" id="startScreen">
+    <div class="overlay-card">
+      <div class="robot-big-wrap">
+        <div class="robot-big-scene">
+          <div class="rb-hat"><div class="rb-cross-circle"><div class="rb-cross"></div></div></div>
+          <div class="rb-head"><div class="rb-face"><div class="rb-eye l" id="rbEyeL"></div><div class="rb-eye r" id="rbEyeR"></div></div></div>
+          <div class="rb-neck"></div>
+          <div class="rb-arm l"></div><div class="rb-arm r"></div><div class="rb-body"></div>
+        </div>
+      </div>
+      <h1>PRO Медик</h1>
+      <p>
+        Ты — начинающий медик. Осматривай пациента, открывай симптомы через инструменты,
+        анализируй жалобы и только потом ставь диагноз. Чем меньше ошибок и подсказок — тем больше очков.
+      </p>
+      <div class="start-actions">
+        <button class="control-btn primary" id="startBtn" style="padding:14px 28px;font-size:15px;">Начать практику</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay-screen hidden" id="finishScreen">
+    <div class="overlay-card">
+      <div class="robot-big-wrap">
+        <div class="robot-big-scene">
+          <div class="rb-hat"><div class="rb-cross-circle"><div class="rb-cross"></div></div></div>
+          <div class="rb-head"><div class="rb-face"><div class="rb-eye l" id="rbEyeL2"></div><div class="rb-eye r" id="rbEyeR2"></div></div></div>
+          <div class="rb-neck"></div>
+          <div class="rb-arm l"></div><div class="rb-arm r"></div><div class="rb-body"></div>
+        </div>
+      </div>
+      <h2 id="finishTitle">Игра завершена</h2>
+      <p id="finishText">Ты прошёл игру.</p>
+      <div class="start-actions">
+        <button class="control-btn primary" id="restartBtn" style="padding:14px 28px;font-size:15px;">Играть заново</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="left">
+    <div class="topline">
+      <div class="headline">🏥 Диагностический кабинет</div>
+      <div class="mini-stats">
+        <div class="stat-pill">в­ђ <span id="score">0</span></div>
+        <div class="stat-pill">🔥 <span id="streak">0</span></div>
+        <div class="stat-pill">Раунд: <span id="roundInfo">0/0</span></div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <div class="monitor">
+        <div class="monitor-label">EKG</div>
+        <div class="ekg">
+          <svg viewBox="0 0 100 20" preserveAspectRatio="none">
+            <polyline points="0,10 10,10 18,10 22,3 27,17 33,10 50,10 57,10 61,4 66,16 72,10 100,10"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="cross-box"><div class="cross-decor"></div></div>
+      <div class="case-chip" id="caseChip">Сначала выбери уровень сложности</div>
+
+      <div class="patient-card" id="patientCard">
+        <div class="patient-figure">
+          <div class="phair"></div>
+          <div class="ph" id="patientHead">
+            <div class="pbrow l"></div>
+            <div class="pbrow r"></div>
+            <div class="peye l"></div>
+            <div class="peye r"></div>
+            <div class="pmouth" id="patientMouth"></div>
+          </div>
+          <div class="pbody">
+            <div class="pcoat-line"></div>
+            <div class="pcoat-pocket"></div>
+            <div class="pcross-mini"></div>
+          </div>
+          <div class="parm l"></div>
+          <div class="parm r"></div>
+          <div class="pleg l"></div>
+          <div class="pleg r"></div>
+        </div>
+
+        <div class="badge b1 locked" id="symptom1">симптом скрыт</div>
+        <div class="badge b2 locked" id="symptom2">симптом скрыт</div>
+        <div class="badge b3 locked" id="symptom3">симптом скрыт</div>
+        <div class="badge b4 locked" id="symptom4">симптом скрыт</div>
+
+        <div class="patient-name" id="patientName">Пациент</div>
+        <div class="patient-desc" id="patientDesc">Выбери уровень и начни медицинскую практику.</div>
+      </div>
+
+      <div class="flash" id="sceneFlash"></div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="card guide-card">
+      <div class="robot-wrap">
+        <div class="robot-scene">
+          <div class="rhat"><div class="rcross-circle"><div class="rcross"></div></div></div>
+          <div class="rhead"><div class="rface"><div class="reye l" id="rEyeL"></div><div class="reye r" id="rEyeR"></div></div></div>
+          <div class="rneck"></div>
+          <div class="rarm l"></div><div class="rarm r"></div><div class="rbody"></div>
+        </div>
+      </div>
+      <div class="guide-content">
+        <h3>Гид-робот</h3>
+        <div class="guide-text" id="guideText">Привет! Выбери уровень сложности, а затем начни уровень. Я буду подсказывать, что делать дальше.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Информация</div>
+      <div class="info-row">
+        <div class="stat-pill">Уровень: <span id="levelText">не выбран</span></div>
+        <div class="stat-pill">Ошибки:
+          <span class="heart-row" id="heartsBox" style="display:inline-flex;margin-left:6px;vertical-align:middle;">
+            <span class="heart"></span><span class="heart"></span><span class="heart"></span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Сложность</div>
+      <div class="level-grid">
+        <button class="level-btn" data-level="easy">Лёгкий</button>
+        <button class="level-btn" data-level="medium">Средний</button>
+        <button class="level-btn" data-level="hard">Сложный</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Таймер</div>
+      <div class="timer-wrap">
+        <div class="timer-circle" id="timerCircle"><div class="timer-inner" id="timerValue">0</div></div>
+        <div class="timer-text" id="timerText">Время начнётся, когда ты откроешь пациента.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Задание</div>
+      <div style="font-size:13px;color:#475569;line-height:1.6;min-height:58px;" id="questionText">
+        Осмотри пациента, открой симптомы и поставь диагноз.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Инструменты</div>
+      <div class="tools">
+        <button class="tool-btn" id="toolTemp">🌡 Температура</button>
+        <button class="tool-btn" id="toolInspect">🔍 Осмотр</button>
+        <button class="tool-btn" id="toolHint">💡 Подсказка</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Результаты осмотра</div>
+      <div class="findings-list" id="findingsList">
+        <div class="finding">Здесь будут появляться результаты измерений и осмотра пациента.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Выбери диагноз</div>
+      <div class="answers" id="answersBox">
+        <button class="answer-btn" style="grid-column:1/-1;">Выбери уровень</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="progress-wrap">
+        <div class="progress-top"><span>Прогресс</span><span id="progressText">0%</span></div>
+        <div class="bar"><div class="bar-fill" id="progressBar"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="status info" id="statusBox">Готов к практике медика.</div>
+    </div>
+
+    <div class="card">
+      <div class="controls">
+        <button class="control-btn" id="nextBtn">Следующий пациент</button>
+        <button class="control-btn primary" id="startLevelBtn">Начать уровень</button>
+        <button class="control-btn good" id="confirmBtn">Поставить диагноз</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GAME = {
+  easy: {
+    name: "лёгкий",
+    time: 24,
+    revealAtStart: 2,
+    cases: [
+      {
+        patient:"Пациент А",
+        desc:"Ребёнок жалуется на боль в горле и слабость.",
+        symptoms:["красное горло","температура 38°C","кашель","сложно глотать"],
+        question:"Открой симптомы и выбери наиболее вероятный диагноз.",
+        options:["Ангина","Аллергия","Перелом","Ожог"],
+        answer:"Ангина",
+        hint:"Подумай о заболевании горла с температурой.",
+        tempResult:"Температура повышена — 38°C.",
+        inspectResult:"При осмотре видно сильное покраснение горла и боль при глотании.",
+        mood:"sick"
+      },
+      {
+        patient:"Пациент Б",
+        desc:"Пациент часто чихает и жалуется на нос и глаза.",
+        symptoms:["чихание","слезятся глаза","заложенность носа","температура нормальная"],
+        question:"Какой диагноз подходит лучше всего?",
+        options:["Аллергия","Аппендицит","Грипп","Отит"],
+        answer:"Аллергия",
+        hint:"Здесь особенно важны глаза и отсутствие высокой температуры.",
+        tempResult:"Температура в норме — 36.6°C.",
+        inspectResult:"Слизистая носа раздражена, симптомы усиливаются рядом с пылью.",
+        mood:"neutral"
+      },
+      {
+        patient:"Пациент В",
+        desc:"Взрослый пациент жалуется на резкую слабость и ломоту.",
+        symptoms:["температура 39°C","ломота в теле","сухой кашель","сильная слабость"],
+        question:"Что это больше всего напоминает?",
+        options:["Грипп","Ушиб","Кариес","Аллергия"],
+        answer:"Грипп",
+        hint:"Смотри на высокую температуру и общую ломоту тела.",
+        tempResult:"Температура очень высокая — 39°C.",
+        inspectResult:"Пациент говорит, что стало плохо резко, присутствует сухой кашель.",
+        mood:"sick"
+      },
+      {
+        patient:"Пациент Г",
+        desc:"Ребёнок жалуется на зуд кожи после сладкого.",
+        symptoms:["сыпь на коже","зуд","покраснение щёк","температура нормальная"],
+        question:"Какой диагноз наиболее вероятен?",
+        options:["Аллергия","Ангина","Отит","Грипп"],
+        answer:"Аллергия",
+        hint:"Свяжи зуд, сыпь и отсутствие температуры.",
+        tempResult:"Температура нормальная — 36.7°C.",
+        inspectResult:"При осмотре заметна кожная сыпь и покраснение на щеках.",
+        mood:"neutral"
+      }
+    ]
+  },
+  medium: {
+    name: "средний",
+    time: 18,
+    revealAtStart: 1,
+    cases: [
+      {
+        patient:"Пациент Д",
+        desc:"Пациент жалуется на боль справа внизу живота.",
+        symptoms:["боль справа внизу живота","тошнота","температура 37.8°C","боль усиливается при движении"],
+        question:"Какой диагноз наиболее вероятен?",
+        options:["Аппендицит","Простуда","Аллергия","Ангина"],
+        answer:"Аппендицит",
+        hint:"Самое важное — место боли.",
+        tempResult:"Температура слегка повышена — 37.8°C.",
+        inspectResult:"При осмотре боль усиливается при нажатии и движении.",
+        mood:"sick"
+      },
+      {
+        patient:"Пациент Е",
+        desc:"Пациент почти не слышит одним ухом и ощущает боль.",
+        symptoms:["боль в ухе","снижение слуха","температура 37.5°C","дискомфорт внутри уха"],
+        question:"Что это может быть?",
+        options:["Отит","Грипп","Ожог","Отравление"],
+        answer:"Отит",
+        hint:"Ключ связан со слухом и локальной болью.",
+        tempResult:"Температура слегка повышена — 37.5°C.",
+        inspectResult:"Пациент показывает на одно ухо, боль локальная и постоянная.",
+        mood:"sick"
+      },
+      {
+        patient:"Пациент Ж",
+        desc:"После еды у пациента начались проблемы с желудком.",
+        symptoms:["тошнота","рвота","боль в животе","слабость"],
+        question:"Какой диагноз вероятнее всего?",
+        options:["Отравление","Отит","Перелом","Аллергия"],
+        answer:"Отравление",
+        hint:"Подумай, что часто бывает после некачественной еды.",
+        tempResult:"Температура нормальная или слегка повышена.",
+        inspectResult:"Пациент говорит, что несколько часов назад ел подозрительную еду.",
+        mood:"sick"
+      },
+      {
+        patient:"Пациент З",
+        desc:"Пациент жалуется на боль в пазухах и густой насморк.",
+        symptoms:["заложенность носа","боль в области лба","густые выделения","головная боль"],
+        question:"Выбери наиболее вероятный диагноз.",
+        options:["Синусит","Отит","Аллергия","Ожог"],
+        answer:"Синусит'",
+        hint:"Важна боль в области носа и лба.",
+        tempResult:"Температура может быть слегка повышена — 37.3°C.",
+        inspectResult:"При осмотре пациенту больно наклонять голову вниз.",
+        mood:"sick"
+      }
+    ]
+  },
+  hard: {
+    name: "сложный",
+    time: 14,
+    revealAtStart: 0,
+    cases: [
+      {
+        patient:"Пациент И",
+        desc:"Пациент испытывает постоянную жажду и сухость во рту.",
+        symptoms:["сильная жажда","частое мочеиспускание","слабость","сухость во рту"],
+        question:"Какой диагноз по этим признакам наиболее вероятен?",
+        options:["Сахарный диабет","Грипп","Ангина","Отит"],
+        answer:"Сахарный диабет",
+        hint:"Свяжи жажду с частым мочеиспусканием.",
+        tempResult:"Температура нормальная — 36.6°C.",
+        inspectResult:"Пациент отмечает, что такое состояние продолжается уже долго.",
+        mood:"neutral"
+      },
+      {
+        patient:"Пациент К",
+        desc:"После нагрузки у пациента появилась тяжесть в груди.",
+        symptoms:["одышка","боль в груди","учащённый пульс","слабость после движения"],
+        question:"Что наиболее вероятно и требует внимания?",
+        options:["Проблемы с сердцем","Аллергия","Ушиб","Кариес"],
+        answer:"Проблемы с сердцем",
+        hint:"Дыхание, пульс и грудная клетка здесь ключевые.",
+        tempResult:"Температура нормальная.",
+        inspectResult:"Пациент говорит, что при движении становится хуже и трудно дышать.",
+        mood:"sick"
+      },
+      {
+        patient:"Пациент Л",
+        desc:"Пациент жалуется на сильную головную боль и боится яркого света.",
+        symptoms:["сильная головная боль","светобоязнь","температура 39°C","тошнота"],
+        question:"Какой диагноз наиболее тревожный?",
+        options:["Менингит","Простуда","Отит","Ожог"],
+        answer:"Менингит",
+        hint:"Реакция на свет очень важна.",
+        tempResult:"Температура высокая — 39°C.",
+        inspectResult:"Пациент просит выключить свет, потому что боль резко усиливается.",
+        mood:"sick"
+      },
+      {
+        patient:"Пациент М",
+        desc:"Пациент жалуется на приступы удушья и свистящее дыхание.",
+        symptoms:["одышка","свистящее дыхание","сухой кашель","тяжесть в груди"],
+        question:"Какой диагноз наиболее вероятен?",
+        options:["Бронхиальная астма","Отит","Аппендицит","Ожог"],
+        answer:"Бронхиальная астма",
+        hint:"Подумай о болезни дыхательных путей с приступами.",
+        tempResult:"Температура нормальная.",
+        inspectResult:"При осмотре слышно свистящее дыхание, особенно на выдохе.",
+        mood:"sick"
+      }
+    ]
+  }
+};
+
+const $ = id => document.getElementById(id);
+
+const startScreen   = $("startScreen");
+const finishScreen  = $("finishScreen");
+const startBtn      = $("startBtn");
+const restartBtn    = $("restartBtn");
+
+const scoreEl       = $("score");
+const streakEl      = $("streak");
+const roundInfo     = $("roundInfo");
+const levelText     = $("levelText");
+const caseChip      = $("caseChip");
+
+const guideText     = $("guideText");
+const questionText  = $("questionText");
+const answersBox    = $("answersBox");
+const progressBar   = $("progressBar");
+const progressText  = $("progressText");
+const statusBox     = $("statusBox");
+const patientName   = $("patientName");
+const patientDesc   = $("patientDesc");
+const findingsList  = $("findingsList");
+
+const symptomEls = [$("symptom1"), $("symptom2"), $("symptom3"), $("symptom4")];
+
+const levelButtons  = document.querySelectorAll(".level-btn");
+const nextBtn       = $("nextBtn");
+const startLevelBtn = $("startLevelBtn");
+const confirmBtn    = $("confirmBtn");
+
+const toolTemp      = $("toolTemp");
+const toolInspect   = $("toolInspect");
+const toolHint      = $("toolHint");
+
+const timerCircle   = $("timerCircle");
+const timerValue    = $("timerValue");
+const timerText     = $("timerText");
+const heartsBox     = $("heartsBox");
+const patientCard   = $("patientCard");
+const sceneFlash    = $("sceneFlash");
+const finishTitle   = $("finishTitle");
+const finishText    = $("finishText");
+const patientHead   = $("patientHead");
+const patientMouth  = $("patientMouth");
+
+let selectedLevel = null;
+let currentIndex = -1;
+let score = 0;
+let streak = 0;
+let mistakes = 0;
+let started = false;
+let answered = false;
+
+let roundTimer = null;
+let timeLeft = 0;
+let maxTime = 0;
+
+let selectedDiagnosis = null;
+let usedTemp = false;
+let usedInspect = false;
+let usedHint = false;
+let revealedSymptoms = 0;
+
+function animRobotEyes(...pairs){
+  setInterval(() => {
+    const x = Math.random() * 6 - 3;
+    const y = Math.random() * 4 - 2;
+    pairs.forEach(([l,r]) => {
+      if(l) l.style.transform = `translate(${x}px,${y}px)`;
+      if(r) r.style.transform = `translate(${x}px,${y}px)`;
+    });
+  }, 1400);
+}
+animRobotEyes([$("rEyeL"), $("rEyeR")], [$("rbEyeL"), $("rbEyeR")], [$("rbEyeL2"), $("rbEyeR2")]);
+
+function clearTimer(){
+  if(roundTimer){
+    clearInterval(roundTimer);
+    roundTimer = null;
+  }
+}
+
+function renderHearts(){
+  heartsBox.innerHTML = "";
+  for(let i=0;i<3;i++){
+    const h = document.createElement("span");
+    h.className = "heart" + (i < mistakes ? " off" : "");
+    heartsBox.appendChild(h);
+  }
+}
+
+function updateTimerVisual(val,max){
+  const pct = Math.max(0, Math.min(100, (val / Math.max(max, 1)) * 100));
+  const color = pct > 40 ? "#2563eb" : pct > 20 ? "#f59e0b" : "#dc2626";
+  timerCircle.style.background = `conic-gradient(${color} ${pct}%, #e5e7eb ${pct}% 100%)`;
+  timerValue.textContent = val;
+}
+
+function updateProgress(done,total){
+  const pct = Math.round((done / Math.max(total,1)) * 100);
+  progressBar.style.width = pct + "%";
+  progressText.textContent = pct + "%";
+}
+
+function setStatus(type, text){
+  statusBox.className = "status " + type;
+  statusBox.textContent = text;
+}
+
+function flashScene(){
+  sceneFlash.classList.remove("show");
+  void sceneFlash.offsetWidth;
+  sceneFlash.classList.add("show");
+}
+
+function resetFindings(text="Здесь будут появляться результаты измерений и осмотра пациента."){
+  findingsList.innerHTML = `<div class="finding">${text}</div>`;
+}
+
+function addFinding(title, text){
+  const item = document.createElement("div");
+  item.className = "finding";
+  item.innerHTML = `<strong>${title}:</strong> ${text}`;
+  findingsList.appendChild(item);
+}
+
+function setToolState(active){
+  [toolTemp, toolInspect, toolHint].forEach(btn => {
+    btn.disabled = !active;
+    btn.classList.remove("used");
+  });
+  if(!active) return;
+  if(usedTemp){ toolTemp.disabled = true; toolTemp.classList.add("used"); }
+  if(usedInspect){ toolInspect.disabled = true; toolInspect.classList.add("used"); }
+  if(usedHint){ toolHint.disabled = true; toolHint.classList.add("used"); }
+}
+
+function setButtonsState(){
+  nextBtn.disabled = !started || !answered;
+  confirmBtn.disabled = !started || answered || !selectedDiagnosis;
+}
+
+function startRoundTimer(){
+  clearTimer();
+  timeLeft = maxTime;
+  updateTimerVisual(timeLeft, maxTime);
+  timerText.textContent = "Успей поставить диагноз до окончания времени.";
+  roundTimer = setInterval(() => {
+    timeLeft--;
+    updateTimerVisual(timeLeft, maxTime);
+
+    if(timeLeft <= Math.ceil(maxTime * .35) && timeLeft > 0 && !answered){
+      timerText.textContent = "Времени мало! Нужно быстрее поставить диагноз.";
+      setStatus("warning", "⚠️ Осталось мало времени!");
+    }
+
+    if(timeLeft <= 0){
+      clearTimer();
+      handleTimeout();
+    }
+  }, 1000);
+}
+
+function applyPatientMood(mood){
+  if(mood === "sick"){
+    patientHead.style.filter = "saturate(.92)";
+    patientMouth.style.borderBottomColor = "#7f1d1d";
+    patientMouth.style.transform = "scaleY(-1)";
+    patientMouth.style.top = "66px";
+  }else{
+    patientHead.style.filter = "none";
+    patientMouth.style.borderBottomColor = "#a16207";
+    patientMouth.style.transform = "none";
+    patientMouth.style.top = "62px";
+  }
+}
+
+function renderSymptomBadges(item){
+  symptomEls.forEach((el, index) => {
+    if(index < revealedSymptoms){
+      el.textContent = item.symptoms[index];
+      el.classList.remove("locked");
+      el.classList.add("revealed");
+      setTimeout(() => el.classList.remove("revealed"), 450);
+    }else{
+      el.textContent = "симптом скрыт";
+      el.classList.add("locked");
+      el.classList.remove("revealed");
+    }
+  });
+}
+
+function revealMoreSymptoms(count){
+  if(!selectedLevel || currentIndex < 0) return;
+  const item = GAME[selectedLevel].cases[currentIndex];
+  const prev = revealedSymptoms;
+  revealedSymptoms = Math.min(4, revealedSymptoms + count);
+  renderSymptomBadges(item);
+  if(revealedSymptoms > prev){
+    addFinding("Открыт симптом", `Теперь доступно симптомов: ${revealedSymptoms} из 4.`);
+    flashScene();
+  }
+}
+
+function renderAnswers(options){
+  answersBox.innerHTML = "";
+  options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = "answer-btn";
+    btn.textContent = opt;
+    btn.addEventListener("click", () => selectDiagnosis(opt, btn));
+    answersBox.appendChild(btn);
+  });
+}
+
+function selectDiagnosis(option, btn){
+  if(answered) return;
+  selectedDiagnosis = option;
+  document.querySelectorAll(".answer-btn").forEach(item => item.classList.remove("selected"));
+  btn.classList.add("selected");
+  setStatus("info", `Выбран диагноз: ${option}. Нажми «Поставить диагноз».`);
+  guideText.textContent = "Хорошо. Теперь подтверди диагноз кнопкой «Поставить диагноз».";
+  setButtonsState();
+}
+
+function initIdle(){
+  patientName.textContent = "Пациент";
+  patientDesc.textContent = "Выбери уровень и начни медицинскую практику.";
+  caseChip.textContent = "Сначала выбери уровень сложности";
+  questionText.textContent = "Осмотри пациента, открой симптомы и поставь диагноз.";
+  guideText.textContent = "Привет! Выбери уровень сложности, а затем начни уровень. Я буду подсказывать, что делать дальше.";
+  answersBox.innerHTML = '<button class="answer-btn" style="grid-column:1/-1;">Выбери уровень</button>';
+  symptomEls.forEach(el => {
+    el.textContent = "симптом скрыт";
+    el.classList.add("locked");
+  });
+  levelText.textContent = "не выбран";
+  roundInfo.textContent = "0/0";
+  scoreEl.textContent = "0";
+  streakEl.textContent = "0";
+  timerText.textContent = "Время начнётся, когда ты откроешь пациента.";
+  updateTimerVisual(0,1);
+  updateProgress(0,1);
+  setStatus("info", "Готов к практике медика.");
+  renderHearts();
+  resetFindings();
+  setToolState(false);
+  selectedDiagnosis = null;
+  setButtonsState();
+  applyPatientMood("neutral");
+}
+
+function chooseLevel(level){
+  selectedLevel = level;
+  currentIndex = -1;
+  score = 0;
+  streak = 0;
+  mistakes = 0;
+  started = false;
+  answered = false;
+  selectedDiagnosis = null;
+  clearTimer();
+
+  levelButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.level === level));
+  levelText.textContent = GAME[level].name;
+  roundInfo.textContent = `0/${GAME[level].cases.length}`;
+  scoreEl.textContent = "0";
+  streakEl.textContent = "0";
+  caseChip.textContent = `Выбран ${GAME[level].name} уровень`;
+  patientName.textContent = "Кабинет готов";
+  patientDesc.textContent = "Нажми «Начать уровень», чтобы принять первого пациента.";
+  questionText.textContent = "Сначала запусти уровень. Затем ты сможешь использовать инструменты и выбирать диагноз.";
+  answersBox.innerHTML = '<button class="answer-btn" style="grid-column:1/-1;">Нажми «Начать уровень»</button>';
+  guideText.textContent = `Выбран ${GAME[level].name} уровень. Здесь скрыто ${4 - GAME[level].revealAtStart} симптом(а/ов) — используй инструменты, чтобы открыть всю картину.`;
+  setStatus("info", "Уровень выбран. Можно начинать.");
+  renderHearts();
+  updateProgress(0, GAME[level].cases.length);
+  updateTimerVisual(0,1);
+  timerText.textContent = "Таймер начнётся вместе с первым пациентом.";
+  resetFindings("После начала уровня здесь появятся результаты осмотра.");
+  setToolState(false);
+  symptomEls.forEach(el => {
+    el.textContent = "симптом скрыт";
+    el.classList.add("locked");
+  });
+  setButtonsState();
+}
+
+function startLevel(){
+  if(!selectedLevel){
+    setStatus("error", "Сначала выбери уровень сложности.");
+    return;
+  }
+  started = true;
+  nextPatient(true);
+}
+
+function nextPatient(force = false){
+  if(!selectedLevel){
+    setStatus("error", "Сначала выбери уровень.");
+    return;
+  }
+  if(!started){
+    setStatus("error", "Нажми «Начать уровень».");
+    return;
+  }
+  if(!force && !answered && currentIndex >= 0){
+    setStatus("warning", "Сначала заверши текущего пациента.");
+    return;
+  }
+
+  const pack = GAME[selectedLevel];
+  currentIndex++;
+
+  if(currentIndex >= pack.cases.length){
+    finishGame(true);
+    return;
+  }
+
+  const item = pack.cases[currentIndex];
+  answered = false;
+  selectedDiagnosis = null;
+  usedTemp = false;
+  usedInspect = false;
+  usedHint = false;
+  revealedSymptoms = pack.revealAtStart;
+  maxTime = pack.time;
+
+  patientName.textContent = item.patient;
+  patientDesc.textContent = item.desc;
+  questionText.textContent = item.question;
+  roundInfo.textContent = `${currentIndex + 1}/${pack.cases.length}`;
+  caseChip.textContent = `Случай ${currentIndex + 1}: изучи пациента`;
+  guideText.textContent = "Новый пациент поступил на осмотр. Используй инструменты, открой симптомы и после этого поставь диагноз.";
+  setStatus("info", "Пациент ждёт осмотра.");
+  resetFindings("Пока у тебя есть только стартовая информация о пациенте.");
+  renderSymptomBadges(item);
+  renderAnswers(item.options);
+  applyPatientMood(item.mood);
+
+  addFinding("Стартовая жалоба", item.desc);
+  if(revealedSymptoms > 0){
+    addFinding("Доступные симптомы", item.symptoms.slice(0, revealedSymptoms).join(", "));
+  }else{
+    addFinding("Симптомы", "На этом уровне стартовые симптомы скрыты. Используй инструменты.");
+  }
+
+  setToolState(true);
+  setButtonsState();
+  updateProgress(currentIndex, pack.cases.length);
+  startRoundTimer();
+  flashScene();
+}
+
+function confirmDiagnosis(){
+  if(answered) return;
+  if(!selectedDiagnosis){
+    setStatus("warning", "Сначала выбери диагноз.");
+    return;
+  }
+
+  const item = GAME[selectedLevel].cases[currentIndex];
+  answered = true;
+  clearTimer();
+
+  document.querySelectorAll(".answer-btn").forEach(btn => {
+    btn.disabled = true;
+    if(btn.textContent === item.answer){
+      btn.style.background = "#ecfdf5";
+      btn.style.borderColor = "#86efac";
+      btn.style.color = "#166534";
+    }
+    if(btn.textContent === selectedDiagnosis && selectedDiagnosis !== item.answer){
+      btn.style.background = "#fef2f2";
+      btn.style.borderColor = "#fca5a5";
+      btn.style.color = "#991b1b";
+    }
+  });
+
+  if(selectedDiagnosis === item.answer){
+    let gained = 10 + Math.max(0, Math.floor(timeLeft / 4)) + (streak >= 1 ? 2 : 0);
+    if(usedHint) gained -= 2;
+    if(usedTemp) gained -= 1;
+    if(usedInspect) gained -= 1;
+    if(gained < 5) gained = 5;
+
+    score += gained;
+    streak++;
+    scoreEl.textContent = String(score);
+    streakEl.textContent = String(streak);
+
+    setStatus("success", `✅ Верно! Диагноз: ${item.answer}. +${gained} очков.`);
+    guideText.textContent = "Отличная работа! Ты правильно сопоставил жалобы, симптомы и результаты осмотра.";
+    addFinding("Итог", `Диагноз поставлен верно: ${item.answer}. Получено ${gained} очков.`);
+    patientCard.classList.remove("shake");
+    patientCard.classList.add("successPulse");
+    setTimeout(() => patientCard.classList.remove("successPulse"), 600);
+  }else{
+    mistakes++;
+    streak = 0;
+    streakEl.textContent = "0";
+    renderHearts();
+
+    setStatus("error", `❌ Неверно. Правильный диагноз: ${item.answer}.`);
+    guideText.textContent = "Не страшно. Главное — запомнить, какие признаки были ключевыми.";
+    addFinding("Итог", `Выбран неверный диагноз: ${selectedDiagnosis}. Правильный: ${item.answer}.`);
+    patientCard.classList.remove("successPulse");
+    patientCard.classList.add("shake");
+    setTimeout(() => patientCard.classList.remove("shake"), 500);
+
+    if(mistakes >= 3){
+      setToolState(false);
+      setButtonsState();
+      finishGame(false);
+      return;
+    }
+  }
+
+  timerText.textContent = "Раунд завершён. Нажми «Следующий пациент».";
+  setToolState(false);
+  updateProgress(currentIndex + 1, GAME[selectedLevel].cases.length);
+  setButtonsState();
+}
+
+function handleTimeout(){
+  if(answered) return;
+  answered = true;
+
+  const item = GAME[selectedLevel].cases[currentIndex];
+  mistakes++;
+  streak = 0;
+  streakEl.textContent = "0";
+  renderHearts();
+
+  document.querySelectorAll(".answer-btn").forEach(btn => {
+    btn.disabled = true;
+    if(btn.textContent === item.answer){
+      btn.style.background = "#ecfdf5";
+      btn.style.borderColor = "#86efac";
+      btn.style.color = "#166534";
+    }
+  });
+
+  setStatus("error", `⏰ Время вышло. Правильный диагноз: ${item.answer}.`);
+  guideText.textContent = "Иногда врачу нужно принимать решение быстрее. Попробуй следующий случай лучше.";
+  addFinding("Итог", `Время истекло. Правильный диагноз: ${item.answer}.`);
+  patientCard.classList.add("shake");
+  setTimeout(() => patientCard.classList.remove("shake"), 500);
+
+  setToolState(false);
+  updateProgress(currentIndex + 1, GAME[selectedLevel].cases.length);
+  timerText.textContent = "Раунд завершён. Нажми «Следующий пациент».";
+  setButtonsState();
+
+  if(mistakes >= 3){
+    finishGame(false);
+  }
+}
+
+function useTemperature(){
+  if(!selectedLevel || answered || usedTemp || currentIndex < 0) return;
+  const item = GAME[selectedLevel].cases[currentIndex];
+  usedTemp = true;
+  revealMoreSymptoms(1);
+  addFinding("Температура", item.tempResult);
+  guideText.textContent = item.tempResult;
+  setStatus("info", "🌡 Температура измерена.");
+  setToolState(true);
+}
+
+function useInspect(){
+  if(!selectedLevel || answered || usedInspect || currentIndex < 0) return;
+  const item = GAME[selectedLevel].cases[currentIndex];
+  usedInspect = true;
+  revealMoreSymptoms(2);
+  addFinding("Осмотр", item.inspectResult);
+  guideText.textContent = item.inspectResult;
+  setStatus("info", "🔍 Осмотр завершён.");
+  setToolState(true);
+}
+
+function useHint(){
+  if(!selectedLevel || answered || usedHint || currentIndex < 0) return;
+  const item = GAME[selectedLevel].cases[currentIndex];
+  usedHint = true;
+  addFinding("Подсказка", item.hint);
+  guideText.textContent = "рџ'Ў " + item.hint;
+  setStatus("warning", "Подсказка использована. Будет небольшой штраф к очкам.");
+  setToolState(true);
+}
+
+function finishGame(completed){
+  clearTimer();
+  finishScreen.classList.remove("hidden");
+
+  if(completed){
+    if(score >= 50){
+      finishTitle.textContent = "Потрясающий результат! 🏆";
+      finishText.textContent = `Ты прошёл уровень до конца и набрал ${score} очков. Очень уверенная диагностика!`;
+    }else if(score >= 32){
+      finishTitle.textContent = "Отличная практика! 🎉";
+      finishText.textContent = `Ты завершил уровень и набрал ${score} очков. У тебя уже хорошие навыки медика.`;
+    }else{
+      finishTitle.textContent = "Уровень пройден ✅";
+      finishText.textContent = `Ты завершил уровень и набрал ${score} очков. Ещё немного практики — и будет ещё лучше.`;
+    }
+  }else{
+    finishTitle.textContent = "Практика завершена 😔";
+    finishText.textContent = `Ты допустил слишком много ошибок и набрал ${score} очков. Перезапусти игру и попробуй ещё раз.`;
+  }
+
+  setToolState(false);
+  setButtonsState();
+}
+
+function restartGame(){
+  clearTimer();
+  finishScreen.classList.add("hidden");
+  selectedLevel = null;
+  currentIndex = -1;
+  score = 0;
+  streak = 0;
+  mistakes = 0;
+  started = false;
+  answered = false;
+  usedTemp = false;
+  usedInspect = false;
+  usedHint = false;
+  selectedDiagnosis = null;
+  revealedSymptoms = 0;
+  levelButtons.forEach(btn => btn.classList.remove("active"));
+  initIdle();
+}
+
+startBtn.addEventListener("click", () => {
+  startScreen.classList.add("hidden");
+  initIdle();
+});
+
+restartBtn.addEventListener("click", restartGame);
+
+levelButtons.forEach(btn => {
+  btn.addEventListener("click", () => chooseLevel(btn.dataset.level));
+});
+
+startLevelBtn.addEventListener("click", startLevel);
+nextBtn.addEventListener("click", () => nextPatient(false));
+confirmBtn.addEventListener("click", confirmDiagnosis);
+
+toolTemp.addEventListener("click", useTemperature);
+toolInspect.addEventListener("click", useInspect);
+toolHint.addEventListener("click", useHint);
+
+initIdle();
+</script>
+<script>
+(() => {
+  let sent = false;
+  const send = (score, summary) => {
+    if (sent) return;
+    sent = true;
+    if (window.parent) {
+      window.parent.postMessage({
+        type: 'skillland-game-complete',
+        game: 'medic',
+        score,
+        summary
+      }, '*');
+    }
+  };
+
+  const check = () => {
+    const finish = document.getElementById('finishScreen');
+    const title = document.getElementById('finishTitle');
+    if (finish && !finish.classList.contains('hidden')) {
+      const raw = typeof score === 'number' ? score : 0;
+      const percent = Math.max(0, Math.min(100, Math.round((raw / 60) * 100)));
+      const summary = title ? title.textContent : 'Игра медика завершена';
+      send(percent, summary);
+    }
+  };
+
+  const obs = new MutationObserver(check);
+  obs.observe(document.body, { subtree: true, childList: true, attributes: true });
+  check();
+})();
+</script></body>
+</html>
+

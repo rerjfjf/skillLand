@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Экономист — Обучение</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(150deg,#e4eaf0 0%,#d5dce6 100%);
+  font-family:'Segoe UI',Arial,sans-serif;
+  overflow:hidden;
+}
+
+/* в"Ђв"Ђв"Ђ LAYOUT в"Ђв"Ђв"Ђ */
+.layout{
+  display:flex;
+  align-items:flex-end;
+  gap:18px;
+  padding:30px 24px;
+}
+
+/* в"Ђв"Ђв"Ђ ROBOT (scaled) в"Ђв"Ђв"Ђ */
+.robot-outer{
+  width:308px;
+  height:380px;
+  position:relative;
+  flex-shrink:0;
+}
+.scene{
+  position:absolute;top:0;left:0;
+  width:420px;height:520px;
+  transform:scale(0.735);
+  transform-origin:top left;
+  display:flex;align-items:center;justify-content:center;
+}
+.robot{position:relative;width:230px;height:360px;animation:floatBot 3.2s ease-in-out infinite}
+@keyframes floatBot{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+.tie{position:absolute;top:110px;left:50%;transform:translateX(-50%);width:20px;height:90px;z-index:3}
+.tie-knot{position:absolute;top:0;left:50%;transform:translateX(-50%);width:18px;height:16px;background:#111;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.tie-body{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:14px;height:60px;background:linear-gradient(180deg,#222,#000);border-radius:6px}
+.tie-tip{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:16px solid #000}
+
+.head{position:absolute;top:0;left:50%;transform:translateX(-50%);width:170px;height:102px;background:linear-gradient(145deg,#fff 0%,#e7e7e7 75%,#cfcfcf 100%);border-radius:52% 52% 48% 48%/68% 68% 34% 34%;box-shadow:inset 10px 10px 18px rgba(255,255,255,.95),inset -12px -12px 20px rgba(0,0,0,.08),0 16px 25px rgba(0,0,0,.08)}
+.face{position:absolute;left:50%;top:17px;transform:translateX(-50%);width:120px;height:58px;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.12),transparent 40%),linear-gradient(180deg,#101215 0%,#050607 100%);border-radius:50px;overflow:hidden}
+.eye{position:absolute;width:26px;height:18px;background:radial-gradient(circle,#44c7ff,#003cff);border-radius:50%;top:19px;transition:transform .4s}
+.eye.left{left:26px}.eye.right{right:26px}
+
+.neck{position:absolute;top:84px;left:50%;transform:translateX(-50%);width:70px;height:28px;background:linear-gradient(180deg,#f3f3f3,#d8d8d8);border-radius:0 0 30px 30px}
+.body{position:absolute;left:50%;top:92px;transform:translateX(-50%);width:155px;height:215px;background:linear-gradient(145deg,#fff 0%,#ededed 60%,#cfcfcf 100%);border-radius:44% 44% 40% 40%/20% 20% 78% 78%}
+.arm{position:absolute;top:150px;width:42px;height:150px;background:linear-gradient(145deg,#fff 0%,#e6e6e6 65%,#c9c9c9 100%);border-radius:48% 48% 52% 52%/18% 18% 82% 82%}
+.arm.left{left:10px;transform:rotate(18deg)}.arm.right{right:10px;transform:rotate(-18deg)}
+.shadow{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);width:110px;height:20px;background:rgba(0,0,0,.16);filter:blur(10px);border-radius:50%}
+
+/* в"Ђв"Ђв"Ђ CHAT в"Ђв"Ђв"Ђ */
+.chat-section{
+  display:flex;flex-direction:column;gap:12px;
+  width:292px;margin-bottom:110px;flex-shrink:0;
+}
+.speech-bubble{
+  position:relative;background:#fff;
+  border-radius:18px;padding:16px 18px;
+  box-shadow:0 4px 28px rgba(0,0,0,.13);
+  font-size:13px;line-height:1.65;color:#1a1a2e;min-height:68px;
+}
+.speech-bubble::before{
+  content:'';position:absolute;
+  left:-9px;top:22px;width:0;height:0;
+  border-top:9px solid transparent;
+  border-bottom:9px solid transparent;
+  border-right:9px solid #fff;
+}
+.btn-area{display:flex;gap:10px;flex-wrap:wrap}
+.class-btn{
+  padding:10px 22px;border:none;border-radius:50px;
+  background:linear-gradient(135deg,#0052ff,#0036cc);
+  color:#fff;font-size:13px;cursor:pointer;font-weight:700;
+  letter-spacing:.3px;transition:transform .15s,box-shadow .15s;
+  box-shadow:0 4px 14px rgba(0,82,255,.3);
+}
+.class-btn:hover{transform:translateY(-2px);box-shadow:0 7px 18px rgba(0,82,255,.42)}
+.help-btn{
+  padding:9px 22px;border:2px solid #0052ff;border-radius:50px;
+  background:#fff;color:#0052ff;font-size:13px;cursor:pointer;font-weight:700;
+  transition:all .2s;display:none;box-shadow:0 2px 10px rgba(0,82,255,.12);
+}
+.help-btn.on{display:block}
+.help-btn:hover{background:#0052ff;color:#fff;box-shadow:0 4px 14px rgba(0,82,255,.3)}
+
+/* в"Ђв"Ђв"Ђ PHONE SHELL в"Ђв"Ђв"Ђ */
+.phone-section{flex-shrink:0}
+.phone{
+  position:relative;width:252px;height:516px;
+  border-radius:42px;
+  background:linear-gradient(180deg,#aeb8c4 0%,#edf3f8 10%,#8d97a2 26%,#e8eef4 50%,#8d97a2 74%,#eef4f8 90%,#a7b2be 100%);
+  box-shadow:0 28px 55px rgba(0,0,0,.28),0 8px 16px rgba(0,0,0,.12),inset 0 0 0 1px rgba(255,255,255,.65),inset 0 0 0 2px rgba(40,45,52,.22);
+}
+.frame-shadow{position:absolute;inset:2px;border-radius:40px;box-shadow:inset 1px 0 0 rgba(255,255,255,.55),inset -1px 0 0 rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.45),inset 0 -1px 0 rgba(0,0,0,.18);pointer-events:none}
+.screen-bezel{position:absolute;inset:4px;border-radius:38px;background:#0a0a0b;overflow:hidden}
+.screen{
+  position:absolute;inset:3px;border-radius:34px;overflow:hidden;
+  background:radial-gradient(circle at 50% 48%,#0c4dd9 0%,#1538b9 8%,rgba(17,56,185,.85) 14%,rgba(167,210,243,.5) 26%,rgba(228,237,245,.85) 46%,#dce4ee 62%,#cfd7e2 78%,#c8d1de 100%);
+}
+.screen::before{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 50% 50%,rgba(8,35,130,.98) 0 4%,transparent 5%),
+    radial-gradient(ellipse 18% 38% at 50% 18%,rgba(241,247,250,.72) 0 45%,transparent 46%),
+    radial-gradient(ellipse 18% 38% at 50% 82%,rgba(241,247,250,.72) 0 45%,transparent 46%),
+    radial-gradient(ellipse 38% 18% at 18% 50%,rgba(84,155,235,.30) 0 45%,transparent 46%),
+    radial-gradient(ellipse 38% 18% at 82% 50%,rgba(84,155,235,.30) 0 45%,transparent 46%),
+    radial-gradient(ellipse 16% 34% at 36% 23%,rgba(180,228,245,.62) 0 46%,transparent 47%),
+    radial-gradient(ellipse 16% 34% at 64% 23%,rgba(180,228,245,.62) 0 46%,transparent 47%),
+    radial-gradient(ellipse 16% 34% at 36% 77%,rgba(167,189,240,.48) 0 46%,transparent 47%),
+    radial-gradient(ellipse 16% 34% at 64% 77%,rgba(167,189,240,.48) 0 46%,transparent 47%),
+    radial-gradient(ellipse 14% 30% at 29% 33%,rgba(116,203,245,.38) 0 46%,transparent 47%),
+    radial-gradient(ellipse 14% 30% at 71% 33%,rgba(116,203,245,.38) 0 46%,transparent 47%),
+    radial-gradient(ellipse 14% 30% at 29% 67%,rgba(68,119,219,.34) 0 46%,transparent 47%),
+    radial-gradient(ellipse 14% 30% at 71% 67%,rgba(68,119,219,.34) 0 46%,transparent 47%),
+    radial-gradient(ellipse 12% 24% at 24% 42%,rgba(46,144,238,.42) 0 46%,transparent 47%),
+    radial-gradient(ellipse 12% 24% at 76% 42%,rgba(46,144,238,.42) 0 46%,transparent 47%),
+    radial-gradient(ellipse 12% 24% at 24% 58%,rgba(43,78,204,.40) 0 46%,transparent 47%),
+    radial-gradient(ellipse 12% 24% at 76% 58%,rgba(43,78,204,.40) 0 46%,transparent 47%);
+  pointer-events:none;
+}
+.screen::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(102deg,rgba(255,255,255,.24) 8%,rgba(255,255,255,.08) 18%,transparent 34%),linear-gradient(78deg,transparent 58%,rgba(255,255,255,.06) 74%,rgba(255,255,255,.14) 82%,transparent 92%);
+  pointer-events:none;
+}
+
+/* Dynamic Island — unchanged */
+.island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:74px;height:22px;background:linear-gradient(180deg,#050506,#0a0a0b);border-radius:999px;box-shadow:inset 0 1px 1px rgba(255,255,255,.04),inset 0 -1px 1px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.35);z-index:5}
+.island::before{content:"";position:absolute;right:8px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(45,120,255,.9) 0 18%,rgba(18,25,61,.9) 30%,#090909 65%);opacity:.95}
+.island::after{content:"";position:absolute;left:10px;top:50%;transform:translateY(-50%);width:38px;height:10px;border-radius:999px;background:rgba(0,0,0,.45)}
+
+.side{position:absolute;background:linear-gradient(180deg,#8b95a0 0%,#c9d1d8 18%,#78818b 52%,#d8dfe6 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -1px 0 rgba(0,0,0,.18)}
+.silent{left:-2px;top:104px;width:3px;height:24px;border-radius:2px 0 0 2px}
+.vol-up{left:-2px;top:144px;width:3px;height:46px;border-radius:2px 0 0 2px}
+.vol-down{left:-2px;top:198px;width:3px;height:46px;border-radius:2px 0 0 2px}
+.power{right:-2px;top:156px;width:3px;height:74px;border-radius:0 2px 2px 0}
+.antenna{position:absolute;width:2px;height:18px;background:rgba(224,232,239,.9);opacity:.7}
+.antenna.left-top{left:-1px;top:76px;border-radius:2px}
+.antenna.left-bottom{left:-1px;bottom:92px;border-radius:2px}
+.antenna.right-top{right:-1px;top:84px;border-radius:2px}
+.antenna.right-bottom{right:-1px;bottom:84px;border-radius:2px}
+.floor-shadow{position:absolute;left:50%;bottom:-26px;transform:translateX(-50%);width:280px;height:34px;background:radial-gradient(ellipse at center,rgba(0,0,0,.22),transparent 70%);filter:blur(5px);z-index:-1}
+
+/* ═══ MARKET OVERLAY — WHITE ═══ */
+.mkt{
+  position:absolute;inset:0;z-index:10;
+  display:none;flex-direction:column;
+  background:#f4f6f9;
+  border-radius:34px;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  animation:mktIn .4s cubic-bezier(.22,.68,0,1.15);
+}
+.mkt.on{display:flex}
+@keyframes mktIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+
+.mkt-top{
+  padding:44px 12px 3px;
+  text-align:center;flex-shrink:0;
+}
+.mkt-title{
+  font-size:10px;font-weight:900;
+  color:#1a1a2e;letter-spacing:2px;
+  font-family:monospace;
+}
+.mkt-time{
+  font-size:7px;color:#9e9e9e;
+  font-family:monospace;margin-top:1px;
+}
+
+.ticker-wrap{
+  background:#e8ecf1;overflow:hidden;
+  padding:3px 0;flex-shrink:0;
+  border-top:1px solid #dde2e9;
+  border-bottom:1px solid #dde2e9;
+}
+.ticker{
+  display:inline-block;font-family:monospace;
+  font-size:7.5px;color:#546e7a;
+  white-space:nowrap;padding-left:100%;
+  animation:scroll 18s linear infinite;
+}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-200%)}}
+
+.mkt-list{
+  flex:1;padding:5px 8px;
+  display:flex;flex-direction:column;gap:4px;
+}
+
+.mkt-row{
+  display:flex;align-items:center;
+  background:#fff;border-radius:9px;
+  padding:5px 6px;gap:3px;
+  box-shadow:0 1px 4px rgba(0,0,0,.07);
+  transition:background .4s;
+}
+.mkt-row.gn{background:#e8faf0}
+.mkt-row.rd{background:#fff0f0}
+
+.mkt-nm{flex:1;font-size:8px;font-weight:700;color:#1a1a2e;font-family:monospace;line-height:1.25}
+.mkt-sub{font-size:6px;color:#9e9e9e;font-weight:400;display:block}
+
+.mkt-pinfo{text-align:right;margin-right:3px}
+.mkt-pr{font-size:9px;font-family:monospace;font-weight:bold;color:#1a1a2e;display:block;white-space:nowrap}
+.mkt-ch{font-size:7px;font-family:monospace;display:block;white-space:nowrap}
+.mkt-ch.up{color:#00b248}.mkt-ch.dn{color:#e53935}
+
+.btn-buy{
+  padding:3px 5px;border:none;border-radius:5px;
+  font-size:7px;font-weight:800;cursor:pointer;
+  font-family:monospace;letter-spacing:.3px;
+  background:#00b248;color:#fff;
+  box-shadow:0 1px 3px rgba(0,178,72,.3);
+  transition:transform .1s;
+}
+.btn-sell{
+  padding:3px 5px;border:none;border-radius:5px;
+  font-size:7px;font-weight:800;cursor:pointer;
+  font-family:monospace;letter-spacing:.3px;
+  background:#e53935;color:#fff;
+  box-shadow:0 1px 3px rgba(229,57,53,.3);
+  transition:transform .1s;
+}
+.btn-buy:hover,.btn-sell:hover{transform:scale(1.08)}
+.btn-buy:active,.btn-sell:active{transform:scale(.95)}
+
+.trade-toast{
+  position:absolute;bottom:100px;left:50%;transform:translateX(-50%);
+  background:rgba(26,26,46,.9);color:#fff;
+  border-radius:8px;padding:4px 10px;
+  font-size:7.5px;font-family:monospace;
+  white-space:nowrap;opacity:0;
+  transition:opacity .25s;pointer-events:none;z-index:20;
+}
+.trade-toast.show{opacity:1}
+
+.mkt-explain{padding:4px 8px 8px;flex-shrink:0}
+.explain-card{
+  background:#fff;border-radius:9px;
+  padding:6px 9px;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.explain-ttl{
+  font-size:7.5px;font-weight:800;
+  color:#1a1a2e;margin-bottom:2px;
+  font-family:monospace;letter-spacing:.5px;
+}
+.explain-txt{
+  font-size:6.8px;color:#546e7a;line-height:1.55;
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- в•ђв•ђ ROBOT в•ђв•ђ -->
+  <div class="robot-outer">
+    <div class="scene">
+      <div class="shadow"></div>
+      <div class="robot">
+        <div class="head">
+          <div class="face">
+            <div class="eye left" id="eL"></div>
+            <div class="eye right" id="eR"></div>
+          </div>
+        </div>
+        <div class="neck"></div>
+        <div class="tie">
+          <div class="tie-knot"></div>
+          <div class="tie-body"></div>
+          <div class="tie-tip"></div>
+        </div>
+        <div class="arm left"></div>
+        <div class="arm right"></div>
+        <div class="body"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- в•ђв•ђ CHAT в•ђв•ђ -->
+  <div class="chat-section">
+    <div class="speech-bubble">
+      <div id="msg">
+        Привет! Я твой работодатель в&nbsp;сфере экономиста.<br><br>
+        Выбери свой класс — это определит уровень сложности заданий!
+      </div>
+    </div>
+    <div class="btn-area" id="btns">
+      <button class="class-btn" onclick="pick('58')">5–8 класс</button>
+      <button class="class-btn" onclick="pick('9')">9 класс</button>
+    </div>
+  </div>
+
+  <!-- в•ђв•ђ PHONE в•ђв•ђ -->
+  <div class="phone-section">
+    <div class="phone">
+      <div class="antenna left-top"></div>
+      <div class="antenna left-bottom"></div>
+      <div class="antenna right-top"></div>
+      <div class="antenna right-bottom"></div>
+      <div class="side silent"></div>
+      <div class="side vol-up"></div>
+      <div class="side vol-down"></div>
+      <div class="side power"></div>
+      <div class="frame-shadow"></div>
+      <div class="screen-bezel">
+        <div class="screen">
+          <div class="island"></div>
+
+          <div class="mkt" id="mkt">
+            <div class="mkt-top">
+              <div class="mkt-title"> БИРЖА</div>
+              <div class="mkt-time" id="mktT">--:--:--  АСТАНА</div>
+            </div>
+            <div class="ticker-wrap"><div class="ticker" id="tick"></div></div>
+            <div class="mkt-list" id="mktL"></div>
+            <div class="trade-toast" id="toast"></div>
+          </div>
+
+        </div>
+      </div>
+      <div class="floor-shadow"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* в"Ђв"Ђ eyes в"Ђв"Ђ */
+const eL=document.getElementById('eL'),eR=document.getElementById('eR');
+function eyes(){const x=Math.random()*10-5,y=Math.random()*6-3;eL.style.transform=eR.style.transform=`translate(${x}px,${y}px)`;}
+eyes();setInterval(eyes,1200);
+
+/* в"Ђв"Ђ tasks в"Ђв"Ђ */
+const T={
+  '58':{
+    h:' Вот твои 3 задания с биржи:',
+    tasks:[
+      {
+        desc:'Простое задание: Купи дешево, продай дорого. График медленно меняется. Экономист анализирует тренды и принимает решения.',
+        initPrice:100, changes:[30,-28,35,-32,40,-30,45,-38,42,-28],
+        hints:['Купи на красной', 'Продай на зелёной'],
+        goal:'Заработай минимум 2 единицы.'
+      },
+      {
+        desc:'Среднее задание: График с трендом вверх. Экономист предсказывает рост и инвестирует.',
+        initPrice:50, changes:[35,-30,40,-35,45,-32,50,-40,48,-30],
+        hints:['Найди дно', 'Продай на росте'],
+        goal:'Заработай минимум 3 единицы.'
+      },
+      {
+        desc:'Сложное задание: Волатильный график. Экономист рискует, но минимизирует убытки.',
+        initPrice:200, changes:[50,-45,55,-50,60,-48,65,-55,58,-42],
+        hints:['Ловко торгуй', 'Получай прибыль'],
+        goal:'Заработай минимум 5 единиц.'
+      }
+    ]
+  },
+  '9':{
+    h:' Вот твои 3 задания с биржи:',
+    tasks:[
+      {
+        desc:'Простое задание: Купи на дне, продай на вершине. Экономист использует анализ спроса и предложения.',
+        initPrice:100, changes:[35,-32,40,-38,45,-35,50,-42,48,-30],
+        hints:['Купи на красной', 'Продай на зелёной'],
+        goal:'Заработай минимум 3 единицы.'
+      },
+      {
+        desc:'Среднее задание: График с обратным трендом. Экономист корректирует стратегию по данным.',
+        initPrice:150, changes:[-40,45,-38,50,-42,48,-35,52,-40,55],
+        hints:['Следи за тренд', 'Прибыль гарантирована'],
+        goal:'Заработай минимум 5 единиц.'
+      },
+      {
+        desc:'Сложное задание: Высокая волатильность. Экономист применяет хеджирование и диверсификацию.',
+        initPrice:300, changes:[60,-55,65,-60,70,-58,75,-65,70,-50],
+        hints:['Мастерское торговля', 'Большие прибыли'],
+        goal:'Заработай минимум 10 единиц.'
+      }
+    ]
+  }
+};
+
+let cur=null;
+function pick(c){
+  cur=c;
+  const d=T[c];
+  let h=`<strong>${d.h}</strong><br><br>`;
+  document.getElementById('msg').innerHTML=h;
+  document.getElementById('btns').innerHTML=`
+    <button class="class-btn" onclick="pick('58')">5–8 класс</button>
+    <button class="class-btn" onclick="pick('9')">9 класс</button>
+    <button class="help-btn on" onclick="doHelp()"> Помощь</button>
+  `;
+  document.getElementById('mkt').classList.add('on');
+  renderTasks(c);
+}
+
+function doHelp(){
+  if(!cur)return;
+  const d=T[cur];
+  let h=`<strong> Подсказки:</strong><br><br>`;
+  d.tasks.forEach((task,i)=>{
+    h+=`<div style="margin-bottom:8px;font-size:12px;line-height:1.55;color:#1a2340;padding:7px 10px;background:#eef3ff;border-radius:9px;border-left:3px solid #0052ff">
+      <b>Задание ${i+1}:</b> ${task.hints.join(' | ')}
+    </div>`;
+  });
+  document.getElementById('msg').innerHTML=h;
+}
+
+function renderTasks(c){
+  const d=T[c];
+  document.getElementById('mktT').textContent='ЗАДАНИЯ';
+  document.getElementById('tick').textContent='Трейди и зарабатывай!';
+  let html = '';
+  d.tasks.forEach((task,i)=>{
+    html += `<div class="task-item" style="padding:8px;margin-bottom:6px;background:#fff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
+      <div style="font-size:10px;font-weight:700;color:#0052ff;margin-bottom:4px;">Задание ${i+1}: ${task.desc}</div>
+      <div style="font-size:8px;color:#666;margin-bottom:4px;">Цель: ${task.goal}</div>
+      <canvas id="chart${i}" width="180" height="80" style="border:1px solid #ccc;margin-bottom:4px;"></canvas>
+      <div style="display:flex;gap:4px;margin-bottom:4px;">
+        <button class="btn-buy" style="padding:2px 6px;font-size:7px;" onclick="buy(${i})">КУПИТЬ</button>
+        <button class="btn-sell" style="padding:2px 6px;font-size:7px;" onclick="sell(${i})">ПРОДАТЬ</button>
+      </div>
+      <div id="profit${i}" style="font-size:8px;color:#1a1a2e;">Прибыль: 0</div>
+    </div>`;
+  });
+  document.getElementById('mktL').innerHTML=html;
+  document.getElementById('toast').style.display='none';
+  // Инициализировать графики
+  d.tasks.forEach((task,i)=>initChart(i, task));
+}
+
+let taskStates = [];
+let completedTasks = [false, false, false];
+
+function initChart(i, task){
+  const canvas = document.getElementById(`chart${i}`);
+  const ctx = canvas.getContext('2d');
+  taskStates[i] = {candles: [], bought: false, buyPrice: 0, profit: 0, step: 0, completed: false};
+  drawChart(ctx, taskStates[i].candles);
+  setInterval(()=>{updateChart(i, task)}, 2000);
+}
+
+function updateChart(i, task){
+  const state = taskStates[i];
+  const open = state.candles.length > 0 ? state.candles[state.candles.length-1].close : task.initPrice;
+  let delta;
+  if(state.step < task.changes.length){
+    delta = task.changes[state.step];
+  } else {
+    delta = (Math.random() - 0.5) * 80;
+    if(!state.completed){
+      state.completed = true;
+      completedTasks[i] = true;
+      checkCompletion();
+    }
+  }
+  const close = open + delta;
+  const high = Math.max(open, close) + Math.random() * 5;
+  const low = Math.min(open, close) - Math.random() * 5;
+  state.candles.push({open, high, low, close});
+  state.step++;
+  const canvas = document.getElementById(`chart${i}`);
+  const ctx = canvas.getContext('2d');
+  drawChart(ctx, state.candles);
+}
+
+function checkCompletion(){
+  if(completedTasks.every(c => c)){
+    calculateSuccess();
+  }
+}
+
+function calculateSuccess(){
+  const d = T[cur];
+  let successful = 0;
+  taskStates.forEach((state, i) => {
+    const goalNum = parseInt(d.tasks[i].goal.match(/\d+/)[0]);
+    if(state.profit >= goalNum) successful++;
+  });
+  const percent = Math.round((successful / 3) * 100);
+  
+  if(successful === 3){
+    // Все задания пройдены успешно
+    showSuccessScreen(percent);
+  } else {
+    const el = document.getElementById('toast');
+    el.textContent = `🎉 Задания завершены! Ты справился на ${percent}%`;
+    el.classList.add('show');
+    if(toastTm) clearTimeout(toastTm);
+    toastTm = setTimeout(() => el.classList.remove('show'), 8000);
+  }
+}
+
+function showSuccessScreen(percent){
+  // Скрыть экран с графиками
+  document.getElementById('mkt').classList.remove('on');
+  
+  // Сообщения от робота в зависимости от процента
+  let message = '';
+  const className = cur === '58' ? '5–8 класс' : '9 класс';
+  
+  if(percent === 100){
+    message = ` Потрясающе! Ты справился идеально — ${percent}%! <br><br>Все твои торговые решения были правильными. Ты как настоящий профессиональный экономист анализировал рынок, покупал в нужное время и продавал с максимальной прибылью. Отличная работа!<br><br>Этот уровень (${className}) полностью под контролем! `;
+  } else {
+    message = ` Отлично поработал! Ты справился на ${percent}%! <br><br>Ты показал хороший навык в торговле — правильно определил моменты покупки и продажи. Рынок подчинился твоей стратегии, и все задания выполнены с прибылью. Так держать, будущий экономист! `;
+  }
+  
+  // Показать начальное сообщение робота
+  document.getElementById('msg').innerHTML = `
+    <div style="font-size:13px;line-height:1.65;color:#1a1a2e;margin-bottom:16px">
+      ${message}
+    </div>
+    <div style="font-size:11px;color:#666;margin-top:12px;border-top:1px solid #ddd;padding-top:12px">
+      Хочешь попробовать другой уровень сложности?
+    </div>
+  `;
+  
+  // Показать кнопки выбора класса
+  document.getElementById('btns').innerHTML=`
+    <button class="class-btn" onclick="resetAndPick('58')">5–8 класс</button>
+    <button class="class-btn" onclick="resetAndPick('9')">9 класс</button>
+  `;
+}
+
+function resetAndPick(c){
+  // Сбросить состояние
+  taskStates = [];
+  completedTasks = [false, false, false];
+  cur = null;
+  // Запустить новую игру
+  pick(c);
+}
+
+function drawChart(ctx, candles){
+  ctx.clearRect(0,0,180,80);
+  if(candles.length === 0) return;
+  const prices = candles.flatMap(c => [c.open, c.high, c.low, c.close]);
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const range = max - min || 1;
+  const candleWidth = 180 / candles.length;
+  for(let j=0; j<candles.length; j++){
+    const c = candles[j];
+    const x = j * candleWidth + candleWidth/2;
+    const color = c.close > c.open ? '#00b248' : '#e53935';
+    // тени
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, 80 - ((c.high - min) / range) * 60);
+    ctx.lineTo(x, 80 - ((c.low - min) / range) * 60);
+    ctx.stroke();
+    // тело
+    const top = Math.min(c.open, c.close);
+    const bottom = Math.max(c.open, c.close);
+    const yTop = 80 - ((top - min) / range) * 60;
+    const yBottom = 80 - ((bottom - min) / range) * 60;
+    ctx.fillStyle = color;
+    ctx.fillRect(x - candleWidth/4, yTop, candleWidth/2, yBottom - yTop);
+  }
+}
+
+function buy(i){
+  const state = taskStates[i];
+  if(!state.bought && state.candles.length > 0){
+    state.bought = true;
+    state.buyPrice = state.candles[state.candles.length-1].close;
+    document.getElementById(`profit${i}`).textContent = `Куплено по ${state.buyPrice.toFixed(2)}`;
+  }
+}
+
+function sell(i){
+  const state = taskStates[i];
+  if(state.bought && state.candles.length > 0){
+    const sellPrice = state.candles[state.candles.length-1].close;
+    state.profit = sellPrice - state.buyPrice;
+    state.bought = false;
+    const color = state.profit >= 0 ? '#00b248' : '#e53935';
+    document.getElementById(`profit${i}`).innerHTML = `<span style="color:${color}">Прибыль: ${state.profit.toFixed(2)}</span>`;
+    
+    // Проверить, достигнута ли цель
+    checkAllGoals();
+  }
+}
+
+function checkAllGoals(){
+  const d = T[cur];
+  let successful = 0;
+  taskStates.forEach((state, i) => {
+    const goalNum = parseInt(d.tasks[i].goal.match(/\d+/)[0]);
+    if(state.profit >= goalNum) successful++;
+  });
+  
+  if(successful === 3){
+    calculateSuccess();
+  }
+}
+
+/* в"Ђв"Ђ market в"Ђв"Ђ */
+const P=[
+  {ico:'',nm:'USD/KZT',sub:'Доллар США',  p:470.5, b:470.5, dir:'up',pct:'0.00'},
+  {ico:'',nm:'EUR/KZT',sub:'Евро',        p:512.3, b:512.3, dir:'up',pct:'0.00'},
+  {ico:'',nm:'Золото', sub:'USD / тр.oz', p:3312,  b:3312,  dir:'up',pct:'0.00'},
+  {ico:'', nm:'Нефть',  sub:'Brent USD/бар',p:68.4, b:68.4,  dir:'up',pct:'0.00'},
+  {ico:'',nm:'KASE',   sub:'Казах. индекс',p:4821, b:4821,  dir:'up',pct:'0.00'},
+];
+
+let mktOn=false;
+function startMkt(){
+  if(mktOn)return;mktOn=true;
+  renderRows();renderTick();tickTime();
+  setInterval(()=>{movePrices();renderRows();renderTick();tickTime();},2400);
+}
+
+function movePrices(){
+  P.forEach(p=>{
+    const delta=(Math.random()-.47)*p.b*.005;
+    const prev=p.p;
+    p.p=+(Math.max(p.b*.88,p.p+delta).toFixed(p.b<500?2:0));
+    p.dir=p.p>=prev?'up':'dn';
+    p.pct=(((p.p-p.b)/p.b)*100).toFixed(2);
+  });
+}
+
+function renderRows(){
+  document.getElementById('mktL').innerHTML=P.map((p,i)=>{
+    const s=parseFloat(p.pct)>=0?'+':'';
+    const a=p.dir==='up'?'в–І':'в–ј';
+    const flash=p.dir==='up'?'gn':'rd';
+    return `<div class="mkt-row ${flash}" id="r${i}">
+      <div class="mkt-nm">${p.ico} ${p.nm}<span class="mkt-sub">${p.sub}</span></div>
+      <div class="mkt-pinfo">
+        <span class="mkt-pr">${p.p.toLocaleString('ru')}</span>
+        <span class="mkt-ch ${p.dir}">${a}${s}${p.pct}%</span>
+      </div>
+      <button class="btn-buy"  onclick="trade('КУП','${p.nm}',${p.p})">КУП</button>
+      <button class="btn-sell" onclick="trade('РџР Р"','${p.nm}',${p.p})">РџР Р"</button>
+    </div>`;
+  }).join('');
+  setTimeout(()=>{
+    document.querySelectorAll('.mkt-row').forEach(r=>r.classList.remove('gn','rd'));
+  },550);
+}
+
+function renderTick(){
+  document.getElementById('tick').textContent=
+    P.map(p=>`${p.ico} ${p.nm} ${p.p.toLocaleString('ru')} ${parseFloat(p.pct)>=0?'в–І':'в–ј'}${p.pct}%`).join('  В·  ')+'  В·  ';
+}
+
+function tickTime(){
+  document.getElementById('mktT').textContent=
+    new Date().toLocaleTimeString('ru',{hour12:false})+'  АСТАНА';
+}
+
+let toastTm=null;
+function trade(action,name,price){
+  const el=document.getElementById('toast');
+  const icon=action==='КУП'?'':'';
+  el.textContent=`${icon} ${action}: ${name} @ ${price.toLocaleString('ru')}`;
+  el.classList.add('show');
+  if(toastTm)clearTimeout(toastTm);
+  toastTm=setTimeout(()=>el.classList.remove('show'),1800);
+}
+</script>
+<script>
+(() => {
+  let sent = false;
+  const clamp = (n) => Math.max(0, Math.min(100, n));
+  const parsePercent = (text) => {
+    const m = String(text || '').match(/(\d{1,3})%/);
+    return m ? clamp(parseInt(m[1], 10)) : null;
+  };
+  const send = (score, summary) => {
+    if (sent) return;
+    sent = true;
+    if (window.parent) {
+      window.parent.postMessage({
+        type: 'skillland-game-complete',
+        game: 'economist',
+        score,
+        summary
+      }, '*');
+    }
+  };
+
+  const check = () => {
+    const toast = document.getElementById('toast');
+    const msg = document.getElementById('msg');
+
+    if (toast) {
+      const p = parsePercent(toast.textContent);
+      if (toast.classList.contains('show') && p !== null) {
+        send(p, 'Экономическая игра завершена');
+        return;
+      }
+    }
+
+    if (msg) {
+      const p = parsePercent(msg.textContent);
+      if (p !== null) {
+        send(p, 'Экономическая игра завершена');
+      }
+    }
+  };
+
+  const obs = new MutationObserver(check);
+  obs.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
+  check();
+})();
+</script></body>
+</html>

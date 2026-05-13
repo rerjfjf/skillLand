@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Профессия Повар</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Nunito', sans-serif;
+  overflow: hidden;
+}
+
+/* в"Ђв"Ђ LAYOUT в"Ђв"Ђ */
+.game-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+/* в"Ђв"Ђ ROBOT COLUMN в"Ђв"Ђ */
+.robot-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 160px;
+}
+
+.bubble {
+  background: #fff;
+  border: 2px solid #ebebeb;
+  border-radius: 18px;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #333;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+  position: relative;
+  text-align: center;
+  transition: opacity 0.35s, transform 0.35s;
+  width: 100%;
+}
+
+.bubble.fade-out { opacity: 0; transform: translateX(-6px); }
+
+/* Triangle pointing right */
+.bubble::before {
+  content: '';
+  position: absolute;
+  right: -9px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 8px solid transparent;
+  border-left-color: #ebebeb;
+}
+.bubble::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 7px solid transparent;
+  border-left-color: #ffffff;
+}
+
+.bubble strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  color: #222;
+  margin-bottom: 4px;
+}
+
+/* в"Ђв"Ђ ROBOT SVG wrapper в"Ђв"Ђ */
+.robot-svg {
+  animation: robotFloat 3s ease-in-out infinite;
+}
+
+@keyframes robotFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* в"Ђв"Ђ MODAL в"Ђв"Ђ */
+.modal {
+  width: 340px;
+  height: 520px;
+  background: #f8f8f8;
+  border-radius: 32px;
+  border: 2px solid #efefef;
+  box-shadow:
+    0 32px 64px rgba(0,0,0,0.09),
+    0 6px 20px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* в"Ђв"Ђ TOP HEADER в"Ђв"Ђ */
+.modal-header {
+  width: 100%;
+  padding: 22px 28px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #bbb;
+}
+
+.progress-dots {
+  display: flex;
+  gap: 7px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  transition: background 0.4s, transform 0.3s;
+}
+.dot.active  { background: #333; transform: scale(1.2); }
+.dot.done    { background: #6fcf97; }
+
+/* в"Ђв"Ђ SCENE в"Ђв"Ђ */
+.scene {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: sceneFadeIn 0.4s ease;
+}
+
+@keyframes sceneFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* в"Ђв"Ђ SWIPE HINT в"Ђв"Ђ */
+.swipe-area {
+  padding: 0 0 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.swipe-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  animation: swipeBounce 1.6s ease-in-out infinite;
+}
+
+.swipe-arrow span {
+  font-size: 11px;
+  color: #ccc;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.arrow-lines {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.arrow-line {
+  width: 2px;
+  border-radius: 2px;
+  background: #ddd;
+  animation: arrowFade 1.6s ease-in-out infinite;
+}
+
+.arrow-line:nth-child(1) { height: 6px; animation-delay: 0s; }
+.arrow-line:nth-child(2) { height: 9px; animation-delay: 0.1s; }
+.arrow-line:nth-child(3) { height: 12px; animation-delay: 0.2s; }
+
+.arrow-head {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 7px solid #ccc;
+}
+
+@keyframes swipeBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50%  { transform: translateY(-5px); opacity: 1; }
+}
+
+@keyframes arrowFade {
+  0%, 100% { opacity: 0.4; }
+  50%  { opacity: 1; }
+}
+
+/* в"Ђв"Ђ SUCCESS OVERLAY в"Ђв"Ђ */
+.success-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.88);
+  border-radius: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 20;
+}
+
+.success-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.check-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #6fcf97;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.success-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #444;
+}
+
+@keyframes popIn {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+
+/* в"Ђв"Ђ INTERACTIVE TARGETS в"Ђв"Ђ */
+.target {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  transition: transform 0.15s ease, filter 0.15s;
+}
+
+.target:hover {
+  filter: brightness(1.05);
+}
+
+.target:active {
+  cursor: grabbing;
+}
+
+/* в"Ђв"Ђ FINALE в"Ђв"Ђ */
+.finale-wrap {
+  text-align: center;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.finale-emoji {
+  font-size: 56px;
+  animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.finale-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #222;
+}
+
+.finale-text {
+  font-size: 13px;
+  color: #888;
+  line-height: 1.7;
+}
+
+.restart-btn {
+  margin-top: 8px;
+  padding: 11px 28px;
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-size: 13px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.2s, transform 0.15s;
+}
+.restart-btn:hover { background: #444; transform: scale(1.03); }
+
+/* в"Ђв"Ђ SALT PARTICLE ANIM в"Ђв"Ђ */
+@keyframes saltDrop {
+  0%   { opacity: 0; transform: translateY(-8px); }
+  30%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(30px); }
+}
+
+.salt-grain {
+  animation: saltDrop 0.9s ease-in forwards;
+  animation-delay: var(--delay);
+}
+
+/* в"Ђв"Ђ SPOON в"Ђв"Ђ */
+@keyframes spoonDip {
+  0%   { transform: rotate(0deg) translateY(0); }
+  30%  { transform: rotate(-25deg) translateY(-18px); }
+  60%  { transform: rotate(-25deg) translateY(-18px); }
+  100% { transform: rotate(0deg) translateY(0); }
+}
+
+.spoon-dipping { animation: spoonDip 1s ease-in-out forwards !important; transform-origin: top center; }
+
+</style>
+</head>
+<body>
+
+<div class="game-wrapper">
+
+  <!-- в"Ђв"Ђ ROBOT в"Ђв"Ђ -->
+  <div class="robot-col">
+    <div class="bubble" id="bubble">
+      <strong>Привет! 👋</strong>
+      Я — робот-гид. Помогу освоить профессию повара!
+    </div>
+
+    <div class="robot-svg">
+      <svg width="110" height="148" viewBox="0 0 110 148" xmlns="http://www.w3.org/2000/svg">
+        <!-- Antenna -->
+        <line x1="55" y1="20" x2="55" y2="6" stroke="#d0d0d0" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="55" cy="4" r="5" fill="#ff7043" opacity="0.9"/>
+        <circle cx="55" cy="4" r="2.5" fill="#fff" opacity="0.6"/>
+
+        <!-- Head -->
+        <rect x="20" y="20" width="70" height="52" rx="18" fill="#ffffff" stroke="#e8e8e8" stroke-width="2.5"/>
+
+        <!-- Eye left -->
+        <rect x="28" y="30" width="22" height="16" rx="7" fill="#f0f4ff" stroke="#e0e0e0" stroke-width="1.5"/>
+        <circle cx="39" cy="38" r="5" fill="#3d5afe"/>
+        <circle cx="41" cy="36" r="1.8" fill="rgba(255,255,255,0.8)"/>
+
+        <!-- Eye right -->
+        <rect x="60" y="30" width="22" height="16" rx="7" fill="#f0f4ff" stroke="#e0e0e0" stroke-width="1.5"/>
+        <circle cx="71" cy="38" r="5" fill="#3d5afe"/>
+        <circle cx="73" cy="36" r="1.8" fill="rgba(255,255,255,0.8)"/>
+
+        <!-- Mouth -->
+        <path d="M39 56 Q55 64 71 56" stroke="#d0d0d0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+        <!-- Cheek blush -->
+        <ellipse cx="28" cy="55" rx="7" ry="4" fill="rgba(255,180,160,0.35)"/>
+        <ellipse cx="82" cy="55" rx="7" ry="4" fill="rgba(255,180,160,0.35)"/>
+
+        <!-- Neck -->
+        <rect x="48" y="72" width="14" height="10" rx="5" fill="#ebebeb"/>
+
+        <!-- Body -->
+        <rect x="14" y="82" width="82" height="58" rx="20" fill="#ffffff" stroke="#e8e8e8" stroke-width="2.5"/>
+
+        <!-- Panel -->
+        <rect x="28" y="94" width="54" height="32" rx="10" fill="#f6f8ff" stroke="#e8e8e8" stroke-width="1.5"/>
+
+        <!-- Chef hat on body panel -->
+        <text x="55" y="116" text-anchor="middle" font-size="18">рџЌі</text>
+
+        <!-- Left arm -->
+        <rect x="0" y="86" width="14" height="36" rx="7" fill="#ffffff" stroke="#e8e8e8" stroke-width="2"/>
+        <circle cx="7" cy="125" r="7" fill="#f0f0f0" stroke="#e0e0e0" stroke-width="1.5"/>
+
+        <!-- Right arm -->
+        <rect x="96" y="86" width="14" height="36" rx="7" fill="#ffffff" stroke="#e8e8e8" stroke-width="2"/>
+        <circle cx="103" cy="125" r="7" fill="#f0f0f0" stroke="#e0e0e0" stroke-width="1.5"/>
+
+        <!-- Legs -->
+        <rect x="32" y="138" width="18" height="10" rx="5" fill="#ebebeb"/>
+        <rect x="60" y="138" width="18" height="10" rx="5" fill="#ebebeb"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- в"Ђв"Ђ MODAL в"Ђв"Ђ -->
+  <div class="modal" id="modal">
+
+    <div class="modal-header">
+      <span class="title-label">Задание</span>
+      <div class="progress-dots" id="dots">
+        <div class="dot active" id="d0"></div>
+        <div class="dot" id="d1"></div>
+        <div class="dot" id="d2"></div>
+        <div class="dot" id="d3"></div>
+      </div>
+    </div>
+
+    <div class="scene" id="scene"></div>
+
+    <div class="swipe-area" id="swipeArea">
+      <div class="swipe-arrow">
+        <div class="arrow-head"></div>
+        <div class="arrow-lines">
+          <div class="arrow-line"></div>
+          <div class="arrow-line"></div>
+          <div class="arrow-line"></div>
+        </div>
+        <span>Проведи вверх</span>
+      </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+      <div class="check-circle">вњ"</div>
+      <div class="success-label" id="successLabel">Отлично!</div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const tasks = [
+  {
+    title: "Посоли суп!",
+    bubble: "<strong>Посоли суп! 🍲</strong>Проведи вверх по солонке, чтобы посолить",
+    scene: 'saltSoup',
+    targetId: 'saltTarget',
+    successMsg: 'Суп посолен!'
+  },
+  {
+    title: "Переверни стейк!",
+    bubble: "<strong>Переверни стейк! 🥩</strong>Проведи вверх по стейку на сковороде",
+    scene: 'steak',
+    targetId: 'steakTarget',
+    successMsg: 'Стейк перевёрнут!'
+  },
+  {
+    title: "Укрась торт!",
+    bubble: "<strong>Укрась торт! 🎂</strong>Проведи вверх, чтобы добавить украшения",
+    scene: 'cake',
+    targetId: 'cakeTarget',
+    successMsg: 'Торт украшен!'
+  },
+  {
+    title: "Попробуй блюдо!",
+    bubble: "<strong>Попробуй суп! 🥄</strong>Проведи вверх по ложке, чтобы оценить вкус",
+    scene: 'taste',
+    targetId: 'spoonTarget',
+    successMsg: 'Вкусно!'
+  }
+];
+
+let current = 0;
+let busy = false;
+
+// в"Ђв"Ђ SCENES в"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђ
+
+function scene_saltSoup() {
+  return `
+  <div style="position:relative;width:290px;height:340px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:16px;">
+
+    <!-- Soup bowl -->
+    <svg viewBox="0 0 260 200" width="240" style="position:absolute;bottom:0;">
+      <defs>
+        <linearGradient id="bG" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="100%" stop-color="#e8e2d8"/>
+        </linearGradient>
+        <linearGradient id="sG" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffb347"/>
+          <stop offset="100%" stop-color="#d86f1f"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="130" cy="190" rx="88" ry="14" fill="rgba(0,0,0,0.06)"/>
+      <ellipse cx="130" cy="160" rx="100" ry="38" fill="url(#bG)" stroke="#d8d0c4" stroke-width="2"/>
+      <ellipse cx="130" cy="148" rx="90" ry="28" fill="#fff"/>
+      <ellipse cx="130" cy="148" rx="80" ry="22" fill="url(#sG)"/>
+      <ellipse cx="108" cy="142" rx="28" ry="9" fill="rgba(255,255,255,0.3)"/>
+      <circle cx="100" cy="148" r="5.5" fill="#f2c94c"/>
+      <circle cx="142" cy="154" r="5.5" fill="#27ae60"/>
+      <circle cx="118" cy="158" r="5" fill="#eb5757"/>
+      <circle cx="158" cy="144" r="4.5" fill="#f2c94c"/>
+      <!-- steam -->
+      <path d="M108 100 C103 88,113 82,108 70" stroke="#e0d8d0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M130 100 C125 88,135 82,130 70" stroke="#e0d8d0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M152 100 C147 88,157 82,152 70" stroke="#e0d8d0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <!-- Salt shaker (target) -->
+    <div id="saltTarget" class="target" style="position:absolute;top:10px;right:16px;transform-origin:bottom center;">
+      <svg viewBox="60 45 140 185" width="68">
+        <defs>
+          <linearGradient id="glassG" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.92"/>
+            <stop offset="100%" stop-color="#dfe8f0" stop-opacity="0.5"/>
+          </linearGradient>
+          <linearGradient id="lidG" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#d6d6d6"/>
+            <stop offset="100%" stop-color="#8f8f8f"/>
+          </linearGradient>
+          <radialGradient id="shineG">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.7)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </radialGradient>
+        </defs>
+        <rect x="72" y="80" width="116" height="108" rx="22" fill="url(#glassG)" stroke="#bfcad3" stroke-width="2"/>
+        <ellipse cx="130" cy="152" rx="48" ry="18" fill="rgba(255,255,255,0.95)"/>
+        <rect x="82" y="152" width="96" height="28" fill="rgba(255,255,255,0.95)"/>
+        <ellipse cx="130" cy="80" rx="58" ry="16" fill="url(#glassG)" stroke="#bfcad3" stroke-width="2"/>
+        <rect x="76" y="55" width="108" height="24" rx="10" fill="url(#lidG)" stroke="#777" stroke-width="1.8"/>
+        <ellipse cx="130" cy="55" rx="54" ry="11" fill="url(#lidG)"/>
+        <ellipse cx="100" cy="118" rx="18" ry="44" fill="url(#shineG)" opacity="0.35"/>
+        <text x="130" y="134" text-anchor="middle" font-size="18" fill="#7a8a99" font-family="Nunito,Arial">SALT</text>
+      </svg>
+    </div>
+
+    <!-- Salt particles (shown after swipe) -->
+    <div id="saltParticles" style="position:absolute;top:52px;right:42px;pointer-events:none;display:none;">
+      <svg width="28" height="70">
+        <circle class="salt-grain" cx="10" cy="8"  r="2.2" fill="white" style="--delay:0.0s"/>
+        <circle class="salt-grain" cx="18" cy="18" r="2"   fill="white" style="--delay:0.1s"/>
+        <circle class="salt-grain" cx="8"  cy="30" r="2.2" fill="white" style="--delay:0.15s"/>
+        <circle class="salt-grain" cx="20" cy="44" r="2"   fill="white" style="--delay:0.2s"/>
+        <circle class="salt-grain" cx="12" cy="58" r="2"   fill="white" style="--delay:0.25s"/>
+      </svg>
+    </div>
+
+  </div>`;
+}
+
+function scene_steak() {
+  return `
+  <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+
+    <!-- Pan -->
+    <svg viewBox="0 0 280 60" width="260" style="margin-bottom:-18px;z-index:0;">
+      <defs>
+        <linearGradient id="panG" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#555"/>
+          <stop offset="100%" stop-color="#2a2a2a"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="130" cy="38" rx="110" ry="26" fill="url(#panG)" stroke="#222" stroke-width="2.5"/>
+      <ellipse cx="130" cy="34" rx="100" ry="20" fill="#3a3a3a"/>
+      <rect x="230" y="30" width="46" height="12" rx="6" fill="#444" stroke="#333" stroke-width="1.5"/>
+    </svg>
+
+    <!-- Steak (target) -->
+    <div id="steakTarget" class="target" style="z-index:1;transform-origin:center bottom;">
+      <svg viewBox="0 0 220 175" width="230" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="fG2" cx="48%" cy="42%" r="58%">
+            <stop offset="0%" stop-color="#f9ede0"/><stop offset="55%" stop-color="#f0cbb0"/><stop offset="100%" stop-color="#d4956a"/>
+          </radialGradient>
+          <radialGradient id="mG2" cx="44%" cy="40%" r="58%">
+            <stop offset="0%" stop-color="#e85050"/><stop offset="35%" stop-color="#c83535"/><stop offset="75%" stop-color="#a02020"/><stop offset="100%" stop-color="#7a1515"/>
+          </radialGradient>
+          <radialGradient id="bG2" cx="38%" cy="32%" r="55%">
+            <stop offset="0%" stop-color="#fffaf3"/><stop offset="60%" stop-color="#ede4cc"/><stop offset="100%" stop-color="#c9b98a"/>
+          </radialGradient>
+          <radialGradient id="msG2" cx="36%" cy="30%" r="40%">
+            <stop offset="0%" stop-color="rgba(255,130,100,0.5)"/><stop offset="100%" stop-color="rgba(255,130,100,0)"/>
+          </radialGradient>
+          <clipPath id="mc2">
+            <path d="M46 75 C33 58,35 34,54 22 C73 10,106 9,134 16 C158 22,174 39,175 58 C176 73,167 86,154 94 C140 103,123 106,108 110 C91 115,70 119,55 113 C43 109,36 99,35 89 C34 84,38 79,46 75 Z"/>
+          </clipPath>
+          <filter id="mb2"><feGaussianBlur stdDeviation="0.7"/></filter>
+          <filter id="tb2"><feGaussianBlur stdDeviation="0.4"/></filter>
+        </defs>
+        <path fill="url(#fG2)" stroke="#6b3015" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round" d="M38 90 C22 72,20 46,40 29 C62 10,104 5,140 15 C170 23,190 46,188 71 C187 90,175 104,158 113 C144 121,129 126,119 135 C107 145,88 153,67 149 C46 145,28 133,22 117 C17 105,20 96,38 90 Z"/>
+        <path fill="url(#mG2)" stroke="#6b1515" stroke-width="2.2" d="M46 75 C33 58,35 34,54 22 C73 10,106 9,134 16 C158 22,174 39,175 58 C176 73,167 86,154 94 C140 103,123 106,108 110 C91 115,70 119,55 113 C43 109,36 99,35 89 C34 84,38 79,46 75 Z"/>
+        <path fill="url(#msG2)" d="M46 75 C33 58,35 34,54 22 C73 10,106 9,134 16 C158 22,174 39,175 58 C176 73,167 86,154 94 C140 103,123 106,108 110 C91 115,70 119,55 113 C43 109,36 99,35 89 C34 84,38 79,46 75 Z"/>
+        <g clip-path="url(#mc2)" filter="url(#tb2)">
+          <path stroke="rgba(255,235,210,0.82)" stroke-width="3.8" fill="none" stroke-linecap="round" d="M60 40 C75 36,90 42,105 38 C118 34,130 30,148 35"/>
+          <path stroke="rgba(255,235,210,0.75)" stroke-width="4.5" fill="none" stroke-linecap="round" d="M50 60 C65 53,82 58,96 54 C112 50,128 44,155 52"/>
+          <path stroke="rgba(255,230,200,0.70)" stroke-width="3.2" fill="none" stroke-linecap="round" d="M48 80 C62 74,80 78,95 73 C112 68,135 65,158 72"/>
+          <path stroke="rgba(55,15,5,0.42)" stroke-width="5.5" fill="none" stroke-linecap="round" d="M65 27 C75 48,76 68,68 90" filter="url(#mb2)"/>
+          <path stroke="rgba(55,15,5,0.35)" stroke-width="5" fill="none" stroke-linecap="round" d="M100 22 C110 44,112 65,103 88" filter="url(#mb2)"/>
+          <path stroke="rgba(55,15,5,0.28)" stroke-width="4.5" fill="none" stroke-linecap="round" d="M135 20 C143 40,148 61,140 84" filter="url(#mb2)"/>
+        </g>
+        <ellipse cx="141" cy="30" rx="16" ry="12.5" fill="url(#bG2)" stroke="#8a7040" stroke-width="2.3"/>
+        <ellipse cx="136" cy="26" rx="5" ry="3.5" fill="rgba(255,253,245,0.7)" transform="rotate(-10,136,26)"/>
+      </svg>
+    </div>
+
+    <!-- Smoke lines after flip -->
+    <div id="smokeLiner" style="display:none;position:absolute;top:60px;left:50%;transform:translateX(-50%);">
+      <svg width="180" height="30">
+        <path d="M40 20 C38 14,44 10,42 4" stroke="#ddd" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M90 20 C88 14,94 10,92 4" stroke="#ddd" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M140 20 C138 14,144 10,142 4" stroke="#ddd" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+  </div>`;
+}
+
+function scene_cake() {
+  return `
+  <div id="cakeTarget" class="target" style="display:flex;align-items:center;justify-content:center;">
+    <svg viewBox="0 0 260 260" width="250" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="plG3" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fffefe"/><stop offset="100%" stop-color="#f3dbe8"/>
+        </linearGradient>
+        <linearGradient id="csG3" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffd8e8"/><stop offset="100%" stop-color="#f5a9c6"/>
+        </linearGradient>
+        <linearGradient id="ctG3" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ffeefd"/><stop offset="100%" stop-color="#ffc9df"/>
+        </linearGradient>
+        <linearGradient id="crG3" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#fffdfd"/><stop offset="100%" stop-color="#ffeef7"/>
+        </linearGradient>
+        <linearGradient id="idG3" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#fff8fc"/><stop offset="100%" stop-color="#ffddec"/>
+        </linearGradient>
+        <radialGradient id="chG3" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#ff9bb2"/><stop offset="45%" stop-color="#e94073"/><stop offset="100%" stop-color="#a80f3f"/>
+        </radialGradient>
+        <radialGradient id="gdG3" cx="40%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#fff4c7"/><stop offset="100%" stop-color="#f0c95a"/>
+        </radialGradient>
+      </defs>
+
+      <ellipse cx="130" cy="210" rx="85" ry="18" fill="rgba(150,85,120,0.10)"/>
+      <ellipse cx="130" cy="200" rx="95" ry="22" fill="url(#plG3)" stroke="#ebc8d8" stroke-width="2"/>
+      <ellipse cx="130" cy="196" rx="68" ry="12" fill="rgba(255,255,255,0.7)"/>
+
+      <rect x="62" y="95" width="136" height="88" rx="18" fill="url(#csG3)" stroke="#d87ea7" stroke-width="2.2"/>
+      <ellipse cx="130" cy="95" rx="68" ry="22" fill="url(#ctG3)" stroke="#d87ea7" stroke-width="2.2"/>
+
+      <path fill="url(#idG3)" d="M62 95 C68 106,78 108,82 96 C86 84,94 84,98 96 C102 111,112 112,116 97 C120 82,130 82,134 97 C138 114,148 113,152 98 C156 84,166 84,170 98 C174 110,184 109,190 96 L198 95 C196 86,182 78,130 77 C78 78,64 86,62 95 Z"/>
+
+      <rect x="68" y="132" width="124" height="12" rx="6" fill="url(#crG3)" opacity="0.95"/>
+
+      <g fill="#fff7fb" stroke="#f5d8e8" stroke-width="0.5">
+        <circle cx="76" cy="182" r="7"/><circle cx="92" cy="184" r="7"/>
+        <circle cx="108" cy="185" r="7"/><circle cx="124" cy="186" r="7"/>
+        <circle cx="140" cy="186" r="7"/><circle cx="156" cy="185" r="7"/>
+        <circle cx="172" cy="184" r="7"/><circle cx="188" cy="182" r="7"/>
+      </g>
+
+      <g fill="url(#crG3)" stroke="#f2d8e6" stroke-width="1">
+        <circle cx="88" cy="84" r="10"/><circle cx="108" cy="78" r="11"/>
+        <circle cx="130" cy="75" r="12"/><circle cx="152" cy="78" r="11"/>
+        <circle cx="172" cy="84" r="10"/>
+      </g>
+
+      <!-- Cherries -->
+      <g>
+        <circle cx="108" cy="63" r="8" fill="url(#chG3)"/>
+        <path d="M108 56 C108 49,114 46,118 43" fill="none" stroke="#5e9b45" stroke-width="2" stroke-linecap="round"/>
+      </g>
+      <g>
+        <circle cx="130" cy="58" r="9" fill="url(#chG3)"/>
+        <path d="M130 50 C131 42,137 39,143 36" fill="none" stroke="#5e9b45" stroke-width="2" stroke-linecap="round"/>
+      </g>
+      <g>
+        <circle cx="152" cy="63" r="8" fill="url(#chG3)"/>
+        <path d="M152 56 C152 49,147 45,143 41" fill="none" stroke="#5e9b45" stroke-width="2" stroke-linecap="round"/>
+      </g>
+
+      <!-- Gold pearls -->
+      <g>
+        <circle cx="82" cy="108" r="3.2" fill="url(#gdG3)"/>
+        <circle cx="100" cy="114" r="3.2" fill="url(#gdG3)"/>
+        <circle cx="120" cy="108" r="3.2" fill="url(#gdG3)"/>
+        <circle cx="140" cy="114" r="3.2" fill="url(#gdG3)"/>
+        <circle cx="160" cy="108" r="3.2" fill="url(#gdG3)"/>
+        <circle cx="178" cy="114" r="3.2" fill="url(#gdG3)"/>
+      </g>
+
+      <!-- Extra decorations — revealed on swipe -->
+      <g id="cakeExtras" style="opacity:0;transition:opacity 0.5s;">
+        <circle cx="90" cy="72" r="6" fill="url(#chG3)"/>
+        <path d="M90 67 C90 61,95 58,98 55" fill="none" stroke="#5e9b45" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="170" cy="72" r="6" fill="url(#chG3)"/>
+        <path d="M170 67 C170 61,165 58,162 55" fill="none" stroke="#5e9b45" stroke-width="1.8" stroke-linecap="round"/>
+        <!-- candles -->
+        <rect x="95" y="100" width="6" height="18" rx="3" fill="#f7c59f"/>
+        <ellipse cx="98" cy="100" rx="4" ry="2.5" fill="#ffec9e"/>
+        <rect x="145" y="96" width="6" height="22" rx="3" fill="#b8f0c8"/>
+        <ellipse cx="148" cy="96" rx="4" ry="2.5" fill="#fff9c4"/>
+        <!-- flames -->
+        <path d="M98 100 C95 96,97 92,98 88 C99 92,101 96,98 100 Z" fill="#ff9800" opacity="0.9"/>
+        <path d="M148 96 C145 92,147 88,148 84 C149 88,151 92,148 96 Z" fill="#ff9800" opacity="0.9"/>
+      </g>
+
+    </svg>
+  </div>`;
+}
+
+function scene_taste() {
+  return `
+  <div style="position:relative;width:290px;height:320px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;">
+
+    <!-- Finished soup (with salt dots) -->
+    <svg viewBox="0 0 260 200" width="240" style="position:absolute;bottom:0;">
+      <defs>
+        <linearGradient id="bF" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#e8e2d8"/>
+        </linearGradient>
+        <linearGradient id="sF" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffb347"/><stop offset="100%" stop-color="#d86f1f"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="130" cy="190" rx="88" ry="14" fill="rgba(0,0,0,0.06)"/>
+      <ellipse cx="130" cy="160" rx="100" ry="38" fill="url(#bF)" stroke="#d8d0c4" stroke-width="2"/>
+      <ellipse cx="130" cy="148" rx="90" ry="28" fill="#fff"/>
+      <ellipse cx="130" cy="148" rx="80" ry="22" fill="url(#sF)"/>
+      <ellipse cx="108" cy="142" rx="28" ry="9" fill="rgba(255,255,255,0.3)"/>
+      <circle cx="100" cy="148" r="5.5" fill="#f2c94c"/>
+      <circle cx="142" cy="154" r="5.5" fill="#27ae60"/>
+      <circle cx="118" cy="158" r="5" fill="#eb5757"/>
+      <circle cx="158" cy="144" r="4.5" fill="#f2c94c"/>
+      <!-- salt dots -->
+      <circle cx="112" cy="138" r="1.5" fill="rgba(255,255,255,0.9)"/>
+      <circle cx="126" cy="134" r="1.5" fill="rgba(255,255,255,0.9)"/>
+      <circle cx="138" cy="140" r="1.5" fill="rgba(255,255,255,0.9)"/>
+      <circle cx="148" cy="135" r="1.5" fill="rgba(255,255,255,0.9)"/>
+    </svg>
+
+    <!-- Spoon (target) -->
+    <div id="spoonTarget" class="target" style="position:absolute;right:22px;bottom:52px;transform-origin:top center;">
+      <svg viewBox="0 0 64 180" width="40">
+        <defs>
+          <linearGradient id="spG" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#e8e8e8"/>
+            <stop offset="100%" stop-color="#b8b8b8"/>
+          </linearGradient>
+        </defs>
+        <!-- bowl -->
+        <ellipse cx="32" cy="32" rx="24" ry="28" fill="url(#spG)" stroke="#cccccc" stroke-width="2"/>
+        <ellipse cx="30" cy="28" rx="15" ry="17" fill="rgba(255,179,71,0.65)"/>
+        <ellipse cx="26" cy="24" rx="7" ry="8" fill="rgba(255,255,255,0.3)"/>
+        <!-- handle -->
+        <path d="M29 58 C28 80,29 120,30 168" stroke="#c8c8c8" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M35 58 C36 80,35 120,34 168" stroke="#e0e0e0" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+  </div>`;
+}
+
+// в"Ђв"Ђ GAME LOGIC в"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђв"Ђ
+
+function updateDots(idx) {
+  for (let i = 0; i < tasks.length; i++) {
+    const d = document.getElementById('d' + i);
+    d.className = 'dot' + (i < idx ? ' done' : i === idx ? ' active' : '');
+  }
+}
+
+function setBubble(html, delay = 0) {
+  const el = document.getElementById('bubble');
+  el.classList.add('fade-out');
+  setTimeout(() => {
+    el.innerHTML = html;
+    el.classList.remove('fade-out');
+  }, delay || 350);
+}
+
+function showScene(sceneKey) {
+  const el = document.getElementById('scene');
+  el.style.opacity = '0';
+  setTimeout(() => {
+    switch(sceneKey) {
+      case 'saltSoup': el.innerHTML = scene_saltSoup(); break;
+      case 'steak':    el.innerHTML = scene_steak();    break;
+      case 'cake':     el.innerHTML = scene_cake();     break;
+      case 'taste':    el.innerHTML = scene_taste();    break;
+    }
+    el.style.transition = 'opacity 0.35s';
+    el.style.opacity = '1';
+  }, 200);
+}
+
+function initTask(idx) {
+  if (idx >= tasks.length) { showFinale(); return; }
+  const t = tasks[idx];
+  updateDots(idx);
+  setBubble(t.bubble);
+  showScene(t.scene);
+  document.getElementById('swipeArea').style.display = '';
+
+  setTimeout(() => {
+    attachSwipe(t.targetId, () => doComplete(idx));
+  }, 450);
+}
+
+function attachSwipe(targetId, cb) {
+  const el = document.getElementById(targetId);
+  if (!el) return;
+
+  let sy = null, sx = null;
+
+  const down = (y, x) => { sy = y; sx = x; };
+  const up   = (y, x) => {
+    if (sy === null) return;
+    const dy = sy - y, dx = Math.abs(sx - x);
+    sy = null;
+    if (dy > 38 && dx < 70 && !busy) cb();
+  };
+
+  el.addEventListener('mousedown', e => down(e.clientY, e.clientX));
+  document.addEventListener('mouseup',  e => up(e.clientY, e.clientX), { once: false });
+  el.addEventListener('touchstart', e => { const t = e.touches[0]; down(t.clientY, t.clientX); }, { passive: true });
+  document.addEventListener('touchend', e => { const t = e.changedTouches[0]; up(t.clientY, t.clientX); }, { passive: true });
+}
+
+function doComplete(idx) {
+  if (busy) return;
+  busy = true;
+
+  playAnim(tasks[idx].scene, () => {
+    const ov = document.getElementById('successOverlay');
+    document.getElementById('successLabel').textContent = tasks[idx].successMsg;
+    ov.classList.add('show');
+    setTimeout(() => {
+      ov.classList.remove('show');
+      current++;
+      busy = false;
+      initTask(current);
+    }, 1300);
+  });
+}
+
+function playAnim(scene, done) {
+  switch(scene) {
+
+    case 'saltSoup': {
+      const sh = document.getElementById('saltTarget');
+      const sp = document.getElementById('saltParticles');
+      if (!sh) { done(); return; }
+      sh.style.transition = 'transform 0.55s cubic-bezier(0.34,1.2,0.64,1)';
+      sh.style.transform = 'rotate(-68deg) translateY(-28px) translateX(-8px)';
+      setTimeout(() => {
+        if (sp) sp.style.display = 'block';
+        setTimeout(() => {
+          sh.style.transform = 'rotate(0deg)';
+          setTimeout(done, 700);
+        }, 900);
+      }, 550);
+      break;
+    }
+
+    case 'steak': {
+      const st = document.getElementById('steakTarget');
+      if (!st) { done(); return; }
+      // Flip: shrink в†' reverse в†' grow back
+      st.style.transition = 'transform 0.3s ease-in';
+      st.style.transform = 'scaleY(0.05) translateY(10px)';
+      setTimeout(() => {
+        st.style.transition = 'none';
+        st.style.transform = 'scaleY(0.05) scaleX(-1) translateY(10px)';
+        requestAnimationFrame(() => {
+          st.style.transition = 'transform 0.35s cubic-bezier(0.34,1.4,0.64,1)';
+          st.style.transform = 'scaleX(-1) translateY(0)';
+          const sm = document.getElementById('smokeLiner');
+          if (sm) sm.style.display = 'block';
+          setTimeout(done, 600);
+        });
+      }, 320);
+      break;
+    }
+
+    case 'cake': {
+      const cakeEl = document.getElementById('cakeTarget');
+      if (cakeEl) {
+        cakeEl.style.transition = 'transform 0.3s cubic-bezier(0.34,1.6,0.64,1)';
+        cakeEl.style.transform = 'scale(1.04)';
+        setTimeout(() => { cakeEl.style.transform = 'scale(1)'; }, 350);
+      }
+      const ex = document.getElementById('cakeExtras');
+      if (ex) ex.style.opacity = '1';
+      setTimeout(done, 700);
+      break;
+    }
+
+    case 'taste': {
+      const sp = document.getElementById('spoonTarget');
+      if (!sp) { done(); return; }
+      sp.classList.add('spoon-dipping');
+      setTimeout(done, 1050);
+      break;
+    }
+
+    default: setTimeout(done, 400);
+  }
+}
+
+function showFinale() {
+  updateDots(tasks.length);
+  setBubble('<strong>🎉 Поздравляю!</strong>Ты прошёл все задания и стал настоящим поваром!');
+  document.getElementById('swipeArea').style.display = 'none';
+
+  const sceneEl = document.getElementById('scene');
+  sceneEl.style.opacity = '0';
+  setTimeout(() => {
+    sceneEl.innerHTML = `
+      <div class="finale-wrap">
+        <div class="finale-emoji">👨‍🍳</div>
+        <div class="finale-title">Ты — настоящий повар!</div>
+        <div class="finale-text">
+          Повар — это творческая профессия.<br>
+          Вкус, точность, скорость и любовь<br>к кулинарии — вот секрет успеха!
+        </div>
+        <button class="restart-btn" onclick="restart()">Начать заново</button>
+      </div>`;
+    sceneEl.style.transition = 'opacity 0.4s';
+    sceneEl.style.opacity = '1';
+  }, 220);
+}
+
+function restart() {
+  current = 0;
+  busy = false;
+  document.getElementById('swipeArea').style.display = '';
+  initTask(0);
+}
+
+// в"Ђв"Ђ START в"Ђв"Ђ
+initTask(0);
+</script>
+<script>
+(() => {
+  let sent = false;
+  const send = () => {
+    if (sent) return;
+    sent = true;
+    if (window.parent) {
+      window.parent.postMessage({
+        type: 'skillland-game-complete',
+        game: 'chef',
+        score: 100,
+        summary: 'Игра повара завершена'
+      }, '*');
+    }
+  };
+
+  const check = () => {
+    if (document.querySelector('.finale-wrap')) {
+      send();
+    }
+  };
+
+  const obs = new MutationObserver(check);
+  obs.observe(document.body, { subtree: true, childList: true, attributes: true });
+  check();
+})();
+</script></body>
+</html>
