@@ -1,0 +1,13 @@
+{
+  "name": "skillland-2",
+  "version": "1.0.0",
+  "description": "SkillLand - локальный сайт с профориентацией, мини-играми, аккаунтами, результатами, отзывами и скрытой админ-панелью. Проект запускается без сборки: сервер отдает обычные HTML-файлы, а данные сохраняются в SQLite-базу `skillland.db`.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
