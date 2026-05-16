@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <title>Экономист — Обучение</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -14,7 +14,7 @@ body{
   justify-content:center;
   background:linear-gradient(150deg,#e4eaf0 0%,#d5dce6 100%);
   font-family:'Segoe UI',Arial,sans-serif;
-  overflow:hidden;
+  overflow:auto;
 }
 
 /* в"Ђв"Ђв"Ђ LAYOUT в"Ђв"Ђв"Ђ */
@@ -257,6 +257,27 @@ body{
 }
 .explain-txt{
   font-size:6.8px;color:#546e7a;line-height:1.55;
+}
+
+@media (max-width: 900px){
+  body{align-items:flex-start;padding:14px 10px;min-height:100svh}
+  .layout{width:100%;max-width:520px;flex-direction:column;align-items:center;gap:14px;padding:0}
+  .robot-outer{width:100%;height:230px;display:flex;justify-content:center;overflow:hidden}
+  .scene{left:50%;transform:translateX(-50%) scale(.48);transform-origin:top center}
+  .chat-section{width:100%;order:2}
+  .phone-section{order:3;transform:scale(.92);transform-origin:top center;margin-top:-8px}
+  .speech-bubble{font-size:15px;line-height:1.45;padding:16px;border-radius:18px}
+  .btn-area{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+  .class-btn{width:100%;min-height:46px;font-size:14px}
+}
+
+@media (max-width: 380px){
+  body{padding-left:8px;padding-right:8px}
+  .robot-outer{height:190px}
+  .scene{transform:translateX(-50%) scale(.40)}
+  .phone-section{transform:scale(.82);margin-top:-24px}
+  .speech-bubble{font-size:14px;padding:14px}
+  .btn-area{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -638,7 +659,7 @@ function movePrices(){
 function renderRows(){
   document.getElementById('mktL').innerHTML=P.map((p,i)=>{
     const s=parseFloat(p.pct)>=0?'+':'';
-    const a=p.dir==='up'?'в–І':'в–ј';
+    const a=p.dir==='up'?'▲':'▼';
     const flash=p.dir==='up'?'gn':'rd';
     return `<div class="mkt-row ${flash}" id="r${i}">
       <div class="mkt-nm">${p.ico} ${p.nm}<span class="mkt-sub">${p.sub}</span></div>
@@ -647,7 +668,7 @@ function renderRows(){
         <span class="mkt-ch ${p.dir}">${a}${s}${p.pct}%</span>
       </div>
       <button class="btn-buy"  onclick="trade('КУП','${p.nm}',${p.p})">КУП</button>
-      <button class="btn-sell" onclick="trade('РџР Р"','${p.nm}',${p.p})">РџР Р"</button>
+      <button class="btn-sell" onclick="trade('ПРОД','${p.nm}',${p.p})">ПРОД</button>
     </div>`;
   }).join('');
   setTimeout(()=>{
@@ -657,7 +678,7 @@ function renderRows(){
 
 function renderTick(){
   document.getElementById('tick').textContent=
-    P.map(p=>`${p.ico} ${p.nm} ${p.p.toLocaleString('ru')} ${parseFloat(p.pct)>=0?'в–І':'в–ј'}${p.pct}%`).join('  В·  ')+'  В·  ';
+    P.map(p=>`${p.ico} ${p.nm} ${p.p.toLocaleString('ru')} ${parseFloat(p.pct)>=0?'▲':'▼'}${p.pct}%`).join('  ·  ')+'  ·  ';
 }
 
 function tickTime(){

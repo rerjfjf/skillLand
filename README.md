@@ -25,7 +25,7 @@ https://nodejs.org
 Перейти в папку проекта:
 
 ```bash
-cd "/Users/nikitasokovyh/Downloads/skillland 2"
+cd "/Users/nikitasokovyh/skillland 3/skillland 2"
 ```
 
 Запустить скрипт через `zsh`:
@@ -75,7 +75,7 @@ xattr -d com.apple.quarantine start.sh 2>/dev/null || true
 Можно запустить сервер напрямую:
 
 ```bash
-cd "/Users/nikitasokovyh/Downloads/skillland 2"
+cd "/Users/nikitasokovyh/skillland 3/skillland 2"
 NODE_NO_WARNINGS=1 node server.js
 ```
 
@@ -174,14 +174,9 @@ kill PID
 - Встроенный модуль `node:sqlite` на Node.js 22+ или системный `sqlite3` на Node.js 20.
 - SQLite - база данных в файле `skillland.db`.
 - Bash - скрипт запуска `start.sh`.
+- `package.json` и `render.yaml` - запуск на Render.
 
-В проекте нет сборщика, npm-зависимостей и `package.json`. Поэтому не нужны команды:
-
-```bash
-npm install
-npm run dev
-npm run build
-```
+В проекте нет сборщика и внешних npm-зависимостей. `npm install` нужен только Render, чтобы платформа увидела Node-проект.
 
 ## Структура проекта
 
@@ -191,6 +186,10 @@ skillland 2/
   server.js               Node.js сервер, API и работа с базой
   admin.html              скрытая админ-панель
   start.sh                запуск сайта одной командой
+  package.json            команды запуска для Render
+  render.yaml             готовая конфигурация Render
+  SkillLand-Windows.zip   архив приложения для Windows
+  SkillLand-macOS.zip     архив приложения для macOS
   skillland.db            SQLite-база аккаунтов, результатов и отзывов
   reviews.json.migrated   старый файл отзывов после переноса в базу
   carta.html              карта профессий
@@ -550,7 +549,7 @@ curl -X DELETE http://localhost:3000/api/admin/delete-account \
 1. Запустить сервер на компьютере:
 
 ```bash
-cd "/Users/nikitasokovyh/Downloads/skillland 2"
+cd "/Users/nikitasokovyh/skillland 3/skillland 2"
 NODE_NO_WARNINGS=1 node server.js
 ```
 
@@ -632,6 +631,28 @@ http://localhost:3000/secret-admin-panel-x7k9
 ```
 
 Если открыть просто `admin.html`, часть функций может работать неправильно, потому что данные админки приходят через серверное API.
+
+## Скачивание приложений
+
+На главной странице есть две кнопки:
+
+- `Скачать для Windows` - скачивает `SkillLand-Windows.zip`;
+- `Скачать для macOS` - скачивает `SkillLand-macOS.zip`.
+
+EXE-файл из Windows-архива на macOS напрямую не запускается. Для Mac используется отдельный архив `SkillLand-macOS.zip` с `SkillLand.app`, который открывает тот же сайт и мини-игры через macOS-запускатель. Если macOS покажет предупреждение безопасности, откройте приложение через правый клик -> `Открыть`.
+
+## Публикация на Render
+
+Проект уже подготовлен для Render:
+
+```text
+Build Command: npm install --omit=dev
+Start Command: npm run render-start
+Health Check Path: /healthz
+Node Version: 22
+```
+
+Если используется `render.yaml`, Render сам возьмет эти настройки. На Render браузер автоматически не открывается, база создается во временном файле `/tmp/skillland.db`, а сайт слушает порт из переменной `PORT`.
 
 ## Что важно перед публикацией в интернет
 

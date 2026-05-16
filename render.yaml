@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: skillland
+    env: node
+    plan: free
+    buildCommand: npm install --omit=dev
+    startCommand: npm run render-start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: SKILLLAND_NO_BROWSER
+        value: "1"
+      - key: HOST
+        value: 0.0.0.0

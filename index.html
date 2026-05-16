@@ -2,10 +2,20 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>SkillLand</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    img,
+    iframe {
+      max-width: 100%;
+    }
 
     :root {
       --text: #050505;
@@ -18,7 +28,7 @@
       color: var(--text);
       overflow-x: hidden;
       background: #000;
-      transition: background-color 1.1s ease;
+      transition: background-color 1.1s ease, color .35s ease;
     }
 
     body.no-scroll { overflow: hidden; }
@@ -27,39 +37,297 @@
       min-height: 100vh;
       position: relative;
       overflow: hidden;
+      padding-bottom: 150px;
       background:
-        radial-gradient(900px 720px at 82% 42%, rgba(73, 83, 255, .90) 0%, rgba(102, 99, 255, .80) 30%, rgba(139, 140, 255, .48) 48%, rgba(245, 244, 255, .08) 72%, transparent 100%),
-        radial-gradient(840px 700px at 20% 80%, rgba(66, 91, 244, .75) 0%, rgba(132, 172, 255, .65) 30%, rgba(222, 241, 255, .58) 55%, transparent 78%),
-        linear-gradient(118deg, #83a8f7 0%, #eef4ff 42%, #f5f0ff 55%, #6970ff 100%);
+        radial-gradient(720px 520px at 49% 21%, rgba(255,255,255,.92) 0%, rgba(246,248,255,.72) 32%, rgba(214,224,255,.28) 58%, transparent 76%),
+        radial-gradient(900px 540px at 76% 19%, rgba(86,100,241,.83) 0%, rgba(111,120,246,.70) 34%, rgba(163,174,255,.30) 62%, transparent 79%),
+        radial-gradient(760px 640px at 4% 14%, rgba(63,93,238,.86) 0%, rgba(103,150,255,.58) 42%, rgba(205,233,255,.22) 72%, transparent 88%),
+        radial-gradient(980px 440px at 38% 77%, rgba(255,255,255,.78) 0%, rgba(224,241,255,.46) 36%, rgba(151,181,255,.18) 66%, transparent 86%),
+        linear-gradient(112deg, #4068f2 0%, #9dc8ff 30%, #eff4ff 52%, #c7c8ff 72%, #6676f4 100%);
+      background-size: cover;
+      animation: none;
     }
 
     .page::before {
       content: "";
       position: absolute;
-      inset: -18%;
+      inset: -12% -8% 42%;
+      z-index: 0;
       background:
-        radial-gradient(ellipse at 18% 53%, rgba(255,255,255,.48) 0 13%, rgba(255,255,255,.16) 22%, transparent 46%),
-        radial-gradient(ellipse at 18% 71%, rgba(255,255,255,.34) 0 9%, rgba(255,255,255,.08) 20%, transparent 42%);
-      filter: blur(18px);
-      opacity: .78;
-      transform: rotate(-9deg);
+        radial-gradient(ellipse 54% 30% at 50% 44%, rgba(255,255,255,.96) 0%, rgba(255,255,255,.58) 36%, transparent 72%),
+        radial-gradient(ellipse 42% 24% at 17% 70%, rgba(255,255,255,.48) 0%, rgba(222,242,255,.26) 42%, transparent 76%),
+        radial-gradient(ellipse 50% 28% at 78% 40%, rgba(218,226,255,.46) 0%, rgba(105,119,244,.20) 50%, transparent 82%),
+        repeating-linear-gradient(116deg, rgba(255,255,255,.115) 0 2px, transparent 2px 34px);
+      filter: blur(10px) saturate(1.12);
+      opacity: .74;
+      transform: rotate(-6deg) translate3d(0,0,0);
+      pointer-events: none;
+      mix-blend-mode: screen;
+      animation: none;
+    }
+
+    .page::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      z-index: 1;
+      height: 310px;
+      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.55) 55%, #000 100%);
       pointer-events: none;
     }
 
+    .cloud-field {
+      position: absolute;
+      inset: -18% -14% 22%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: visible;
+      isolation: isolate;
+      opacity: .78;
+    }
+
+    .cloud-layer,
+    .cloud-grain,
+    .cloud-field::before,
+    .cloud-field::after {
+      position: absolute;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .cloud-field::before,
+    .cloud-field::after {
+      content: "";
+      border-radius: 999px;
+      mix-blend-mode: screen;
+    }
+
+    .cloud-field::before {
+      left: -18%;
+      top: 3%;
+      width: 78vw;
+      height: 72vh;
+      background:
+        radial-gradient(ellipse at 20% 35%, rgba(255,255,255,.88) 0%, rgba(230,245,255,.52) 24%, transparent 54%),
+        radial-gradient(ellipse at 47% 48%, rgba(255,255,255,.58) 0%, rgba(201,229,255,.32) 30%, transparent 64%),
+        radial-gradient(ellipse at 68% 62%, rgba(255,255,255,.34) 0%, rgba(142,184,255,.20) 34%, transparent 68%);
+      filter: saturate(1.20);
+      opacity: .74;
+      transform: rotate(-17deg);
+      animation: none;
+    }
+
+    .cloud-field::after {
+      right: -16%;
+      top: -22%;
+      width: 76vw;
+      height: 78vh;
+      background:
+        radial-gradient(ellipse at 45% 48%, rgba(77,88,255,.72) 0%, rgba(107,115,255,.50) 38%, transparent 72%),
+        radial-gradient(ellipse at 18% 68%, rgba(255,255,255,.30) 0%, rgba(187,198,255,.20) 34%, transparent 66%);
+      filter: saturate(1.32);
+      opacity: .74;
+      transform: rotate(10deg);
+      animation: none;
+    }
+
+    .cloud-layer {
+      left: 50%;
+      top: 50%;
+      border-radius: 999px;
+      filter: saturate(1.34);
+      mix-blend-mode: screen;
+      opacity: .88;
+      transform: translate3d(-50%, -50%, 0);
+    }
+
+    .cloud-layer-a {
+      left: 21%;
+      top: 50%;
+      width: 78vw;
+      height: 60vh;
+      background:
+        radial-gradient(ellipse at 20% 47%, rgba(255,255,255,.88) 0%, rgba(223,241,255,.66) 23%, rgba(142,185,255,.36) 47%, transparent 72%),
+        radial-gradient(ellipse at 58% 36%, rgba(255,255,255,.62) 0%, rgba(192,218,255,.36) 34%, transparent 68%),
+        radial-gradient(ellipse at 82% 55%, rgba(255,255,255,.36) 0%, rgba(127,146,255,.30) 36%, transparent 72%);
+      animation: none;
+    }
+
+    .cloud-layer-b {
+      left: 74%;
+      top: 32%;
+      width: 72vw;
+      height: 54vh;
+      background:
+        radial-gradient(ellipse at 35% 48%, rgba(118,125,255,.68) 0%, rgba(91,102,255,.60) 38%, transparent 74%),
+        radial-gradient(ellipse at 68% 58%, rgba(170,176,255,.58) 0%, rgba(92,107,255,.38) 42%, transparent 78%),
+        radial-gradient(ellipse at 18% 34%, rgba(255,255,255,.42) 0%, rgba(255,255,255,.18) 36%, transparent 68%);
+      animation: none;
+    }
+
+    .cloud-layer-c {
+      left: 47%;
+      top: 66%;
+      width: 86vw;
+      height: 42vh;
+      background:
+        radial-gradient(ellipse at 25% 52%, rgba(196,232,255,.54) 0%, rgba(111,160,255,.34) 44%, transparent 76%),
+        radial-gradient(ellipse at 58% 48%, rgba(255,255,255,.46) 0%, rgba(211,222,255,.28) 36%, transparent 70%),
+        radial-gradient(ellipse at 88% 42%, rgba(90,102,255,.48) 0%, rgba(106,117,255,.24) 46%, transparent 78%);
+      filter: saturate(1.28);
+      opacity: .78;
+      animation: none;
+    }
+
+    .cloud-grain {
+      inset: -6%;
+      opacity: .26;
+      mix-blend-mode: soft-light;
+      background-image:
+        radial-gradient(circle at 14% 24%, rgba(255,255,255,.42) 0 1px, transparent 2px),
+        radial-gradient(circle at 46% 62%, rgba(255,255,255,.26) 0 1px, transparent 2px),
+        radial-gradient(circle at 76% 38%, rgba(255,255,255,.24) 0 1px, transparent 2px);
+      background-size: 92px 92px, 134px 134px, 178px 178px;
+      animation: none;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      width: 58vw;
+      height: 28vw;
+      min-width: 520px;
+      min-height: 260px;
+      border-radius: 50%;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(255,255,255,.58), transparent 60%),
+        radial-gradient(ellipse at 55% 46%, rgba(255,255,255,.42), transparent 62%),
+        radial-gradient(ellipse at 82% 56%, rgba(210,224,255,.34), transparent 62%);
+      filter: blur(30px);
+      opacity: .58;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .hero::before {
+      left: 50%;
+      top: 48%;
+      width: min(1040px, 88vw);
+      height: min(560px, 58vh);
+      min-width: 0;
+      min-height: 0;
+      background:
+        radial-gradient(ellipse at 47% 43%, rgba(255,255,255,.98) 0%, rgba(255,255,255,.74) 34%, rgba(226,238,255,.34) 58%, transparent 82%),
+        radial-gradient(ellipse at 24% 68%, rgba(211,233,255,.58) 0%, rgba(181,214,255,.30) 46%, transparent 76%),
+        radial-gradient(ellipse at 77% 28%, rgba(154,162,255,.38) 0%, rgba(102,115,255,.22) 48%, transparent 74%);
+      filter: blur(76px) saturate(1.22);
+      opacity: .96;
+      transform: translate3d(-50%, -50%, 0);
+      animation: none;
+    }
+
+    .hero::after {
+      right: -10vw;
+      top: 6vh;
+      width: min(760px, 62vw);
+      height: min(360px, 38vh);
+      min-width: 0;
+      min-height: 0;
+      background:
+        radial-gradient(ellipse at 46% 45%, rgba(95,105,255,.48), rgba(124,133,255,.22) 46%, transparent 78%),
+        radial-gradient(ellipse at 16% 72%, rgba(255,255,255,.24), transparent 70%);
+      filter: blur(58px) saturate(1.18);
+      opacity: .62;
+      animation: none;
+    }
+
     .navbar {
-      position: relative;
-      z-index: 35;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 70;
       height: 74px;
       display: flex;
       align-items: center;
       padding: 0 38px;
       gap: 42px;
-      transition: color .24s ease;
+      background: transparent;
+      transition: color .24s ease, background-color .28s ease, box-shadow .28s ease, backdrop-filter .28s ease;
+    }
+
+    .navbar.is-scrolled {
+      background: rgba(0,0,0,.9);
+      color: #fff;
+      box-shadow: 0 10px 36px rgba(0,0,0,.18);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
 
     body.mega-active .navbar,
     body.search-active .navbar {
       color: #fff;
+    }
+
+    @keyframes gradientClouds {
+      0% { background-position: 0% 0%, 100% 28%, 40% 38%, 50% 50%; }
+      45% { background-position: 10% 8%, 88% 40%, 54% 46%, 50% 50%; }
+      100% { background-position: 17% 11%, 78% 31%, 66% 42%, 50% 50%; }
+    }
+
+    @keyframes cloudMist {
+      0% { transform: translate3d(-5%, -2%, 0) rotate(-8deg) scale(1); opacity: .72; }
+      45% { transform: translate3d(4%, 3%, 0) rotate(-4deg) scale(1.09); opacity: .95; }
+      100% { transform: translate3d(-1%, 6%, 0) rotate(-11deg) scale(1.05); opacity: .80; }
+    }
+
+    @keyframes codexCloudA {
+      0% { transform: translate3d(-55%, -50%, 0) rotate(-7deg) scale(1); opacity: .72; }
+      42% { transform: translate3d(-47%, -47%, 0) rotate(-3deg) scale(1.12); opacity: .96; }
+      100% { transform: translate3d(-40%, -42%, 0) rotate(2deg) scale(1.06); opacity: .84; }
+    }
+
+    @keyframes codexCloudB {
+      0% { transform: translate3d(-45%, -55%, 0) rotate(5deg) scale(1.02); opacity: .74; }
+      48% { transform: translate3d(-56%, -45%, 0) rotate(-2deg) scale(1.14); opacity: .92; }
+      100% { transform: translate3d(-64%, -49%, 0) rotate(-6deg) scale(1.08); opacity: .80; }
+    }
+
+    @keyframes codexCloudC {
+      0% { transform: translate3d(-52%, -44%, 0) rotate(-2deg) scale(1.02); opacity: .58; }
+      50% { transform: translate3d(-45%, -53%, 0) rotate(3deg) scale(1.13); opacity: .82; }
+      100% { transform: translate3d(-58%, -47%, 0) rotate(-4deg) scale(1.07); opacity: .70; }
+    }
+
+    @keyframes codexCloudWisps {
+      0% { transform: translate3d(-4%, -2%, 0) rotate(-18deg) scale(1); opacity: .62; }
+      48% { transform: translate3d(5%, 4%, 0) rotate(-12deg) scale(1.10); opacity: .82; }
+      100% { transform: translate3d(9%, 1%, 0) rotate(-15deg) scale(1.05); opacity: .72; }
+    }
+
+    @keyframes codexCloudGlow {
+      0% { transform: translate3d(4%, -3%, 0) rotate(10deg) scale(1); opacity: .66; }
+      52% { transform: translate3d(-6%, 4%, 0) rotate(6deg) scale(1.12); opacity: .86; }
+      100% { transform: translate3d(-2%, 8%, 0) rotate(13deg) scale(1.06); opacity: .76; }
+    }
+
+    @keyframes codexCloudGrain {
+      0% { transform: translate3d(-1.5%, -1%, 0); }
+      100% { transform: translate3d(1.5%, 1%, 0); }
+    }
+
+    @keyframes cloudFloatA {
+      0% { transform: translate3d(-4%, 0, 0) scale(1); }
+      100% { transform: translate3d(12%, 8%, 0) scale(1.08); }
+    }
+
+    @keyframes cloudFloatB {
+      0% { transform: translate3d(6%, -2%, 0) scale(1.03); }
+      100% { transform: translate3d(-10%, 7%, 0) scale(1.12); }
     }
 
     .logo {
@@ -72,7 +340,7 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 42px;
+      gap: 36px;
       font-size: 16px;
       font-weight: 500;
       margin-left: 6px;
@@ -91,9 +359,17 @@
       color: inherit;
       cursor: pointer;
       padding: 26px 0;
+      white-space: nowrap;
+    }
+
+    .nav-link:focus-visible {
+      outline: 1px solid currentColor;
+      outline-offset: 6px;
+      border-radius: 999px;
     }
 
     .search-btn,
+    .theme-toggle,
     .menu-btn {
       border: 0;
       background: transparent;
@@ -106,6 +382,21 @@
 
     .search-btn svg { transition: transform .25s ease, opacity .25s ease; }
     .search-btn:hover svg { transform: scale(1.05); }
+
+    .theme-toggle {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: background .24s ease, transform .24s ease, color .24s ease;
+    }
+
+    .theme-toggle:hover { transform: translateY(-1px); background: rgba(255,255,255,.32); }
+    .theme-toggle .moon { display: none; }
+    body.light-theme .theme-toggle .sun { display: none; }
+    body.light-theme .theme-toggle .moon { display: block; }
 
     .nav-actions {
       margin-left: auto;
@@ -148,6 +439,37 @@
     }
 
     .try-pill { padding: 14px 26px; }
+    .download-actions {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .download-actions .download-btn {
+      min-width: 277px;
+    }
+
+    .mac-download-btn {
+      background: rgba(255,255,255,.14);
+      color: #050505;
+      border: 1px solid rgba(255,255,255,.42);
+      box-shadow: 0 18px 54px rgba(77,93,180,.18), inset 0 1px 0 rgba(255,255,255,.34);
+      backdrop-filter: blur(22px) saturate(1.28);
+      -webkit-backdrop-filter: blur(22px) saturate(1.28);
+    }
+
+    .download-btn.download-unavailable {
+      pointer-events: none;
+      opacity: 1;
+      background: rgba(255,255,255,.14);
+      color: #050505;
+      border: 1px solid rgba(255,255,255,.42);
+      box-shadow: 0 18px 54px rgba(77,93,180,.18), inset 0 1px 0 rgba(255,255,255,.34);
+      backdrop-filter: blur(22px) saturate(1.28);
+      -webkit-backdrop-filter: blur(22px) saturate(1.28);
+    }
+
     body.mega-active .try-pill,
     body.search-active .try-pill {
       background: #fff;
@@ -161,6 +483,7 @@
       color: #fff;
       padding: 130px 38px 80px;
       overflow: hidden;
+      margin-top: -1px;
     }
 
     .black-story::before {
@@ -219,6 +542,395 @@
       max-width: 560px;
     }
 
+    .social-preview-section {
+      position: relative;
+      z-index: 2;
+      max-width: 1180px;
+      margin: 4px auto 0;
+      display: grid;
+      justify-items: center;
+      gap: 24px;
+      text-align: center;
+    }
+
+    .social-preview-copy h2 {
+      font-size: clamp(38px, 5vw, 70px);
+      line-height: 1;
+      letter-spacing: -3px;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    .social-preview-copy p,
+    .social-preview-note {
+      max-width: 760px;
+      color: rgba(255,255,255,.72);
+      font-size: clamp(17px, 1.7vw, 22px);
+      line-height: 1.45;
+      letter-spacing: -.35px;
+    }
+
+    .social-preview-shell {
+      width: min(470px, calc(100vw - 44px));
+      min-height: 638px;
+      border-radius: 28px;
+      padding: 14px;
+      background: linear-gradient(180deg, #171a1f 0%, #0c0d12 100%);
+      border: 1px solid rgba(164, 189, 218, .22);
+      box-shadow: 0 34px 110px rgba(72, 98, 255, .18), 0 24px 80px rgba(0,0,0,.55);
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .social-preview-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 8px;
+      min-height: 68px;
+      border-radius: 20px;
+      background: #24272d;
+    }
+
+    .social-tab {
+      position: relative;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 15px;
+      min-width: 0;
+      color: rgba(255,255,255,.76);
+      background: transparent;
+      cursor: pointer;
+      transition: background .22s ease, color .22s ease, transform .22s ease;
+    }
+
+    .social-tab:hover { transform: translateY(-1px); }
+
+    .social-tab.active {
+      background: #dfe6eb;
+      color: #07110c;
+    }
+
+    .social-tab-avatar,
+    .social-avatar-lg,
+    .social-friend-avatar {
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: #07110c;
+      background: linear-gradient(145deg, #86e7f3, #77ef76);
+      border-radius: 999px;
+    }
+
+    .social-tab-avatar {
+      width: 42px;
+      height: 42px;
+      font-size: 17px;
+    }
+
+    .social-tab-avatar::after {
+      content: "";
+      position: absolute;
+      right: 15px;
+      bottom: 13px;
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: #8bfd5e;
+      border: 3px solid #151820;
+    }
+
+    .social-icon {
+      position: relative;
+      width: 35px;
+      height: 35px;
+      display: block;
+    }
+
+    .social-icon::before,
+    .social-icon::after {
+      content: "";
+      position: absolute;
+      border: 2px solid currentColor;
+      transition: border-color .22s ease;
+    }
+
+    .social-people::before {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      left: 6px;
+      top: 5px;
+      box-shadow: 13px 0 0 -2px #24272d, 13px 0 0 0 currentColor;
+    }
+
+    .social-people::after {
+      width: 25px;
+      height: 13px;
+      border-top: 0;
+      border-radius: 0 0 13px 13px;
+      left: 4px;
+      bottom: 4px;
+    }
+
+    .social-chat::before {
+      width: 24px;
+      height: 18px;
+      border-radius: 999px;
+      left: 4px;
+      top: 6px;
+    }
+
+    .social-chat::after {
+      width: 10px;
+      height: 10px;
+      border-left: 0;
+      border-top: 0;
+      transform: rotate(30deg);
+      right: 7px;
+      bottom: 5px;
+    }
+
+    .social-add::before {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      left: 5px;
+      top: 4px;
+    }
+
+    .social-add::after {
+      width: 24px;
+      height: 15px;
+      border-top: 0;
+      border-radius: 0 0 14px 14px;
+      left: 1px;
+      bottom: 4px;
+      box-shadow: 11px -11px 0 -8px currentColor, 11px -11px 0 -6px transparent;
+    }
+
+    .social-plus {
+      position: absolute;
+      right: 2px;
+      top: 5px;
+      width: 13px;
+      height: 13px;
+    }
+
+    .social-plus::before,
+    .social-plus::after {
+      content: "";
+      position: absolute;
+      background: currentColor;
+      border-radius: 2px;
+    }
+
+    .social-plus::before {
+      width: 13px;
+      height: 2px;
+      left: 0;
+      top: 5px;
+    }
+
+    .social-plus::after {
+      width: 2px;
+      height: 13px;
+      left: 5px;
+      top: 0;
+    }
+
+    .social-panel {
+      display: none;
+      padding: 44px 16px 16px;
+      text-align: center;
+    }
+
+    .social-panel.active {
+      display: block;
+      animation: socialFade .28s ease both;
+    }
+
+    .social-avatar-lg {
+      width: 112px;
+      height: 112px;
+      margin: 0 auto 24px;
+      font-size: 48px;
+    }
+
+    .social-user-name {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -.6px;
+      margin-bottom: 10px;
+    }
+
+    .social-status {
+      color: rgba(255,255,255,.72);
+      font-weight: 800;
+      margin-bottom: 28px;
+    }
+
+    .social-achievement,
+    .social-menu-row,
+    .social-friend-row,
+    .social-message {
+      background: #24272d;
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 10px;
+    }
+
+    .social-achievement {
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 13px;
+      font-weight: 900;
+      color: rgba(255,255,255,.86);
+      margin-bottom: 28px;
+    }
+
+    .social-badge {
+      width: 21px;
+      height: 21px;
+      border-radius: 6px;
+      background: #fff;
+      color: #111;
+      display: grid;
+      place-items: center;
+      font-size: 9px;
+      font-weight: 900;
+    }
+
+    .social-menu-row {
+      min-height: 58px;
+      padding: 0 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(255,255,255,.82);
+      font-weight: 800;
+      text-align: left;
+    }
+
+    .social-arrow {
+      font-size: 24px;
+      color: rgba(255,255,255,.72);
+    }
+
+    .social-foot {
+      margin: 26px 0 22px;
+      color: rgba(255,255,255,.42);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .social-exit {
+      min-height: 42px;
+      border-radius: 999px;
+      background: #2c2f37;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+
+    .social-panel-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -.6px;
+      margin-bottom: 18px;
+    }
+
+    .social-friend-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .social-friend-row {
+      min-height: 70px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .social-friend-avatar {
+      width: 44px;
+      height: 44px;
+      font-size: 17px;
+    }
+
+    .social-friend-row b {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 3px;
+    }
+
+    .social-friend-row span {
+      color: rgba(255,255,255,.58);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .social-gift {
+      border: 0;
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: #34b9ff;
+      color: #04131d;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .social-message {
+      padding: 15px;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .social-message b {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .social-message span {
+      color: rgba(255,255,255,.64);
+      line-height: 1.35;
+    }
+
+    .social-search-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      min-height: 56px;
+      padding: 0 14px;
+      border-radius: 12px;
+      background: #24272d;
+      color: rgba(255,255,255,.56);
+      font-weight: 800;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .social-add-card {
+      padding: 18px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, rgba(52,185,255,.18), rgba(119,239,118,.14));
+      border: 1px solid rgba(255,255,255,.12);
+      text-align: left;
+      line-height: 1.45;
+      color: rgba(255,255,255,.76);
+    }
+
+    @keyframes socialFade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .bottom-cta {
       min-height: 82vh;
       position: relative;
@@ -273,10 +985,138 @@
       color: #000;
     }
 
+    .bottom-cta .mac-download-btn,
+    .bottom-cta .download-btn.download-unavailable {
+      background: rgba(255,255,255,.10);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.30);
+      box-shadow: 0 18px 54px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.28);
+      backdrop-filter: blur(22px) saturate(1.25);
+      -webkit-backdrop-filter: blur(22px) saturate(1.25);
+    }
+
+    .site-footer {
+      position: relative;
+      z-index: 4;
+      background: #000;
+      color: #fff;
+      padding: 34px 38px 42px;
+      border-top: 1px solid rgba(255,255,255,.1);
+    }
+
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .footer-brand {
+      font-size: 15px;
+      font-weight: 800;
+      color: rgba(255,255,255,.78);
+      white-space: nowrap;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 18px 28px;
+    }
+
+    .footer-link {
+      border: 0;
+      background: transparent;
+      color: rgba(255,255,255,.72);
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      transition: color .2s ease;
+    }
+
+    .footer-link:hover {
+      color: #fff;
+    }
+
+    .language-menu {
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .language-toggle {
+      min-width: 132px;
+      min-height: 46px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      backdrop-filter: blur(18px) saturate(1.2);
+      -webkit-backdrop-filter: blur(18px) saturate(1.2);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
+      transition: background .2s ease, border-color .2s ease;
+    }
+
+    .language-toggle:hover,
+    .language-menu.open .language-toggle {
+      background: rgba(255,255,255,.18);
+      border-color: rgba(255,255,255,.30);
+    }
+
+    .language-list {
+      position: absolute;
+      right: 0;
+      bottom: calc(100% + 12px);
+      min-width: 330px;
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 28px;
+      background: rgba(18,19,24,.72);
+      box-shadow: 0 28px 90px rgba(0,0,0,.32);
+      backdrop-filter: blur(22px) saturate(1.22);
+      -webkit-backdrop-filter: blur(22px) saturate(1.22);
+      opacity: 0;
+      transform: translateY(10px) scale(.98);
+      pointer-events: none;
+      transition: opacity .22s ease, transform .22s ease;
+    }
+
+    .language-menu.open .language-list {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .language-option {
+      min-height: 44px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: rgba(255,255,255,.82);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: left;
+      padding: 0 18px;
+    }
+
+    .language-option:hover,
+    .language-option.active {
+      background: rgba(255,255,255,.16);
+      color: #fff;
+    }
+
     .desktop-mega {
       position: fixed;
       inset: 0;
-      z-index: 25;
+      z-index: 55;
       pointer-events: none;
       opacity: 0;
       transition: opacity .28s ease;
@@ -442,6 +1282,11 @@
       padding: 48px 24px 96px;
     }
 
+    .hero > * {
+      position: relative;
+      z-index: 1;
+    }
+
     .app-icon {
       width: 126px;
       height: 126px;
@@ -523,6 +1368,1132 @@
       font-size: 17px;
     }
 
+    .download-btn.mobile-blocked {
+      min-width: min(360px, calc(100vw - 48px));
+      background: rgba(255,255,255,.58);
+      color: #050505;
+      border: 1px solid rgba(0,0,0,.1);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 18px 45px rgba(0,0,0,.08);
+      cursor: default;
+      white-space: normal;
+      text-align: center;
+      line-height: 1.15;
+    }
+
+    .app-window-preview {
+      position: relative;
+      z-index: 3;
+      width: min(1180px, calc(100vw - 48px));
+      min-height: 650px;
+      margin: -44px auto 0;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #0f1014;
+      color: #fff;
+      box-shadow: 0 52px 150px rgba(0,0,0,.34), 0 24px 80px rgba(55, 64, 255, .18);
+      display: grid;
+      grid-template-columns: 205px minmax(0, 1fr) 260px;
+      text-align: left;
+      border: 1px solid rgba(255,255,255,.28);
+    }
+
+    .preview-sidebar {
+      background: #111216;
+      padding: 22px 14px;
+      display: grid;
+      align-content: start;
+      gap: 14px;
+    }
+
+    .preview-dots {
+      display: flex;
+      gap: 8px;
+      margin: 0 0 22px 4px;
+    }
+
+    .preview-dots span {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ff5f57;
+    }
+
+    .preview-dots span:nth-child(2) { background: #ffbd2e; }
+    .preview-dots span:nth-child(3) { background: #28c840; }
+
+    .preview-brand {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      background: #fff;
+      color: #111;
+      font-weight: 900;
+      margin-bottom: 22px;
+    }
+
+    .preview-nav-item {
+      height: 52px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px;
+      color: rgba(255,255,255,.62);
+      font-weight: 700;
+    }
+
+    .preview-nav-item.active {
+      background: #303036;
+      color: #fff;
+    }
+
+    .preview-nav-item i {
+      width: 18px;
+      height: 18px;
+      border: 2px solid currentColor;
+      border-radius: 4px;
+    }
+
+    .preview-main {
+      padding: 26px 26px 30px;
+      background:
+        radial-gradient(640px 420px at 68% 18%, rgba(78, 103, 255, .18), transparent 58%),
+        #0f1014;
+    }
+
+    .preview-top {
+      height: 46px;
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .preview-search {
+      width: 270px;
+      height: 42px;
+      border-radius: 999px;
+      background: #202128;
+      color: #a4a6b0;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      font-size: 14px;
+    }
+
+    .preview-title {
+      font-size: clamp(32px, 3.6vw, 54px);
+      line-height: .98;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .preview-hero-card {
+      height: 318px;
+      border-radius: 12px;
+      background:
+        radial-gradient(420px 280px at 76% 16%, rgba(255,255,255,.24), transparent 58%),
+        linear-gradient(135deg, #191d58 0%, #2666ff 42%, #18b58c 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 34px;
+      display: flex;
+      align-items: flex-end;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), 0 22px 55px rgba(0,0,0,.28);
+    }
+
+    .preview-hero-card::before {
+      content: "";
+      position: absolute;
+      width: 430px;
+      height: 430px;
+      right: -112px;
+      top: -98px;
+      border-radius: 50%;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.42), rgba(255,255,255,.06) 44%, transparent 45%),
+        repeating-linear-gradient(135deg, rgba(255,255,255,.2) 0 2px, transparent 2px 18px);
+      transform: rotate(-8deg);
+      opacity: .72;
+    }
+
+    .preview-hero-card::after {
+      content: "";
+      position: absolute;
+      right: 52px;
+      bottom: 44px;
+      width: 150px;
+      height: 150px;
+      border-radius: 30px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.32), rgba(255,255,255,.05)),
+        linear-gradient(135deg, #0a0b10, #1f2434);
+      box-shadow: 0 24px 50px rgba(0,0,0,.34);
+      transform: rotate(-7deg);
+    }
+
+    .preview-hero-copy {
+      position: relative;
+      z-index: 2;
+      width: min(470px, 72%);
+    }
+
+    .preview-kicker {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 12px;
+      margin-bottom: 14px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.32);
+      color: rgba(255,255,255,.86);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .preview-hero-copy b {
+      display: block;
+      font-size: clamp(44px, 5vw, 74px);
+      line-height: .88;
+      letter-spacing: -2px;
+      font-weight: 900;
+    }
+
+    .preview-hero-copy p {
+      width: min(430px, 100%);
+      margin-top: 14px;
+      color: rgba(255,255,255,.82);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .preview-thumbs {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 18px 0 20px;
+    }
+
+    .preview-thumbs span {
+      width: 112px;
+      height: 58px;
+      border-radius: 5px;
+      border: 1px solid rgba(255,255,255,.72);
+      background: linear-gradient(135deg, #455ddf, #079b78);
+    }
+
+    .preview-section-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 22px 0 14px;
+      color: rgba(255,255,255,.92);
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .preview-section-line span {
+      color: rgba(255,255,255,.5);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .preview-game-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .preview-game-card {
+      min-width: 0;
+    }
+
+    .preview-game-thumb {
+      height: 148px;
+      border-radius: 9px;
+      margin-bottom: 11px;
+      background:
+        radial-gradient(120px 90px at 66% 22%, rgba(255,255,255,.34), transparent 62%),
+        linear-gradient(145deg, #2f64ff, #10a87f);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+    }
+
+    .preview-game-card:nth-child(2) .preview-game-thumb {
+      background:
+        radial-gradient(120px 90px at 28% 20%, rgba(255,255,255,.32), transparent 62%),
+        linear-gradient(145deg, #f7a92f, #f24f71);
+    }
+
+    .preview-game-card:nth-child(3) .preview-game-thumb {
+      background:
+        radial-gradient(120px 90px at 68% 20%, rgba(255,255,255,.3), transparent 62%),
+        linear-gradient(145deg, #1f2937, #9f7aea);
+    }
+
+    .preview-game-card:nth-child(4) .preview-game-thumb {
+      background:
+        radial-gradient(120px 90px at 70% 20%, rgba(255,255,255,.32), transparent 62%),
+        linear-gradient(145deg, #23a67a, #e8c547);
+    }
+
+    .preview-game-card strong {
+      display: block;
+      color: #fff;
+      font-size: 15px;
+      line-height: 1.18;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .preview-game-card span {
+      color: rgba(255,255,255,.56);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .preview-info-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .preview-info-card {
+      min-height: 128px;
+      border: 1px solid #2b2c33;
+      border-radius: 8px;
+      background: #1b1c21;
+      padding: 18px;
+    }
+
+    .preview-info-card h3 {
+      margin: 0 0 12px;
+      font-size: 20px;
+    }
+
+    .preview-info-card p {
+      margin: 0;
+      color: #c8c9d0;
+      line-height: 1.45;
+      font-size: 15px;
+    }
+
+    .preview-panel {
+      background: #111216;
+      padding: 28px 18px 30px;
+      border-left: 1px solid rgba(255,255,255,.06);
+    }
+
+    .preview-profile-pill {
+      min-height: 86px;
+      border-radius: 14px;
+      background: #24262d;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      margin-bottom: 18px;
+    }
+
+    .preview-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, #b7f5ff, #55e676);
+      color: #06120d;
+      font-size: 22px;
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+
+    .preview-profile-pill b,
+    .preview-friend b {
+      display: block;
+      color: #fff;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .preview-profile-pill span,
+    .preview-friend span {
+      color: rgba(255,255,255,.56);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .preview-mini-title {
+      margin: 22px 0 12px;
+      color: rgba(255,255,255,.9);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .preview-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .preview-stat {
+      min-height: 76px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      padding: 12px;
+    }
+
+    .preview-stat b {
+      display: block;
+      color: #fff;
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .preview-stat span {
+      color: rgba(255,255,255,.56);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .preview-friend {
+      min-height: 58px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.055);
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .preview-friend::before {
+      content: "";
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #fff, #99a6ff);
+    }
+
+    .preview-cover {
+      height: 150px;
+      border-radius: 3px;
+      background: linear-gradient(135deg, #1222a6, #0e9b7e);
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preview-cover::after {
+      content: "CODE LAND";
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      color: #fff;
+      font-size: 28px;
+      line-height: .9;
+      font-weight: 900;
+    }
+
+    .preview-rating {
+      min-height: 92px;
+      border: 1px solid #333640;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      color: #d9dae1;
+      margin-bottom: 16px;
+    }
+
+    .preview-rating b {
+      width: 48px;
+      height: 48px;
+      border: 3px solid currentColor;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+    }
+
+    .preview-play {
+      height: 58px;
+      border-radius: 8px;
+      background: #27bfff;
+      color: #06131c;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 18px;
+      margin-top: 18px;
+    }
+
+    .site-ai-compose-preview {
+      position: relative;
+      z-index: 4;
+      width: min(940px, calc(100vw - 48px));
+      min-height: 126px;
+      margin: -38px auto 92px;
+      border-radius: 44px;
+      background: rgba(255,255,255,.94);
+      border: 1px solid rgba(0,0,0,.08);
+      box-shadow: 0 34px 100px rgba(61,83,160,.26), 0 14px 34px rgba(0,0,0,.08);
+      color: #050505;
+      display: grid;
+      grid-template-columns: 64px minmax(0, 1fr) auto 54px;
+      grid-template-rows: 1fr 46px;
+      align-items: center;
+      gap: 0 16px;
+      padding: 18px 18px 18px 28px;
+      text-align: left;
+    }
+
+    .site-ai-input {
+      grid-column: 1 / -1;
+      width: 100%;
+      min-height: 44px;
+      max-height: 130px;
+      border: 0;
+      outline: 0;
+      resize: none;
+      background: transparent;
+      color: #050505;
+      font-size: clamp(22px, 3vw, 34px);
+      line-height: 1.22;
+      align-self: end;
+      padding-left: 38px;
+      font-family: inherit;
+    }
+
+    .site-ai-input::placeholder {
+      color: rgba(0,0,0,.44);
+    }
+
+    .site-ai-plus,
+    .site-ai-send {
+      border: 0;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 500;
+    }
+
+    .site-ai-plus {
+      width: 42px;
+      height: 42px;
+      background: transparent;
+      color: #111;
+      font-size: 34px;
+      line-height: 1;
+    }
+
+    .site-ai-model {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: #111;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .site-ai-model::after {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-right: 1.8px solid currentColor;
+      border-bottom: 1.8px solid currentColor;
+      rotate: 45deg;
+      opacity: .48;
+      margin-top: -4px;
+    }
+
+    .site-ai-send {
+      width: 42px;
+      height: 42px;
+      background: #050505;
+      color: #fff;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .preview-sidebar,
+    .preview-main,
+    .preview-panel {
+      transition: opacity .38s ease, transform .42s ease, filter .42s ease;
+    }
+
+    .app-window-preview.ai-mode .preview-sidebar,
+    .app-window-preview.ai-mode .preview-main,
+    .app-window-preview.ai-mode .preview-panel {
+      opacity: 0;
+      transform: scale(.985) translateY(8px);
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .preview-ai-panel {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: 292px minmax(0, 1fr);
+      gap: 22px;
+      padding: 28px;
+      background:
+        radial-gradient(680px 360px at 66% 0%, rgba(89,105,209,.18), transparent 68%),
+        #0f1014;
+      color: #fff;
+      opacity: 0;
+      transform: translateY(18px) scale(.985);
+      pointer-events: none;
+      transition: opacity .42s ease, transform .42s ease;
+    }
+
+    .app-window-preview.ai-mode .preview-ai-panel {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .preview-ai-drawer {
+      border: 1px solid #26272f;
+      border-radius: 18px;
+      background: #15161c;
+      padding: 16px;
+      min-width: 0;
+    }
+
+    .preview-ai-drawer strong {
+      display: block;
+      margin: 4px 0 18px;
+      font-size: 18px;
+    }
+
+    .preview-ai-drawer-item,
+    .preview-ai-project {
+      border-radius: 14px;
+      background: #292a31;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .preview-ai-drawer-item:nth-child(3) {
+      background: transparent;
+      color: #d5d6dc;
+    }
+
+    .preview-ai-project {
+      background: #1b1c22;
+      border: 1px solid #30313a;
+      color: #cfd0d8;
+      font-weight: 600;
+      line-height: 1.45;
+      margin-top: 18px;
+    }
+
+    .preview-ai-workspace {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      border: 1px solid #26272f;
+      border-radius: 18px;
+      background:
+        radial-gradient(500px 220px at 50% 0%, rgba(71,83,164,.18), transparent 68%),
+        #111217;
+      overflow: hidden;
+    }
+
+    .preview-ai-head {
+      padding: 28px 30px 10px;
+    }
+
+    .preview-ai-head span {
+      display: block;
+      color: #a6a7b0;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .preview-ai-head h3 {
+      margin: 0 0 10px;
+      font-size: clamp(34px, 4vw, 54px);
+      line-height: 1;
+    }
+
+    .preview-ai-head p {
+      margin: 0;
+      color: #c5c6ce;
+      max-width: 720px;
+      line-height: 1.45;
+    }
+
+    .preview-ai-messages {
+      min-height: 0;
+      overflow: auto;
+      padding: 24px 30px 34px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .site-ai-message {
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr);
+      gap: 12px;
+      max-width: 760px;
+      animation: contentIn .22s ease both;
+    }
+
+    .site-ai-message.user {
+      align-self: end;
+      grid-template-columns: minmax(0, 1fr) 38px;
+      max-width: 690px;
+    }
+
+    .site-ai-message span {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      color: #111;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .site-ai-message.user span {
+      grid-column: 2;
+      background: linear-gradient(135deg, #8bd7ff, #6fe06d);
+      color: #0b1110;
+    }
+
+    .site-ai-message div {
+      border-radius: 18px;
+      background: #202127;
+      border: 1px solid #2c2d36;
+      padding: 14px 16px;
+      color: #e9e9ef;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .site-ai-message.user div {
+      background: #f5f5f6;
+      color: #111;
+      border-color: transparent;
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    body.light-theme {
+      background: #fff;
+      color: #050505;
+    }
+
+    body.light-theme .page {
+      background:
+        radial-gradient(720px 520px at 49% 21%, rgba(255,255,255,.96) 0%, rgba(246,248,255,.74) 32%, rgba(214,224,255,.30) 58%, transparent 76%),
+        radial-gradient(900px 540px at 76% 19%, rgba(91,103,242,.78) 0%, rgba(116,126,247,.64) 34%, rgba(165,176,255,.30) 62%, transparent 79%),
+        radial-gradient(760px 640px at 4% 14%, rgba(67,99,239,.80) 0%, rgba(108,154,255,.52) 42%, rgba(210,236,255,.22) 72%, transparent 88%),
+        radial-gradient(980px 440px at 38% 77%, rgba(255,255,255,.82) 0%, rgba(228,243,255,.50) 36%, rgba(153,184,255,.18) 66%, transparent 86%),
+        linear-gradient(112deg, #4c73f3 0%, #abd0ff 30%, #f5f7ff 52%, #cecfff 72%, #707ff4 100%);
+      color: #050505;
+    }
+
+    body.light-theme .page::before {
+      opacity: .80;
+      background:
+        radial-gradient(ellipse 62% 34% at 8% 45%, rgba(255,255,255,.96) 0%, rgba(222,242,255,.50) 34%, transparent 68%),
+        radial-gradient(ellipse 54% 28% at 30% 30%, rgba(255,255,255,.76) 0%, rgba(199,222,255,.30) 38%, transparent 72%),
+        radial-gradient(ellipse 62% 32% at 58% 50%, rgba(255,255,255,.58) 0%, rgba(210,222,255,.27) 42%, transparent 76%),
+        radial-gradient(ellipse 48% 34% at 83% 31%, rgba(225,231,255,.48) 0%, rgba(151,165,255,.22) 44%, transparent 78%),
+        repeating-linear-gradient(108deg, rgba(255,255,255,.10) 0 2px, transparent 2px 28px);
+    }
+
+    body.light-theme .page::after {
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.64) 55%, #fff 100%);
+    }
+
+    body.light-theme .cloud-layer {
+      opacity: .76;
+      filter: saturate(1.10);
+    }
+
+    body.light-theme .cloud-layer-a {
+      opacity: .86;
+    }
+
+    body.light-theme .cloud-grain {
+      opacity: .18;
+    }
+
+    body.light-theme .navbar.is-scrolled {
+      background: rgba(255,255,255,.9);
+      color: #050505;
+      box-shadow: 0 10px 34px rgba(0,0,0,.08);
+    }
+
+    body.light-theme .login-pill,
+    body.light-theme .theme-toggle {
+      background: rgba(0,0,0,.06);
+      color: #000;
+    }
+
+    body.light-theme .try-pill,
+    body.light-theme .download-btn {
+      background: #050505;
+      color: #fff;
+    }
+
+    body.light-theme .mac-download-btn,
+    body.light-theme .download-btn.download-unavailable {
+      background: rgba(255,255,255,.20);
+      color: #050505;
+      border-color: rgba(255,255,255,.56);
+      box-shadow: 0 18px 54px rgba(77,93,180,.18), inset 0 1px 0 rgba(255,255,255,.42);
+      backdrop-filter: blur(22px) saturate(1.28);
+      -webkit-backdrop-filter: blur(22px) saturate(1.28);
+    }
+
+    body.light-theme .app-window-preview {
+      background: #0f1014;
+      color: #fff;
+      border-color: rgba(0,0,0,.12);
+      box-shadow: 0 46px 140px rgba(55, 74, 145, .24), 0 28px 90px rgba(0,0,0,.16);
+    }
+
+    body.light-theme .preview-sidebar,
+    body.light-theme .preview-main,
+    body.light-theme .preview-panel {
+      color: #fff;
+    }
+
+    body.light-theme .preview-nav-item {
+      color: rgba(255,255,255,.62);
+    }
+
+    body.light-theme .preview-nav-item.active {
+      background: #303036;
+      color: #fff;
+    }
+
+    body.light-theme .preview-search,
+    body.light-theme .preview-info-card,
+    body.light-theme .preview-rating {
+      background: #202128;
+      color: #a4a6b0;
+      border-color: #333640;
+    }
+
+    body.light-theme .preview-info-card p,
+    body.light-theme .preview-rating span {
+      color: #c8c9d0;
+    }
+
+    body.light-theme .black-story {
+      background: #fff;
+      color: #050505;
+    }
+
+    body.light-theme .bottom-cta {
+      color: #050505;
+      background:
+        linear-gradient(180deg, #fff 0%, rgba(255,255,255,.96) 18%, rgba(242,246,255,.92) 36%, rgba(194,211,255,.72) 61%, rgba(124,135,255,.72) 82%, rgba(97,105,255,.82) 100%),
+        radial-gradient(860px 420px at 18% 88%, rgba(116,171,255,.55), transparent 66%),
+        radial-gradient(880px 440px at 82% 84%, rgba(126,93,220,.46), transparent 66%);
+    }
+
+    body.light-theme .story-text p,
+    body.light-theme .bottom-cta p {
+      color: rgba(0,0,0,.68);
+    }
+
+    body.light-theme .social-preview-copy p,
+    body.light-theme .social-preview-note {
+      color: rgba(0,0,0,.68);
+    }
+
+    body.light-theme .story-media,
+    body.light-theme .review-form-card,
+    body.light-theme .review-card,
+    body.light-theme .about-block,
+    body.light-theme .person-card,
+    body.light-theme .city-map-frame {
+      background: #f5f5f7;
+      color: #050505;
+      border-color: rgba(0,0,0,.08);
+      box-shadow: 0 24px 70px rgba(0,0,0,.08);
+    }
+
+    body.light-theme .screen-muted,
+    body.light-theme .review-text,
+    body.light-theme .person-role,
+    body.light-theme .about-block p,
+    body.light-theme .about-block li {
+      color: rgba(0,0,0,.68);
+    }
+
+    body.light-theme .bottom-cta .download-btn {
+      background: #050505;
+      color: #fff;
+    }
+
+    body.light-theme .bottom-cta .mac-download-btn,
+    body.light-theme .bottom-cta .download-btn.download-unavailable {
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      border-color: rgba(255,255,255,.34);
+      box-shadow: 0 18px 54px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.30);
+      backdrop-filter: blur(22px) saturate(1.25);
+      -webkit-backdrop-filter: blur(22px) saturate(1.25);
+    }
+
+    body.light-theme .download-btn.mobile-blocked {
+      background: rgba(255,255,255,.46);
+      color: #050505;
+      border-color: rgba(0,0,0,.12);
+    }
+
+    body.light-theme .site-footer {
+      background: #fff;
+      color: #050505;
+      border-top-color: rgba(0,0,0,.1);
+    }
+
+    body.light-theme .footer-brand,
+    body.light-theme .footer-link {
+      color: rgba(0,0,0,.62);
+    }
+
+    body.light-theme .footer-link:hover {
+      color: #050505;
+    }
+
+    body.light-theme .language-toggle {
+      background: rgba(255,255,255,.58);
+      color: #050505;
+      border-color: rgba(0,0,0,.10);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 16px 44px rgba(54,73,150,.12);
+    }
+
+    body.light-theme .language-list {
+      background: rgba(255,255,255,.74);
+      border-color: rgba(0,0,0,.10);
+      box-shadow: 0 28px 90px rgba(54,73,150,.18);
+    }
+
+    body.light-theme .language-option {
+      color: rgba(0,0,0,.68);
+    }
+
+    body.light-theme .language-option:hover,
+    body.light-theme .language-option.active {
+      background: rgba(0,0,0,.08);
+      color: #050505;
+    }
+
+    body.light-theme .profile-page-card,
+    body.light-theme .info-page-card {
+      background: #f5f5f7;
+      color: #050505;
+      border-color: rgba(0,0,0,.08);
+      box-shadow: 0 24px 70px rgba(0,0,0,.08);
+    }
+
+    body.light-theme .profile-page-sub,
+    body.light-theme .profile-simple-note,
+    body.light-theme .info-page-card p,
+    body.light-theme .info-page-card li {
+      color: rgba(0,0,0,.68);
+    }
+
+    body.light-theme.mega-active .navbar {
+      color: #050505;
+    }
+
+    body.light-theme.mega-active .try-pill,
+    body.light-theme .mega-action {
+      background: #050505;
+      color: #fff;
+    }
+
+    body.light-theme .desktop-mega .mega-black {
+      background: #fff;
+      color: #050505;
+      box-shadow: 0 28px 90px rgba(0,0,0,.08);
+    }
+
+    body.light-theme .desktop-mega .mega-blur {
+      background: rgba(255,255,255,.62);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    body.light-theme .desktop-mega .new-badge {
+      background: #050505;
+      color: #fff;
+    }
+
+    body.light-theme .layer,
+    body.light-theme .screen {
+      background: #fff;
+      color: #050505;
+    }
+
+    body.light-theme .screen-top {
+      background: linear-gradient(180deg, rgba(255,255,255,.94) 0%, rgba(255,255,255,.86) 65%, rgba(255,255,255,0) 100%);
+      color: #050505;
+    }
+
+    body.light-theme .screen-back {
+      background: #050505;
+      color: #fff;
+    }
+
+    body.light-theme .person-name,
+    body.light-theme .leader-note,
+    body.light-theme .about-block h3 {
+      color: #050505;
+    }
+
+    body.light-theme #screenCareer,
+    body.light-theme #screenCity,
+    body.light-theme #screenInterview,
+    body.light-theme #screenCareer .screen-top {
+      background: #000;
+      color: #fff;
+    }
+
+    body.light-theme #screenCareer .screen-top,
+    body.light-theme #screenCity .screen-top,
+    body.light-theme #screenInterview .screen-top {
+      background: linear-gradient(180deg, rgba(0,0,0,.93) 0%, rgba(0,0,0,.86) 65%, rgba(0,0,0,0) 100%);
+    }
+
+    body.light-theme #screenCareer .career-bubble {
+      background: rgba(255,255,255,.11);
+      border-color: rgba(255,255,255,.24);
+      color: rgba(255,255,255,.95);
+    }
+
+    body.light-theme #screenCareer .career-cta {
+      background: #fff;
+      color: #000;
+    }
+
+    body.light-theme #screenCareer .screen-back {
+      background: #fff;
+      color: #000;
+    }
+
+    body.light-theme #screenCity .screen-back,
+    body.light-theme #screenInterview .screen-back {
+      background: #fff;
+      color: #000;
+    }
+
+    body.light-theme .auth-overlay {
+      background: rgba(245,247,255,.32);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    body.light-theme .auth-card,
+    body.light-theme .profile-card {
+      background: rgba(255,255,255,.72);
+      color: #050505;
+      border-color: rgba(0,0,0,.12);
+      box-shadow: 0 28px 80px rgba(0,0,0,.14);
+    }
+
+    body.light-theme .auth-sub,
+    body.light-theme .profile-user {
+      color: rgba(0,0,0,.68);
+    }
+
+    body.light-theme .auth-input {
+      background: rgba(255,255,255,.64);
+      border-color: rgba(0,0,0,.14);
+      color: #050505;
+    }
+
+    body.light-theme .auth-input::placeholder {
+      color: rgba(0,0,0,.45);
+    }
+
+    body.light-theme .auth-btn.main {
+      background: #050505;
+      color: #fff;
+    }
+
+    body.light-theme .auth-btn.ghost {
+      background: rgba(0,0,0,.065);
+      color: #050505;
+      border-color: rgba(0,0,0,.14);
+    }
+
+    body.light-theme .profile-game {
+      background: rgba(0,0,0,.06);
+      color: #050505;
+    }
+
+    body.light-theme .profile-best {
+      color: #050505;
+    }
+
+    body.light-theme .auth-note {
+      color: #6f1556;
+    }
+
+    body.light-theme .mobile-menu {
+      background: #fff;
+      color: #050505;
+    }
+
+    body.light-theme .mobile-menu-head .logo,
+    body.light-theme .mobile-nav-item,
+    body.light-theme .mobile-bottom a.is-profile {
+      color: #050505;
+    }
+
+    body.light-theme .mobile-menu .search-btn svg {
+      stroke: #050505;
+    }
+
+    body.light-theme .mobile-menu .menu-btn .rect {
+      border-color: #050505;
+    }
+
+    body.light-theme .mobile-menu .menu-btn .rect::before {
+      background: #050505;
+    }
+
+    body.light-theme .mobile-sub {
+      color: rgba(0,0,0,.66);
+    }
+
+    body.light-theme .mobile-sub-btn {
+      background: #050505;
+      color: #fff !important;
+    }
+
+    body.light-theme .mobile-divider {
+      background: rgba(0,0,0,.14);
+    }
+
+    body.light-theme .mobile-bottom a:last-child {
+      color: rgba(0,0,0,.58);
+    }
+
     .arrow { font-size: 23px; line-height: 1; transform: translateY(-1px); }
 
     .menu-btn .rect {
@@ -558,7 +2529,7 @@
     .mobile-menu {
       position: fixed;
       inset: 0;
-      z-index: 60;
+      z-index: 95;
       background: #000;
       color: #fff;
       transform: translateX(100%);
@@ -828,6 +2799,90 @@
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
+    }
+
+    .profile-page-wrap,
+    .info-page-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .profile-page-card,
+    .info-page-card {
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.045);
+      padding: 24px;
+      color: #fff;
+    }
+
+    .profile-page-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .profile-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, #bff8ff, #6be779);
+      color: #07120d;
+      font-size: 30px;
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+
+    .profile-page-name {
+      font-size: clamp(28px, 5vw, 48px);
+      line-height: 1;
+      letter-spacing: -2px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .profile-page-sub {
+      color: rgba(255,255,255,.66);
+      font-size: 15px;
+    }
+
+    .profile-page-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .profile-simple-note {
+      color: rgba(255,255,255,.72);
+      line-height: 1.55;
+      font-size: 16px;
+    }
+
+    .info-page-card h3 {
+      font-size: clamp(30px, 4.5vw, 56px);
+      line-height: 1;
+      letter-spacing: -2px;
+      margin-bottom: 18px;
+    }
+
+    .info-page-card p,
+    .info-page-card li {
+      color: rgba(255,255,255,.78);
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .info-page-card ul {
+      display: grid;
+      gap: 8px;
+      padding-left: 20px;
+      margin-top: 12px;
     }
 
     .layer {
@@ -1242,6 +3297,115 @@
       font-size: 14px;
     }
 
+    .interview-wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      min-height: calc(100vh - 130px);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 420px;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .interview-panel {
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.045);
+      padding: clamp(18px, 3vw, 34px);
+      box-shadow: 0 24px 80px rgba(0,0,0,.28);
+    }
+
+    .interview-kicker {
+      color: rgba(255,255,255,.62);
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .interview-question {
+      font-size: clamp(30px, 5vw, 58px);
+      line-height: 1.02;
+      letter-spacing: -2.2px;
+      margin-bottom: 22px;
+      font-weight: 800;
+    }
+
+    .interview-answers {
+      display: grid;
+      gap: 10px;
+    }
+
+    .interview-answer {
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      border-radius: 16px;
+      padding: 15px 16px;
+      text-align: left;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform .2s ease, background .2s ease;
+    }
+
+    .interview-answer:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,.14);
+    }
+
+    .interview-progress {
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      overflow: hidden;
+      margin-top: 22px;
+    }
+
+    .interview-progress span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: #27bfff;
+      transition: width .35s ease;
+    }
+
+    .interview-result {
+      display: none;
+      border-radius: 18px;
+      background: rgba(39,191,255,.12);
+      border: 1px solid rgba(39,191,255,.28);
+      padding: 18px;
+      margin-top: 20px;
+    }
+
+    .interview-result.show {
+      display: block;
+    }
+
+    .interview-result h3 {
+      font-size: clamp(26px, 4vw, 42px);
+      line-height: 1.05;
+      letter-spacing: -1.4px;
+      margin-bottom: 10px;
+    }
+
+    .interview-result p {
+      color: rgba(255,255,255,.78);
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+
+    .interview-open-game {
+      border: 0;
+      border-radius: 999px;
+      background: #27bfff;
+      color: #06131c;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
     .game-wrap {
       height: calc(100vh - 96px);
       border-radius: 14px;
@@ -1320,15 +3484,26 @@
     }
 
     @media (max-width: 760px) {
+      body { width: 100%; }
+
       .page {
         min-height: 100svh;
+        padding-bottom: 78px;
         background:
-          radial-gradient(420px 560px at 86% 64%, rgba(57, 76, 255, .83) 0%, rgba(111, 114, 255, .68) 42%, transparent 82%),
-          radial-gradient(360px 390px at 5% 79%, rgba(95, 142, 255, .8) 0%, rgba(203, 235, 255, .68) 50%, transparent 86%),
-          linear-gradient(146deg, #e9edff 0%, #f6f4ff 43%, #bfc6ff 68%, #6273ff 100%);
+          radial-gradient(410px 420px at 50% 20%, rgba(255,255,255,.96) 0%, rgba(246,248,255,.68) 38%, transparent 76%),
+          radial-gradient(500px 520px at 95% 16%, rgba(83,96,243,.78) 0%, rgba(117,122,247,.56) 44%, transparent 82%),
+          radial-gradient(460px 520px at -8% 20%, rgba(62,92,238,.84) 0%, rgba(113,170,255,.48) 52%, transparent 88%),
+          radial-gradient(520px 360px at 40% 74%, rgba(255,255,255,.74) 0%, rgba(225,242,255,.44) 44%, transparent 84%),
+          linear-gradient(145deg, #5577f2 0%, #b7dcff 34%, #f5f7ff 54%, #c7c9ff 72%, #6a77ef 100%);
       }
 
       .page::before { inset: -14%; opacity: .64; filter: blur(16px); }
+      .cloud-field { opacity: .48; inset: -18% -52% 30%; }
+      .cloud-layer { filter: saturate(1.24); }
+      .cloud-layer-a { left: 25%; top: 52%; width: 125vw; height: 58vh; }
+      .cloud-layer-b { left: 83%; top: 32%; width: 112vw; height: 52vh; }
+      .cloud-layer-c { left: 49%; top: 70%; width: 130vw; height: 38vh; }
+      .cloud-grain { opacity: .18; background-size: 72px 72px, 108px 108px, 142px 142px; }
       .navbar { height: 64px; padding: 21px 23px 0 26px; align-items: flex-start; }
       .logo { font-size: 24px; letter-spacing: -1.45px; }
       .nav-links, .nav-actions, .desktop-mega { display: none; }
@@ -1338,11 +3513,80 @@
       .search-row { gap: 18px; }
       .search-input { width: 100%; font-size: 28px; }
 
-      .hero { min-height: calc(100svh - 64px); justify-content: flex-start; padding: 107px 32px 60px; }
+      .hero { min-height: auto; justify-content: flex-start; padding: 98px 22px 52px; }
       .app-icon { width: 123px; height: 123px; border-radius: 29px; margin-bottom: 49px; }
-      h1 { font-size: 43px; letter-spacing: -2.4px; font-weight: 500; margin-bottom: 39px; }
-      .subtitle { font-size: 23px; line-height: 1.7; max-width: 430px; margin-bottom: 45px; }
-      .download-btn { min-width: 279px; height: 54px; font-size: 17px; }
+      h1 { font-size: clamp(40px, 13vw, 54px); letter-spacing: -2.2px; font-weight: 500; margin-bottom: 32px; }
+      .subtitle { font-size: clamp(18px, 5.8vw, 23px); line-height: 1.55; max-width: 430px; margin-bottom: 38px; }
+      .download-actions { width: min(100%, 360px); }
+      .download-btn { width: 100%; min-width: 0; height: 54px; font-size: 17px; }
+      .app-window-preview {
+        width: calc(100vw - 28px);
+        min-height: auto;
+        margin-top: -12px;
+        grid-template-columns: 1fr;
+        border-radius: 10px;
+      }
+      .preview-sidebar { display: none; }
+      .preview-main { padding: 18px; }
+      .preview-panel { padding: 18px; }
+      .preview-top { margin-bottom: 18px; }
+      .preview-search { width: 100%; }
+      .preview-title { font-size: 38px; }
+      .preview-hero-card { height: 260px; }
+      .preview-hero-copy { width: 100%; }
+      .preview-hero-card::after { width: 96px; height: 96px; right: 24px; bottom: 28px; opacity: .72; }
+      .preview-game-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .preview-game-thumb { height: 126px; }
+      .preview-info-row { grid-template-columns: 1fr; }
+      .site-ai-compose-preview {
+        width: calc(100vw - 28px);
+        min-height: 104px;
+        margin: -14px auto 62px;
+        border-radius: 30px;
+        grid-template-columns: 46px minmax(0, 1fr) 42px;
+        grid-template-rows: 1fr 38px;
+        gap: 0 8px;
+        padding: 14px 12px 14px 16px;
+      }
+      .site-ai-input {
+        font-size: 20px;
+        padding-left: 14px;
+      }
+      .site-ai-model { font-size: 14px; }
+      .site-ai-send,
+      .site-ai-plus { width: 38px; height: 38px; }
+      .preview-ai-panel {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 14px;
+        overflow: auto;
+      }
+      .preview-ai-drawer {
+        display: none;
+      }
+      .preview-ai-workspace {
+        min-height: 520px;
+      }
+      .preview-ai-head {
+        padding: 22px 18px 8px;
+      }
+      .preview-ai-head h3 {
+        font-size: 34px;
+      }
+      .preview-ai-messages {
+        padding: 16px 18px 24px;
+      }
+      .language-menu {
+        width: 100%;
+      }
+      .language-toggle {
+        width: 100%;
+      }
+      .language-list {
+        left: 0;
+        right: auto;
+        min-width: 100%;
+      }
       .mobile-menu { display: block; }
 
       .black-story { padding: 90px 22px 45px; }
@@ -1357,9 +3601,41 @@
       .story-media img { min-height: 260px; }
       .story-text h2 { font-size: 44px; letter-spacing: -2.5px; margin-bottom: 20px; }
       .story-text p { font-size: 20px; line-height: 1.45; }
+      .social-preview-section { gap: 18px; margin-top: -10px; }
+      .social-preview-copy h2 { font-size: 40px; letter-spacing: -2px; }
+      .social-preview-shell {
+        width: 100%;
+        min-height: auto;
+        border-radius: 24px;
+        padding: 10px;
+      }
+      .social-preview-tabs {
+        min-height: 62px;
+        gap: 6px;
+        padding: 7px;
+      }
+      .social-tab { min-height: 48px; border-radius: 13px; }
+      .social-tab-avatar { width: 38px; height: 38px; }
+      .social-tab-avatar::after { right: 13px; bottom: 12px; }
+      .social-panel { padding: 32px 8px 12px; }
+      .social-avatar-lg { width: 96px; height: 96px; font-size: 42px; margin-bottom: 20px; }
+      .social-user-name { font-size: 25px; }
+      .social-achievement { margin-bottom: 20px; }
+      .social-menu-row { min-height: 54px; padding: 0 13px; font-size: 15px; }
+      .social-friend-row {
+        grid-template-columns: 40px 1fr;
+      }
+      .social-gift {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+      .social-preview-note { font-size: 16px; line-height: 1.5; padding: 0 6px; }
       .bottom-cta { min-height: 78vh; padding: 115px 22px 95px; }
       .bottom-cta h2 { font-size: 43px; letter-spacing: -2.5px; }
       .bottom-cta p { font-size: 20px; line-height: 1.45; margin-bottom: 40px; }
+      .site-footer { padding: 28px 22px 36px; }
+      .footer-inner { align-items: flex-start; flex-direction: column; gap: 20px; }
+      .footer-links { justify-content: flex-start; gap: 14px 22px; }
 
       .profile-grid { grid-template-columns: 1fr; }
       .profile-edit { grid-template-columns: 1fr; }
@@ -1394,10 +3670,26 @@
       }
       .city-map-frame { height: min(56vh, 500px); }
       .city-pin {
-        font-size: 11px;
-        min-width: 96px;
-        padding: 7px 8px;
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        display: block;
+        width: calc(100% - 20px);
+        margin: 8px 10px;
+        font-size: 12px;
+        min-width: 0;
+        padding: 10px 12px;
       }
+      .city-map-wrap { padding-bottom: 10px; }
+      .interview-wrap { min-height: auto; grid-template-columns: 1fr; gap: 18px; }
+      .interview-panel { order: 2; }
+      .interview-wrap .rb-scene { order: 1; height: 300px; }
+      .interview-question { letter-spacing: -1.4px; }
+      .profile-page-card, .info-page-card { padding: 18px; border-radius: 18px; }
+      .profile-page-top { align-items: flex-start; }
+      .profile-page-actions { flex-direction: column; }
+      .profile-page-actions .auth-btn { width: 100%; }
       .game-wrap { height: calc(100vh - 90px); }
     }
 
@@ -1437,10 +3729,138 @@
 
     @media (max-width: 390px) {
       .hero { padding-left: 20px; padding-right: 20px; }
-      .mobile-nav-list { font-size: 38px; }
-      .mobile-bottom { font-size: 38px; }
+      .mobile-nav-list { font-size: clamp(31px, 10.5vw, 38px); letter-spacing: -1.7px; gap: 20px; }
+      .mobile-bottom { font-size: clamp(31px, 10.5vw, 38px); letter-spacing: -1.7px; }
+      .preview-game-grid { grid-template-columns: 1fr; }
+      .preview-game-thumb { height: 118px; }
+      .story-text h2,
+      .bottom-cta h2 {
+        font-size: clamp(34px, 11vw, 43px);
+        letter-spacing: -1.7px;
+      }
+      .story-text p,
+      .bottom-cta p {
+        font-size: clamp(17px, 5.2vw, 20px);
+      }
+      .download-btn.mobile-blocked {
+        min-width: 0;
+        width: 100%;
+        max-width: 330px;
+      }
       .people-grid { grid-template-columns: 1fr; }
       .review-form-card { padding: 16px 12px; }
+    }
+
+    @media (min-width: 761px) and (max-width: 1180px) {
+      .navbar { gap: 18px; padding-left: 24px; padding-right: 24px; }
+      .nav-links { gap: 18px; font-size: 14px; }
+      .try-pill,
+      .login-pill { padding-left: 18px; padding-right: 18px; }
+      .hero { padding-top: 116px; }
+      .app-window-preview {
+        width: calc(100vw - 40px);
+        grid-template-columns: 172px minmax(0, 1fr);
+      }
+      .preview-panel { grid-column: 1 / -1; border-left: 0; border-top: 1px solid rgba(255,255,255,.06); }
+      .preview-game-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .story-row,
+      .story-row.reverse { grid-template-columns: 1fr 1fr; gap: 36px; }
+      .social-preview-section { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); }
+      .career-wrap,
+      .interview-wrap { grid-template-columns: minmax(0, 1fr) minmax(320px, .9fr); }
+    }
+
+    @media (min-width: 390px) and (max-width: 760px) {
+      .preview-game-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .city-map-wrap {
+        display: grid;
+        gap: 8px;
+        padding-bottom: 10px;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .preview-title,
+      .preview-hero-copy b,
+      .social-preview-copy h2,
+      .story-text h2,
+      .bottom-cta h2,
+      .screen-title {
+        letter-spacing: 0;
+      }
+      .preview-top { height: auto; align-items: stretch; flex-direction: column; gap: 10px; }
+      .preview-thumbs { gap: 8px; }
+      .preview-thumbs span { flex: 1; min-width: 0; height: 48px; }
+      .site-ai-compose-preview { width: calc(100vw - 20px); }
+      .mobile-menu {
+        padding-top: calc(22px + env(safe-area-inset-top, 0px));
+        padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+      }
+      .screen {
+        min-height: 100svh;
+        padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      }
+      .screen-top {
+        padding-top: calc(12px + env(safe-area-inset-top, 0px));
+      }
+      .city-map-frame { height: min(48svh, 380px); }
+      .city-pin {
+        width: calc(100% - 20px);
+        min-height: 46px;
+        font-size: 13px;
+        line-height: 1.2;
+      }
+      .game-wrap {
+        height: calc(100svh - 74px - env(safe-area-inset-bottom, 0px));
+        border-left: 0;
+        border-right: 0;
+      }
+    }
+
+    @media (max-width: 340px) {
+      h1 { font-size: 38px; }
+      .subtitle { font-size: 17px; }
+      .download-actions { width: 100%; }
+      .preview-main,
+      .preview-panel { padding: 14px; }
+      .preview-hero-card { height: 230px; padding: 22px; }
+      .preview-hero-copy b { font-size: 36px; }
+      .preview-game-thumb { height: 104px; }
+      .mobile-nav-list,
+      .mobile-bottom { font-size: 29px; gap: 18px; }
+      .person-avatar { width: 82px; height: 82px; }
+      .screen-title { font-size: 1.18rem; max-width: calc(100vw - 108px); text-align: center; }
+      .auth-card,
+      .profile-card { padding: 16px 12px; }
+    }
+
+    @media (max-width: 760px) and (max-height: 700px) {
+      .hero { padding-top: 78px; padding-bottom: 34px; }
+      .app-icon { width: 92px; height: 92px; border-radius: 23px; margin-bottom: 28px; }
+      .cloud { transform: scale(.75); }
+      h1 { font-size: clamp(38px, 12vw, 48px); margin-bottom: 22px; }
+      .subtitle {
+        font-size: clamp(16px, 5.2vw, 19px);
+        line-height: 1.42;
+        margin-bottom: 24px;
+      }
+      .download-actions { gap: 10px; }
+      .download-btn { height: 48px; }
+      .app-window-preview { margin-top: 0; }
+    }
+
+    @media (max-width: 360px) {
+      .navbar { padding-left: 18px; padding-right: 18px; }
+      .mobile-icons { gap: 18px; }
+      .logo { font-size: 22px; }
+      .app-icon { width: 104px; height: 104px; }
+      .cloud { transform: scale(.86); }
+      .mobile-menu { padding-left: 18px; padding-right: 18px; }
+      .mobile-bottom a:first-child {
+        align-items: flex-start;
+        gap: 8px;
+      }
     }
 
     /* ── ОТЗЫВЫ ─────────────────────────────────────── */
@@ -1558,7 +3978,18 @@
   </style>
 </head>
 <body>
+  <script>
+    if (localStorage.getItem('skillland-site-theme') === 'light') {
+      document.body.classList.add('light-theme');
+    }
+  </script>
   <main class="page">
+    <div class="cloud-field" aria-hidden="true">
+      <span class="cloud-layer cloud-layer-a"></span>
+      <span class="cloud-layer cloud-layer-b"></span>
+      <span class="cloud-layer cloud-layer-c"></span>
+      <span class="cloud-grain"></span>
+    </div>
     <header class="navbar">
       <div class="logo">SkillLand</div>
 
@@ -1571,6 +4002,10 @@
         <button class="search-btn js-search-open" aria-label="Поиск">
           <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.35" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.7"/><path d="M16 16l5 5"/></svg>
         </button>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Переключить тему">
+          <svg class="sun" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="moon" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M21 12.7A8.5 8.5 0 1 1 11.3 3 6.7 6.7 0 0 0 21 12.7Z"/></svg>
+        </button>
       </nav>
 
       <div class="nav-actions">
@@ -1582,6 +4017,10 @@
         <button class="search-btn js-search-open" aria-label="Поиск">
           <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.35" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.7"/><path d="M16 16l5 5"/></svg>
         </button>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Переключить тему">
+          <svg class="sun" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="moon" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M21 12.7A8.5 8.5 0 1 1 11.3 3 6.7 6.7 0 0 0 21 12.7Z"/></svg>
+        </button>
         <button class="menu-btn" aria-label="Открыть меню" id="openMenu"><span class="rect"></span></button>
       </div>
     </header>
@@ -1590,14 +4029,114 @@
       <div class="app-icon" aria-hidden="true"><div class="cloud"><span class="glyph"></span></div></div>
       <h1>SkillLand</h1>
       <p class="subtitle">Профориентация SkillLand — это практическое знакомство с профессиями через интерактивные задания и мини-симуляторы, чтобы быстро понять, какое направление действительно подходит.</p>
-      <a class="download-btn" href="#" data-open-route="career">Профориентация <span class="arrow">↗</span></a>
+      <div class="download-actions" aria-label="Скачать SkillLand">
+        <a class="download-btn" href="SkillLand-Windows.zip" download="SkillLand-Windows.zip">Скачать для Windows<span class="arrow">↗</span></a>
+        <a class="download-btn mac-download-btn" href="SkillLand-macOS.zip" download="SkillLand-macOS.zip" data-download-file="SkillLand-macOS.zip" data-mac-download>Скачать для macOS<span class="arrow">↗</span></a>
+      </div>
     </section>
+
+    <section class="app-window-preview" aria-label="Превью приложения SkillLand">
+      <aside class="preview-sidebar">
+        <div class="preview-dots"><span></span><span></span><span></span></div>
+        <div class="preview-brand">SL</div>
+        <div class="preview-nav-item active"><i></i>Магазин</div>
+        <div class="preview-nav-item"><i></i>Библиотека</div>
+        <div class="preview-nav-item"><i></i>Новости</div>
+        <div class="preview-nav-item"><i></i>Друзья</div>
+      </aside>
+      <div class="preview-main">
+        <div class="preview-top">
+          <div class="preview-search">Искать в SkillLand</div>
+          <strong>Главное</strong>
+        </div>
+        <div class="preview-title">SkillLand</div>
+        <div class="preview-hero-card">
+          <div class="preview-hero-copy">
+            <span class="preview-kicker">Профориентация</span>
+            <b>Выбери профессию через игру</b>
+            <p>Мини-симуляторы, отзывы, лайки и личный прогресс в одном спокойном лаунчере.</p>
+          </div>
+        </div>
+        <div class="preview-section-line">
+          <strong>Игры профессий</strong>
+          <span>Все игры</span>
+        </div>
+        <div class="preview-game-grid">
+          <article class="preview-game-card">
+            <div class="preview-game-thumb"></div>
+            <strong>Программист</strong>
+            <span>Базовая игра</span>
+          </article>
+          <article class="preview-game-card">
+            <div class="preview-game-thumb"></div>
+            <strong>Повар</strong>
+            <span>Базовая игра</span>
+          </article>
+          <article class="preview-game-card">
+            <div class="preview-game-thumb"></div>
+            <strong>Медик</strong>
+            <span>Базовая игра</span>
+          </article>
+          <article class="preview-game-card">
+            <div class="preview-game-thumb"></div>
+            <strong>Дизайнер</strong>
+            <span>Базовая игра</span>
+          </article>
+        </div>
+      </div>
+      <aside class="preview-panel">
+        <div class="preview-profile-pill">
+          <div class="preview-avatar">S</div>
+          <div>
+            <b>Профиль</b>
+            <span>3 игры в прогрессе</span>
+          </div>
+        </div>
+        <div class="preview-stat-grid">
+          <div class="preview-stat"><b>12</b><span>лайков</span></div>
+          <div class="preview-stat"><b>4.8</b><span>средняя оценка</span></div>
+        </div>
+        <div class="preview-mini-title">Друзья</div>
+        <div class="preview-friend"><div><b>Алия</b><span>тоже выбрала IT</span></div></div>
+        <div class="preview-friend"><div><b>Максим</b><span>прошел медика</span></div></div>
+        <div class="preview-play">Открыть</div>
+      </aside>
+      <div class="preview-ai-panel" id="siteAiPanel" aria-live="polite">
+        <aside class="preview-ai-drawer">
+          <strong>SkillLand AI</strong>
+          <div class="preview-ai-drawer-item">My Projects</div>
+          <div class="preview-ai-drawer-item">Открыть проект</div>
+          <div class="preview-ai-project">Сайт подключен к локальному серверу SkillLand. Можно задать вопрос прямо здесь.</div>
+        </aside>
+        <div class="preview-ai-workspace">
+          <div class="preview-ai-head">
+            <span>AI</span>
+            <h3>Чат для проектов</h3>
+            <p>Задай вопрос по SkillLand, профориентации, игре или проекту. Ответ появится здесь, как в программе.</p>
+          </div>
+          <div class="preview-ai-messages" id="siteAiMessages">
+            <article class="site-ai-message assistant">
+              <span>AI</span>
+              <div>Привет. Я SkillLand AI: могу объяснить профессию, помочь с проектом или упростить задание для школы. Напиши вопрос в поле ниже.</div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <form class="site-ai-compose-preview" id="siteAiForm" aria-label="AI-чат SkillLand">
+      <textarea class="site-ai-input" id="siteAiInput" rows="1" placeholder="Ask SkillLand anything, @ to add files, / for commands"></textarea>
+      <button class="site-ai-plus" type="button" aria-label="Добавить">+</button>
+      <div class="site-ai-model">SkillLand AI</div>
+      <div></div>
+      <button class="site-ai-send" type="submit" aria-label="Отправить">↑</button>
+    </form>
   </main>
 
   <section class="black-story">
     <div class="story-row">
       <div class="story-media">
-        <img src="ray-so-export.png" alt="SkillLand preview">
+        <img src="ray-so-export.png" alt="SkillLand preview" loading="lazy" decoding="async">
       </div>
       <div class="story-text">
         <h2>Вот SkillLand</h2>
@@ -1607,20 +4146,108 @@
 
     <div class="story-row reverse">
       <div class="story-media">
-        <img src="ray-so-export (1).png" alt="Stap2Win IT центр">
+        <img src="ray-so-export (1).png" alt="Stap2Win IT центр" loading="lazy" decoding="async">
       </div>
       <div class="story-text">
         <h2>Дальше — Stap2Win</h2>
         <p>В дальнейшем мы откроем IT-центр Stap2Win и будем бесплатно проводить курсы по IT: программирование, дизайн, разработка проектов и ещё много интересного для тех, кто хочет расти в цифровых профессиях.</p>
       </div>
     </div>
+
+    <div class="social-preview-section">
+      <div class="social-preview-copy">
+        <h2>Профиль и друзья</h2>
+        <p>Внутри SkillLand профиль будет простым: видно прогресс, достижения, друзей и подсказки по играм.</p>
+      </div>
+
+      <div class="social-preview-shell" aria-label="Превью профиля и друзей SkillLand">
+        <div class="social-preview-tabs" role="tablist" aria-label="Разделы профиля">
+          <button class="social-tab active" type="button" data-social-tab="profile" aria-label="Профиль"><span class="social-tab-avatar">П</span></button>
+          <button class="social-tab" type="button" data-social-tab="friends" aria-label="Друзья"><span class="social-icon social-people"></span></button>
+          <button class="social-tab" type="button" data-social-tab="messages" aria-label="Сообщения"><span class="social-icon social-chat"></span></button>
+          <button class="social-tab" type="button" data-social-tab="add" aria-label="Добавить друга"><span class="social-icon social-add"><span class="social-plus"></span></span></button>
+        </div>
+
+        <div class="social-panel active" data-social-panel="profile">
+          <div class="social-avatar-lg">П</div>
+          <div class="social-user-name">Пользователь</div>
+          <div class="social-status">В сети</div>
+          <div class="social-achievement"><span class="social-badge">SL</span> Достижения</div>
+          <div class="social-menu-row"><span>Настройки учетной записи</span><span class="social-arrow">›</span></div>
+          <div class="social-menu-row"><span>Друзья и совместные игры</span><span class="social-arrow">›</span></div>
+          <div class="social-menu-row"><span>Сообщения и подсказки</span><span class="social-arrow">›</span></div>
+          <div class="social-foot">skillland@local-profile · Connected</div>
+          <div class="social-exit">Выйти</div>
+        </div>
+
+        <div class="social-panel" data-social-panel="friends">
+          <div class="social-panel-title">Друзья</div>
+          <div class="social-friend-list">
+            <div class="social-friend-row">
+              <div class="social-friend-avatar">А</div>
+              <div><b>Алия</b><span>Интерес: медицина · 4 игры</span></div>
+              <button class="social-gift" type="button">Подарить игру</button>
+            </div>
+            <div class="social-friend-row">
+              <div class="social-friend-avatar">М</div>
+              <div><b>Максим</b><span>Интерес: IT · прошел программиста</span></div>
+              <button class="social-gift" type="button">Подарить игру</button>
+            </div>
+            <div class="social-friend-row">
+              <div class="social-friend-avatar">Д</div>
+              <div><b>Дана</b><span>Интерес: экономика · 9 достижений</span></div>
+              <button class="social-gift" type="button">Подарить игру</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="social-panel" data-social-panel="messages">
+          <div class="social-panel-title">Сообщения</div>
+          <div class="social-message"><b>Подсказка SkillLand</b><span>Попробуй игру программиста: там задания стали проще и больше про логику.</span></div>
+          <div class="social-message"><b>Алия</b><span>Я прошла медицину и поставила 5 звезд. Посмотри мой результат.</span></div>
+          <div class="social-message"><b>Максим</b><span>Скинул тебе игру как подарок, попробуй пройти после уроков.</span></div>
+        </div>
+
+        <div class="social-panel" data-social-panel="add">
+          <div class="social-panel-title">Найти друга</div>
+          <div class="social-search-row">Поиск по нику или классу</div>
+          <div class="social-add-card">Добавляйте друзей из класса, смотрите, какие профессии им ближе, сравнивайте успехи и отправляйте игры как подарок.</div>
+        </div>
+      </div>
+
+      <p class="social-preview-note">Через друзей можно находить одноклассников, отправлять им игры как подарок, смотреть их успехи и интересы, а потом вместе выбирать, какую профессию попробовать следующей.</p>
+    </div>
   </section>
 
   <section class="bottom-cta">
     <h2>Попробуйте SkillLand сегодня</h2>
     <p>Профориентация, обучение и первые IT-навыки — всё в одном месте, чтобы начать свой путь уверенно и бесплатно.</p>
-    <a class="download-btn" href="#" data-open-route="career">Профориентация <span class="arrow">↗</span></a>
+    <div class="download-actions" aria-label="Скачать SkillLand">
+      <a class="download-btn" href="SkillLand-Windows.zip" download="SkillLand-Windows.zip">Скачать для Windows <span class="arrow">↗</span></a>
+      <a class="download-btn mac-download-btn" href="SkillLand-macOS.zip" download="SkillLand-macOS.zip" data-download-file="SkillLand-macOS.zip" data-mac-download>Скачать для macOS <span class="arrow">↗</span></a>
+    </div>
   </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">SkillLand 2026</div>
+      <nav class="footer-links" aria-label="Разделы SkillLand">
+        <button class="footer-link" type="button" data-info-page="privacy">Конфиденциальность</button>
+        <button class="footer-link" type="button" data-info-page="news">Новости</button>
+        <button class="footer-link" type="button" data-info-page="research">Наши исследования</button>
+        <button class="footer-link" type="button" data-info-page="catalog">Каталог исследований</button>
+        <button class="footer-link" type="button" data-info-page="solutions">Решения</button>
+      </nav>
+      <div class="language-menu" id="languageMenu" data-no-translate>
+        <button class="language-toggle" id="languageToggle" type="button" aria-haspopup="true" aria-expanded="false">Русский</button>
+        <div class="language-list" id="languageList" role="menu" aria-label="Выбор языка">
+          <button class="language-option active" type="button" data-lang="ru" role="menuitem">Русский</button>
+          <button class="language-option" type="button" data-lang="kk" role="menuitem">Қазақша</button>
+          <button class="language-option" type="button" data-lang="en" role="menuitem">English</button>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <div class="desktop-mega" id="desktopMega">
     <div class="mega-black" id="megaBlack">
@@ -1718,6 +4345,44 @@
   </div>
 
   <div class="layer" id="layer" aria-hidden="true">
+    <section class="screen" id="screenProfile">
+      <div class="screen-top">
+        <button class="screen-back" data-back-home aria-label="Назад">←</button>
+        <h2 class="screen-title">Профиль</h2>
+      </div>
+      <div class="profile-page-wrap">
+        <article class="profile-page-card">
+          <div class="profile-page-top">
+            <div class="profile-avatar" id="profilePageAvatar">S</div>
+            <div>
+              <h3 class="profile-page-name" id="profilePageName">SkillLand</h3>
+              <p class="profile-page-sub" id="profilePageSub">Ваши игры, успехи и рекомендации.</p>
+            </div>
+          </div>
+          <p class="profile-simple-note" id="profilePageBest">Профиль загрузится после входа.</p>
+        </article>
+        <article class="profile-page-card">
+          <h3 class="profile-title">Успехи в играх</h3>
+          <div class="profile-grid" id="profilePageGrid"></div>
+          <div class="profile-page-actions">
+            <button class="auth-btn main" type="button" data-open-route="career">Пройти профориентацию</button>
+            <button class="auth-btn ghost" type="button" id="profilePageLogout">Выйти</button>
+          </div>
+          <div class="auth-note" id="profilePageNote"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="screen" id="screenInfo">
+      <div class="screen-top">
+        <button class="screen-back" data-back-home aria-label="Назад">←</button>
+        <h2 class="screen-title" id="infoPageTitle">SkillLand</h2>
+      </div>
+      <div class="info-page-wrap">
+        <article class="info-page-card" id="infoPageContent"></article>
+      </div>
+    </section>
+
     <section class="screen" id="screenTeam">
       <div class="screen-top">
         <button class="screen-back" data-back-home aria-label="Назад">←</button>
@@ -1884,6 +4549,41 @@
       </div>
     </section>
 
+    <section class="screen" id="screenInterview">
+      <div class="screen-top">
+        <button class="screen-back" data-back-home aria-label="Назад">←</button>
+        <h2 class="screen-title">Интервью SkillLand</h2>
+      </div>
+      <div class="interview-wrap">
+        <div class="interview-panel">
+          <p class="interview-kicker" id="interviewStep">Вопрос 1 из 5</p>
+          <h3 class="interview-question" id="interviewQuestion">Что тебе интереснее попробовать?</h3>
+          <div class="interview-answers" id="interviewAnswers"></div>
+          <div class="interview-progress"><span id="interviewProgressBar"></span></div>
+          <div class="interview-result" id="interviewResult">
+            <h3 id="interviewResultTitle">Рекомендация готова</h3>
+            <p id="interviewResultText"></p>
+            <button class="interview-open-game" type="button" id="interviewOpenGame">Перейти к игре</button>
+          </div>
+        </div>
+        <div class="rb-scene">
+          <div class="rb-shadow"></div>
+          <div class="rb-robot">
+            <div class="rb-head">
+              <div class="rb-face">
+                <div class="rb-eye left"></div>
+                <div class="rb-eye right"></div>
+              </div>
+            </div>
+            <div class="rb-neck"></div>
+            <div class="rb-arm left"></div>
+            <div class="rb-arm right"></div>
+            <div class="rb-body"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="screen" id="screenCity">
       <div class="screen-top">
         <button class="screen-back" data-back-home aria-label="Назад">←</button>
@@ -1897,7 +4597,7 @@
         <button class="city-pin" style="--x:34%;--y:54%;" data-open-game="miner">Горный центр<br>Шахтёр</button>
         <button class="city-pin" style="--x:67%;--y:55%;" data-open-game="medic">Медицинский блок<br>Медик</button>
       </div>
-      <p class="city-tip">Нажмите на здание с профессией — откроется мини-игра с кнопкой назад.</p>
+      <p class="city-tip">Нажмите на здание с профессией — робот задаст вопросы и подберет игру.</p>
     </section>
 
     <section class="screen" id="screenGame">
@@ -1941,6 +4641,7 @@
 
   <script>
     const menu = document.getElementById('mobileMenu');
+    const navbar = document.querySelector('.navbar');
     const openBtn = document.getElementById('openMenu');
     const closeBtn = document.getElementById('closeMenu');
     const desktopMega = document.getElementById('desktopMega');
@@ -1950,6 +4651,13 @@
     const searchOverlay = document.getElementById('searchOverlay');
     const searchClose = document.getElementById('searchClose');
     const searchInput = document.getElementById('searchInput');
+    const appPreview = document.querySelector('.app-window-preview');
+    const siteAiForm = document.getElementById('siteAiForm');
+    const siteAiInput = document.getElementById('siteAiInput');
+    const siteAiMessages = document.getElementById('siteAiMessages');
+    const languageMenu = document.getElementById('languageMenu');
+    const languageToggle = document.getElementById('languageToggle');
+    const languageList = document.getElementById('languageList');
 
     const desktopAuthBtn = document.getElementById('desktopAuthBtn');
     const mobileAuthBtn = document.getElementById('mobileAuthBtn');
@@ -1972,8 +4680,17 @@
     const profileLogout = document.getElementById('profileLogout');
     const profileClose = document.getElementById('profileClose');
     const profileNote = document.getElementById('profileNote');
+    const profilePageAvatar = document.getElementById('profilePageAvatar');
+    const profilePageName = document.getElementById('profilePageName');
+    const profilePageSub = document.getElementById('profilePageSub');
+    const profilePageGrid = document.getElementById('profilePageGrid');
+    const profilePageBest = document.getElementById('profilePageBest');
+    const profilePageLogout = document.getElementById('profilePageLogout');
+    const profilePageNote = document.getElementById('profilePageNote');
 
     const layer = document.getElementById('layer');
+    const infoPageTitle = document.getElementById('infoPageTitle');
+    const infoPageContent = document.getElementById('infoPageContent');
     const adviceOverlay = document.getElementById('adviceOverlay');
     const adviceClose = document.getElementById('adviceClose');
     const adviceSummary = document.getElementById('adviceSummary');
@@ -1982,6 +4699,14 @@
     const gameTitle = document.getElementById('gameTitle');
     const gameBackBtn = document.getElementById('gameBackBtn');
     const careerStartBtn = document.getElementById('careerStartBtn');
+    const interviewStep = document.getElementById('interviewStep');
+    const interviewQuestion = document.getElementById('interviewQuestion');
+    const interviewAnswers = document.getElementById('interviewAnswers');
+    const interviewProgressBar = document.getElementById('interviewProgressBar');
+    const interviewResult = document.getElementById('interviewResult');
+    const interviewResultTitle = document.getElementById('interviewResultTitle');
+    const interviewResultText = document.getElementById('interviewResultText');
+    const interviewOpenGame = document.getElementById('interviewOpenGame');
 
     const rbEyeLeft = document.getElementById('rbEyeLeft');
     const rbEyeRight = document.getElementById('rbEyeRight');
@@ -2006,6 +4731,13 @@
     let currentScreen = '';
     let currentUserNick = '';
     let currentAccountCache = null;
+    let interviewIndex = 0;
+    let interviewScores = {};
+    let interviewRecommendation = 'programmer';
+    let siteAiHistory = [];
+    let currentLanguage = localStorage.getItem('skillland-language') || 'ru';
+    const originalTextNodes = new WeakMap();
+    const originalAttrValues = new WeakMap();
 
     const megaData = {
       ultra: {
@@ -2029,6 +4761,72 @@
         button: 'Посмотреть'
       }
     };
+
+    const infoPages = {
+      privacy: {
+        title: 'Конфиденциальность',
+        html: '<h3>Конфиденциальность SkillLand</h3><p>SkillLand показывает, какие данные нужны для профиля, прогресса и отзывов. В демонстрационной версии мы сохраняем только ник, игровые результаты и отзывы, чтобы ученик видел свои успехи.</p><ul><li>Пароли нужны только для входа в учебный профиль.</li><li>Отзывы и оценки привязываются к нику.</li><li>Данные используются внутри SkillLand для прогресса и рекомендаций.</li></ul>'
+      },
+      news: {
+        title: 'Новости',
+        html: '<h3>Новости SkillLand</h3><p>Здесь будут обновления о новых профессиях, мини-играх, интервью, конкурсах и школьных мероприятиях. Раздел помогает быстро понять, что появилось в проекте и куда двигаться дальше.</p><ul><li>Новые игры профессий.</li><li>Истории учеников и команд.</li><li>Анонсы функций профиля и друзей.</li></ul>'
+      },
+      research: {
+        title: 'Наши исследования',
+        html: '<h3>Наши исследования</h3><p>SkillLand анализирует, какие задания помогают школьникам лучше понять профессию. Мы смотрим на интерес, уверенность, стиль выбора и то, какие мини-симуляторы чаще приводят к осознанному решению.</p><ul><li>Какие профессии выбирают чаще.</li><li>Какие вопросы лучше раскрывают интересы.</li><li>Как игры помогают профориентации.</li></ul>'
+      },
+      catalog: {
+        title: 'Каталог исследований',
+        html: '<h3>Каталог исследований</h3><p>Каталог собирает материалы по профессиям, навыкам и образовательным траекториям. В будущем здесь можно будет открыть направление и увидеть игры, навыки, рекомендации и полезные материалы.</p><ul><li>IT и программирование.</li><li>Медицина и помощь людям.</li><li>Экономика, сервис, производство и творчество.</li></ul>'
+      },
+      solutions: {
+        title: 'Решения',
+        html: '<h3>Решения SkillLand</h3><p>Раздел решений показывает, как SkillLand можно использовать в школе, кружке или дома. Идея простая: дать ученику попробовать профессию через игру, сохранить результат и получить понятную рекомендацию.</p><ul><li>Профориентация для классов.</li><li>Игровые задания для уроков.</li><li>Личный профиль с прогрессом и отзывами.</li></ul>'
+      }
+    };
+
+    const interviewQuestions = [
+      {
+        text: 'Что тебе хочется делать в задании?',
+        answers: [
+          { text: 'Разбираться в коде, логике и цифровых инструментах', game: 'programmer' },
+          { text: 'Считать, планировать и принимать решения', game: 'economist' },
+          { text: 'Помогать людям и быстро реагировать', game: 'medic' }
+        ]
+      },
+      {
+        text: 'Какой результат тебе приятнее увидеть?',
+        answers: [
+          { text: 'Работающая программа или полезная система', game: 'programmer' },
+          { text: 'Готовое блюдо или аккуратный процесс', game: 'chef' },
+          { text: 'Добытые ресурсы и понятный план действий', game: 'miner' }
+        ]
+      },
+      {
+        text: 'Какая ситуация звучит интереснее?',
+        answers: [
+          { text: 'Найти ошибку и спокойно исправить ее', game: 'programmer' },
+          { text: 'Организовать бюджет и выбрать стратегию', game: 'economist' },
+          { text: 'Поставить диагноз по признакам и помочь пациенту', game: 'medic' }
+        ]
+      },
+      {
+        text: 'В команде тебе ближе роль...',
+        answers: [
+          { text: 'Тот, кто придумывает систему и собирает ее', game: 'programmer' },
+          { text: 'Тот, кто держит темп и отвечает за качество', game: 'chef' },
+          { text: 'Тот, кто не боится сложных условий', game: 'miner' }
+        ]
+      },
+      {
+        text: 'Что для тебя важнее в профессии?',
+        answers: [
+          { text: 'Технологии и возможность создавать новое', game: 'programmer' },
+          { text: 'Польза людям и ощущение ответственности', game: 'medic' },
+          { text: 'Практический результат, который видно сразу', game: 'chef' }
+        ]
+      }
+    ];
 
     function defaultStats() {
       return { programmer: 0, economist: 0, chef: 0, miner: 0, medic: 0 };
@@ -2093,6 +4891,275 @@
         throw new Error(data.error || 'Ошибка сервера');
       }
       return data;
+    }
+
+    function escapeHtml(value) {
+      return String(value || '').replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;',
+      }[char]));
+    }
+
+    function appendSiteAiMessage(role, text) {
+      if (!siteAiMessages) return;
+      const article = document.createElement('article');
+      article.className = `site-ai-message ${role}`;
+      const badge = role === 'user' ? (currentUserNick || 'U').slice(0, 1).toUpperCase() : 'AI';
+      const finalText = role === 'assistant' ? translateTextValue(text, currentLanguage) : text;
+      article.innerHTML = `<span>${escapeHtml(badge)}</span><div>${escapeHtml(finalText)}</div>`;
+      siteAiMessages.appendChild(article);
+      siteAiMessages.scrollTop = siteAiMessages.scrollHeight;
+    }
+
+    async function sendSiteAiMessage() {
+      if (!siteAiInput || !appPreview) return;
+      const text = siteAiInput.value.trim();
+      if (!text) return;
+
+      appPreview.classList.add('ai-mode');
+      appendSiteAiMessage('user', text);
+      siteAiHistory.push({ role: 'user', text });
+      siteAiInput.value = '';
+      siteAiInput.style.height = '';
+      const thinking = document.createElement('article');
+      thinking.className = 'site-ai-message assistant';
+      thinking.innerHTML = `<span>AI</span><div>${escapeHtml(translateTextValue('Думаю над ответом...', currentLanguage))}</div>`;
+      siteAiMessages.appendChild(thinking);
+      siteAiMessages.scrollTop = siteAiMessages.scrollHeight;
+
+      const languagePrompt = {
+        ru: '',
+        kk: 'Жауапты қазақ тілінде бер. Мектеп оқушысына түсінікті, қысқа жауап бер.',
+        en: 'Answer in English. Keep it clear and short for a school student.',
+      }[currentLanguage] || '';
+
+      try {
+        const data = await apiJson('/api/ai/chat', {
+          method: 'POST',
+          body: JSON.stringify({
+            message: languagePrompt ? `${languagePrompt}\n\n${text}` : text,
+            user: currentUserNick || 'Гость',
+            history: siteAiHistory.slice(-8),
+          }),
+        });
+        thinking.querySelector('div').textContent = translateTextValue(data.reply || 'Ответ готов.', currentLanguage);
+        siteAiHistory.push({ role: 'assistant', text: data.reply || '' });
+      } catch (error) {
+        thinking.querySelector('div').textContent = translateTextValue('Сервер SkillLand AI сейчас недоступен. Попробуй еще раз через пару секунд.', currentLanguage);
+      }
+    }
+
+    const languageLabels = {
+      ru: 'Русский',
+      kk: 'Қазақша',
+      en: 'English',
+    };
+
+    const languageExact = {
+      kk: {
+        'Русский': 'Қазақша',
+        'Войти': 'Кіру',
+        'Вход': 'Кіру',
+        'Команда': 'Команда',
+        'Разработчики': 'Әзірлеушілер',
+        'Отзывы': 'Пікірлер',
+        'О нас': 'Біз туралы',
+        'Поиск': 'Іздеу',
+        'Профориентация': 'Кәсіби бағдар',
+        'Профориентация SkillLand — это практическое знакомство с профессиями через интерактивные задания и мини-симуляторы, чтобы быстро понять, какое направление действительно подходит.': 'SkillLand кәсіби бағдары — интерактивті тапсырмалар мен мини-симуляторлар арқылы мамандықтармен практикалық танысу. Осылай өзіңізге шынымен сәйкес бағытты тез түсінуге болады.',
+        'Профориентация, обучение и первые IT-навыки — всё в одном месте, чтобы начать свой путь уверенно и бесплатно.': 'Кәсіби бағдар, оқу және алғашқы IT-дағдылар — бәрі бір жерде. Өз жолыңызды сенімді әрі тегін бастаңыз.',
+        'Скачать для Windows': 'Windows үшін жүктеу',
+        'Скачать для macOS': 'macOS үшін жүктеу',
+        'macOS версия готовится': 'macOS нұсқасы дайындалып жатыр',
+        'Магазин': 'Дүкен',
+        'Библиотека': 'Кітапхана',
+        'Новости': 'Жаңалықтар',
+        'Друзья': 'Достар',
+        'Главное': 'Басты',
+        'Все игры': 'Барлық ойындар',
+        'Профиль': 'Профиль',
+        'Игры профессий': 'Мамандық ойындары',
+        'Базовая игра': 'Негізгі ойын',
+        'Открыть': 'Ашу',
+        'Попробуйте SkillLand сегодня': 'SkillLand-ты бүгін байқап көріңіз',
+        'Конфиденциальность': 'Құпиялылық',
+        'Наши исследования': 'Зерттеулеріміз',
+        'Каталог исследований': 'Зерттеулер каталогы',
+        'Решения': 'Шешімдер',
+        'Чат для проектов': 'Жобаларға арналған чат',
+        'Открыть проект': 'Жобаны ашу',
+        'Проект не загружен': 'Жоба жүктелмеген',
+        'Думаю над ответом...': 'Жауапты ойлап жатырмын...',
+      },
+      en: {
+        'Русский': 'English',
+        'Войти': 'Sign in',
+        'Вход': 'Sign in',
+        'Команда': 'Team',
+        'Разработчики': 'Developers',
+        'Отзывы': 'Reviews',
+        'О нас': 'About',
+        'Поиск': 'Search',
+        'Профориентация': 'Career guidance',
+        'Профориентация SkillLand — это практическое знакомство с профессиями через интерактивные задания и мини-симуляторы, чтобы быстро понять, какое направление действительно подходит.': 'SkillLand career guidance is a practical way to explore careers through interactive tasks and mini simulators, so you can quickly understand which path really fits.',
+        'Профориентация, обучение и первые IT-навыки — всё в одном месте, чтобы начать свой путь уверенно и бесплатно.': 'Career guidance, learning and first IT skills in one place, so you can start confidently and for free.',
+        'Скачать для Windows': 'Download for Windows',
+        'Скачать для macOS': 'Download for macOS',
+        'macOS версия готовится': 'macOS version is coming',
+        'Магазин': 'Store',
+        'Библиотека': 'Library',
+        'Новости': 'News',
+        'Друзья': 'Friends',
+        'Главное': 'Home',
+        'Все игры': 'All games',
+        'Профиль': 'Profile',
+        'Игры профессий': 'Career games',
+        'Базовая игра': 'Base game',
+        'Открыть': 'Open',
+        'Попробуйте SkillLand сегодня': 'Try SkillLand today',
+        'Конфиденциальность': 'Privacy',
+        'Наши исследования': 'Our research',
+        'Каталог исследований': 'Research catalog',
+        'Решения': 'Solutions',
+        'Чат для проектов': 'Project chat',
+        'Открыть проект': 'Open project',
+        'Проект не загружен': 'Project not loaded',
+        'Думаю над ответом...': 'Thinking...',
+      },
+    };
+
+    const languageReplacements = {
+      kk: [
+        [/Профориентация/g, 'Кәсіби бағдар'],
+        [/профориентация/g, 'кәсіби бағдар'],
+        [/профессиями/g, 'мамандықтармен'],
+        [/профессии/g, 'мамандықтар'],
+        [/профессию/g, 'мамандықты'],
+        [/профессия/g, 'мамандық'],
+        [/интерактивные задания/g, 'интерактивті тапсырмалар'],
+        [/мини-симуляторы/g, 'мини-симуляторлар'],
+        [/игры/g, 'ойындар'],
+        [/игра/g, 'ойын'],
+        [/обучение/g, 'оқыту'],
+        [/практика/g, 'тәжірибе'],
+        [/проект/g, 'жоба'],
+        [/проекты/g, 'жобалар'],
+        [/друзей/g, 'достарды'],
+        [/друзья/g, 'достар'],
+        [/отзывы/g, 'пікірлер'],
+        [/лайки/g, 'лайктар'],
+        [/прогресс/g, 'прогресс'],
+        [/ученик/g, 'оқушы'],
+        [/школьников/g, 'оқушыларды'],
+        [/бесплатно/g, 'тегін'],
+        [/сегодня/g, 'бүгін'],
+        [/Скачать/g, 'Жүктеу'],
+        [/Открыть/g, 'Ашу'],
+        [/Выбери/g, 'Таңда'],
+      ],
+      en: [
+        [/Профориентация/g, 'Career guidance'],
+        [/профориентация/g, 'career guidance'],
+        [/профессиями/g, 'careers'],
+        [/профессии/g, 'careers'],
+        [/профессию/g, 'career'],
+        [/профессия/g, 'career'],
+        [/интерактивные задания/g, 'interactive tasks'],
+        [/мини-симуляторы/g, 'mini simulators'],
+        [/игры/g, 'games'],
+        [/игра/g, 'game'],
+        [/обучение/g, 'learning'],
+        [/практика/g, 'practice'],
+        [/проект/g, 'project'],
+        [/проекты/g, 'projects'],
+        [/друзей/g, 'friends'],
+        [/друзья/g, 'friends'],
+        [/отзывы/g, 'reviews'],
+        [/лайки/g, 'likes'],
+        [/прогресс/g, 'progress'],
+        [/ученик/g, 'student'],
+        [/школьников/g, 'students'],
+        [/бесплатно/g, 'free'],
+        [/сегодня/g, 'today'],
+        [/Скачать/g, 'Download'],
+        [/Открыть/g, 'Open'],
+        [/Выбери/g, 'Choose'],
+      ],
+    };
+
+    function translateTextValue(value, lang = currentLanguage) {
+      const raw = String(value || '');
+      if (lang === 'ru' || !raw.trim()) return raw;
+      const lead = raw.match(/^\s*/)[0];
+      const tail = raw.match(/\s*$/)[0];
+      let text = raw.trim();
+      text = (languageExact[lang] && languageExact[lang][text]) || text;
+      (languageReplacements[lang] || []).forEach(([from, to]) => {
+        text = text.replace(from, to);
+      });
+      return `${lead}${text}${tail}`;
+    }
+
+    function translateDom(root, lang = currentLanguage) {
+      if (!root) return;
+      const doc = root.nodeType === 9 ? root : root.ownerDocument || document;
+      const base = root.nodeType === 9 ? root.body : root;
+      if (!base) return;
+      const filter = {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent || parent.closest('script,style,noscript,textarea,[data-no-translate]')) {
+            return doc.defaultView.NodeFilter.FILTER_REJECT;
+          }
+          return node.nodeValue.trim() ? doc.defaultView.NodeFilter.FILTER_ACCEPT : doc.defaultView.NodeFilter.FILTER_REJECT;
+        },
+      };
+      const walker = doc.createTreeWalker(base, doc.defaultView.NodeFilter.SHOW_TEXT, filter);
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach((node) => {
+        if (!originalTextNodes.has(node)) originalTextNodes.set(node, node.nodeValue);
+        node.nodeValue = translateTextValue(originalTextNodes.get(node), lang);
+      });
+
+      base.querySelectorAll('[placeholder], [aria-label], [title], [alt]').forEach((el) => {
+        if (el.closest('script,style,noscript,[data-no-translate]')) return;
+        let stored = originalAttrValues.get(el);
+        if (!stored) {
+          stored = {};
+          originalAttrValues.set(el, stored);
+        }
+        ['placeholder', 'aria-label', 'title', 'alt'].forEach((attr) => {
+          if (!el.hasAttribute(attr)) return;
+          if (!stored[attr]) stored[attr] = el.getAttribute(attr);
+          el.setAttribute(attr, translateTextValue(stored[attr], lang));
+        });
+      });
+    }
+
+    function translateGameFrame() {
+      try {
+        if (gameFrame && gameFrame.contentDocument) translateDom(gameFrame.contentDocument, currentLanguage);
+      } catch {}
+    }
+
+    function applyLanguage(lang) {
+      currentLanguage = lang || 'ru';
+      localStorage.setItem('skillland-language', currentLanguage);
+      document.documentElement.lang = currentLanguage;
+      if (languageToggle) {
+        languageToggle.textContent = languageLabels[currentLanguage] || languageLabels.ru;
+        languageToggle.setAttribute('aria-expanded', 'false');
+      }
+      document.querySelectorAll('[data-lang]').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
+      });
+      translateDom(document, currentLanguage);
+      translateGameFrame();
+      if (languageMenu) languageMenu.classList.remove('open');
     }
 
     async function refreshCurrentAccount() {
@@ -2173,6 +5240,57 @@
       profileBest.textContent = bestProfession(account.stats || defaultStats());
     }
 
+    function renderProfilePage() {
+      const account = getCurrentAccount();
+      profilePageGrid.innerHTML = '';
+      profilePageNote.textContent = '';
+
+      if (!account) {
+        profilePageAvatar.textContent = '?';
+        profilePageName.textContent = 'Гость SkillLand';
+        profilePageSub.textContent = currentUserNick ? 'Загружаем профиль...' : 'Войдите, чтобы видеть прогресс.';
+        profilePageBest.textContent = currentUserNick ? 'Профиль загружается.' : 'Активного аккаунта пока нет.';
+        return;
+      }
+
+      profilePageAvatar.textContent = account.nick.slice(0, 1).toUpperCase();
+      profilePageName.textContent = account.nick;
+      profilePageSub.textContent = 'Ваш учебный профиль SkillLand';
+      profilePageBest.textContent = bestProfession(account.stats || defaultStats());
+
+      GAME_ORDER.forEach((key) => {
+        const row = document.createElement('div');
+        row.className = 'profile-game';
+
+        const name = document.createElement('span');
+        name.textContent = GAME_META[key].label;
+
+        const score = document.createElement('strong');
+        score.textContent = `${sanitizeScore(account.stats[key])}%`;
+
+        row.append(name, score);
+        profilePageGrid.appendChild(row);
+      });
+    }
+
+    function openProfilePage() {
+      closeAuthOverlay();
+      openRoute('profile');
+      renderProfilePage();
+      if (currentUserNick && !getCurrentAccount()) {
+        refreshCurrentAccount().then(renderProfilePage);
+      }
+    }
+
+    function openInfoPage(key) {
+      const data = infoPages[key] || infoPages.news;
+      infoPageTitle.textContent = data.title;
+      infoPageContent.innerHTML = data.html;
+      translateDom(infoPageTitle, currentLanguage);
+      translateDom(infoPageContent, currentLanguage);
+      openRoute('info');
+    }
+
     function closeAuthOverlay() {
       authOverlay.classList.remove('show');
       authOverlay.setAttribute('aria-hidden', 'true');
@@ -2196,15 +5314,7 @@
     }
 
     function openProfileModal() {
-      authOverlay.classList.add('show');
-      authOverlay.setAttribute('aria-hidden', 'false');
-      authCard.style.display = 'none';
-      profileCard.classList.add('show');
-      profileNote.textContent = '';
-      profileNick.value = '';
-      profilePass.value = '';
-      renderProfile();
-      syncBodyScroll();
+      openProfilePage();
     }
 
     function openAuthFlow() {
@@ -2305,6 +5415,7 @@
       renderAuthButtons();
       updateReviewFormVisibility();
       closeAuthOverlay();
+      if (currentScreen === 'profile') closeLayer();
     }
 
     async function updateCurrentUserScore(gameKey, score) {
@@ -2317,6 +5428,9 @@
       if (profileCard.classList.contains('show')) {
         renderProfile();
       }
+      if (currentScreen === 'profile') {
+        renderProfilePage();
+      }
       try {
         await apiJson('/api/scores', {
           method: 'POST',
@@ -2324,6 +5438,7 @@
         });
         await refreshCurrentAccount();
         if (profileCard.classList.contains('show')) renderProfile();
+        if (currentScreen === 'profile') renderProfilePage();
       } catch (err) {
         console.warn('Не удалось сохранить результат:', err.message);
       }
@@ -2426,7 +5541,10 @@
       if (route === 'developers') return document.getElementById('screenDevelopers');
       if (route === 'reviews') return document.getElementById('screenReviews');
       if (route === 'about') return document.getElementById('screenAbout');
+      if (route === 'profile') return document.getElementById('screenProfile');
+      if (route === 'info') return document.getElementById('screenInfo');
       if (route === 'career') return document.getElementById('screenCareer');
+      if (route === 'interview') return document.getElementById('screenInterview');
       if (route === 'city') return document.getElementById('screenCity');
       if (route === 'game') return document.getElementById('screenGame');
       return null;
@@ -2449,6 +5567,7 @@
       document.querySelectorAll('.screen').forEach((screen) => screen.classList.remove('active'));
       target.classList.add('active');
       currentScreen = route;
+      if (route === 'profile') renderProfilePage();
       syncBodyScroll();
     }
 
@@ -2467,8 +5586,78 @@
       const meta = GAME_META[gameKey];
       if (!meta) return;
       gameTitle.textContent = meta.title;
+      translateDom(gameTitle, currentLanguage);
       gameFrame.src = meta.file;
       openRoute('game');
+    }
+
+    function startInterview(gameHint = '') {
+      interviewIndex = 0;
+      interviewScores = defaultStats();
+      if (GAME_META[gameHint]) interviewScores[gameHint] += 1;
+      interviewRecommendation = GAME_META[gameHint] ? gameHint : 'programmer';
+      interviewResult.classList.remove('show');
+      interviewOpenGame.style.display = 'none';
+      renderInterviewQuestion();
+      openRoute('interview');
+    }
+
+    function renderInterviewQuestion() {
+      const question = interviewQuestions[interviewIndex];
+      const total = interviewQuestions.length;
+      interviewAnswers.innerHTML = '';
+      interviewResult.classList.remove('show');
+      interviewOpenGame.style.display = 'none';
+
+      if (!question) {
+        finishInterview();
+        return;
+      }
+
+      interviewStep.textContent = `Вопрос ${interviewIndex + 1} из ${total}`;
+      interviewQuestion.textContent = question.text;
+      interviewProgressBar.style.width = `${Math.round((interviewIndex / total) * 100)}%`;
+
+      question.answers.forEach((answer) => {
+        const btn = document.createElement('button');
+        btn.className = 'interview-answer';
+        btn.type = 'button';
+        btn.textContent = answer.text;
+        btn.addEventListener('click', () => {
+          interviewScores[answer.game] = (interviewScores[answer.game] || 0) + 2;
+          interviewIndex += 1;
+          renderInterviewQuestion();
+        });
+        interviewAnswers.appendChild(btn);
+      });
+    }
+
+    function finishInterview() {
+      interviewStep.textContent = 'Анализ SkillLand';
+      interviewQuestion.textContent = 'Собираю картину интересов...';
+      interviewAnswers.innerHTML = '<div class="interview-answer">Скрытый анализ: интересы, темп мышления, формат задач и стиль выбора.</div>';
+      interviewProgressBar.style.width = '100%';
+
+      let bestKey = 'programmer';
+      let bestScore = -1;
+      GAME_ORDER.forEach((key) => {
+        const score = interviewScores[key] || 0;
+        if (score > bestScore) {
+          bestScore = score;
+          bestKey = key;
+        }
+      });
+
+      interviewRecommendation = bestKey;
+      setTimeout(() => {
+        const meta = GAME_META[interviewRecommendation];
+        interviewQuestion.textContent = 'Робот закончил интервью';
+        interviewAnswers.innerHTML = '';
+        interviewResultTitle.textContent = `Советую пройти: ${meta.label}`;
+        interviewResultText.textContent = 'По ответам видно, что эта игра лучше всего покажет подходящие задачи: ты попробуешь профессию на практике и сразу поймешь, интересно ли продолжать.';
+        interviewResult.classList.add('show');
+        interviewOpenGame.style.display = '';
+      }, 520);
     }
 
     function showAdvice(summary, gameKey) {
@@ -2498,9 +5687,290 @@
       }
     }
 
+    function isMobileDownloadMode() {
+      return window.matchMedia('(max-width: 760px)').matches || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    }
+
+    function syncDownloadButtons() {
+      const mobileMode = isMobileDownloadMode();
+      document.querySelectorAll('.download-btn[href$=".zip"], .download-btn[data-download-file], .download-btn[data-original-href]').forEach((btn) => {
+        if (!btn.dataset.originalHtml) {
+          btn.dataset.originalHtml = btn.innerHTML;
+          btn.dataset.originalHref = btn.getAttribute('href') || '';
+          btn.dataset.downloadFile = btn.getAttribute('download') || '';
+        }
+
+        const unavailable = btn.dataset.unavailable === '1';
+
+        if (unavailable) {
+          btn.classList.remove('mobile-blocked');
+          btn.classList.add('download-unavailable');
+          btn.removeAttribute('href');
+          btn.removeAttribute('download');
+          btn.setAttribute('aria-disabled', 'true');
+          btn.innerHTML = btn.dataset.unavailableHtml || btn.dataset.originalHtml;
+        } else {
+          btn.classList.remove('mobile-blocked');
+          btn.classList.remove('download-unavailable');
+          btn.setAttribute('href', btn.dataset.originalHref);
+          if (btn.dataset.downloadFile) btn.setAttribute('download', btn.dataset.downloadFile);
+          btn.removeAttribute('aria-disabled');
+          btn.innerHTML = btn.dataset.originalHtml;
+        }
+      });
+      document.body.classList.toggle('mobile-device', mobileMode);
+      translateDom(document, currentLanguage);
+    }
+
+    async function syncMacDownloadAvailability() {
+      const macButtons = document.querySelectorAll('[data-mac-download]');
+      if (!macButtons.length) return;
+
+      let available = false;
+      try {
+        const res = await fetch('SkillLand-macOS.zip', { method: 'HEAD', cache: 'no-store' });
+        available = res.ok;
+      } catch {
+        available = false;
+      }
+
+      macButtons.forEach((btn) => {
+        btn.dataset.unavailable = available ? '0' : '1';
+        btn.dataset.unavailableHtml = 'macOS версия готовится';
+        btn.title = available ? '' : 'Финальную Mac-сборку нужно собрать на macOS или macOS CI.';
+        if (available) {
+          btn.setAttribute('href', 'SkillLand-macOS.zip');
+          btn.setAttribute('download', 'SkillLand-macOS.zip');
+        }
+      });
+      syncDownloadButtons();
+      applyLanguage(currentLanguage);
+    }
+
+    function initCloudCanvas() {
+      return;
+      if (!cloudCanvas) return;
+      const ctx = cloudCanvas.getContext('2d', { alpha: true });
+      if (!ctx) return;
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const lowPower =
+        window.matchMedia('(max-width: 760px)').matches ||
+        (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+        (navigator.deviceMemory && navigator.deviceMemory <= 3);
+      const fps = lowPower ? 10 : 16;
+      const scale = lowPower ? 0.30 : 0.42;
+      let w = 0;
+      let h = 0;
+      let lastFrame = 0;
+      let resizeTimer = 0;
+
+      const blobs = [
+        { x: .10, y: .38, r: .52, sx: .018, sy: .012, a: .92 },
+        { x: .28, y: .28, r: .42, sx: -.014, sy: .016, a: .70 },
+        { x: .48, y: .46, r: .38, sx: .012, sy: -.010, a: .64 },
+        { x: .70, y: .42, r: .44, sx: -.018, sy: .012, a: .56 },
+        { x: .88, y: .30, r: .48, sx: .014, sy: -.014, a: .42 },
+      ];
+
+      function fract(value) {
+        return value - Math.floor(value);
+      }
+
+      const wisps = Array.from({ length: lowPower ? 8 : 15 }, (_, i) => {
+        const a = fract(Math.sin(i * 18.91) * 43758.5453);
+        const b = fract(Math.sin(i * 41.13) * 24634.6345);
+        return {
+          x: -.04 + a * .86,
+          y: .08 + b * .58,
+          rx: .12 + fract(a * 7.1) * .24,
+          ry: .045 + fract(b * 5.3) * .105,
+          rot: -.42 + fract(a * 4.7) * .56,
+          dx: .012 + fract(b * 3.8) * .018,
+          dy: .006 + fract(a * 5.4) * .012,
+          a: .16 + fract(a * b * 9.2) * .28,
+        };
+      });
+
+      const sparks = Array.from({ length: lowPower ? 10 : 26 }, (_, i) => {
+        const seed = Math.sin(i * 91.7) * 10000;
+        const frac = seed - Math.floor(seed);
+        return {
+          x: (frac * 1.31) % 1,
+          y: (Math.sin(i * 37.3) * 10000 % 1 + 1) % 1,
+          s: 1 + (i % 3),
+          p: i * .37,
+        };
+      });
+
+      function resizeCanvas() {
+        const cssW = Math.max(320, Math.round(window.innerWidth));
+        const cssH = Math.max(520, Math.round(Math.min(window.innerHeight * (lowPower ? 1.04 : 1.18), lowPower ? 900 : 1040)));
+        cloudCanvas.style.height = `${cssH}px`;
+        w = Math.max(320, Math.round(cssW * scale));
+        h = Math.max(260, Math.round(cssH * scale));
+        cloudCanvas.width = w;
+        cloudCanvas.height = h;
+        drawClouds(performance.now());
+      }
+
+      function radial(cx, cy, radius, stops) {
+        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+        stops.forEach(([pos, color]) => g.addColorStop(pos, color));
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      function softEllipse(cx, cy, rx, ry, rotation, stops) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rotation);
+        ctx.scale(rx, ry);
+        const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
+        stops.forEach(([pos, color]) => g.addColorStop(pos, color));
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(0, 0, 1, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawBeam(t) {
+        ctx.save();
+        ctx.translate(w * .47, h * .39);
+        ctx.rotate(-0.055 + Math.sin(t * .22) * .012);
+        const beam = ctx.createLinearGradient(-w * .65, 0, w * .65, 0);
+        beam.addColorStop(0, 'rgba(255,255,255,0)');
+        beam.addColorStop(.32, 'rgba(255,255,255,.30)');
+        beam.addColorStop(.52, 'rgba(255,255,255,.82)');
+        beam.addColorStop(.71, 'rgba(255,255,255,.26)');
+        beam.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = beam;
+        ctx.globalAlpha = .72;
+        ctx.fillRect(-w, -h * .13, w * 2, h * .26);
+        ctx.restore();
+      }
+
+      function drawClouds(now) {
+        const t = now * .001;
+        ctx.clearRect(0, 0, w, h);
+
+        const sky = ctx.createLinearGradient(0, 0, w, h);
+        sky.addColorStop(0, '#8fb7ff');
+        sky.addColorStop(.34, '#edf8ff');
+        sky.addColorStop(.52, '#f6f2ff');
+        sky.addColorStop(1, '#6570ff');
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.globalCompositeOperation = 'source-over';
+        radial(w * .90, h * .34, w * .64, [
+          [0, 'rgba(75,86,255,.82)'],
+          [.42, 'rgba(111,112,255,.56)'],
+          [1, 'rgba(111,112,255,0)'],
+        ]);
+        radial(w * .04, h * .58, w * .55, [
+          [0, 'rgba(255,255,255,.66)'],
+          [.38, 'rgba(211,237,255,.50)'],
+          [1, 'rgba(211,237,255,0)'],
+        ]);
+
+        drawBeam(t);
+
+        ctx.globalCompositeOperation = 'screen';
+        wisps.forEach((wisp, i) => {
+          const cx = (wisp.x + Math.sin(t * .11 + i) * wisp.dx) * w;
+          const cy = (wisp.y + Math.cos(t * .13 + i * .7) * wisp.dy) * h;
+          const alpha = wisp.a + Math.sin(t * .33 + i) * .06;
+          softEllipse(cx, cy, w * wisp.rx, h * wisp.ry, wisp.rot + Math.sin(t * .07 + i) * .06, [
+            [0, `rgba(255,255,255,${Math.max(.10, alpha)})`],
+            [.48, `rgba(222,240,255,${Math.max(.05, alpha * .42)})`],
+            [1, 'rgba(255,255,255,0)'],
+          ]);
+        });
+
+        blobs.forEach((b, i) => {
+          const driftX = Math.sin(t * .17 + i * 1.7) * b.sx + Math.cos(t * .09 + i) * b.sx * .65;
+          const driftY = Math.cos(t * .15 + i * 1.2) * b.sy;
+          const cx = (b.x + driftX) * w;
+          const cy = (b.y + driftY) * h;
+          const radius = b.r * Math.max(w, h);
+          radial(cx, cy, radius, [
+            [0, `rgba(255,255,255,${b.a})`],
+            [.28, `rgba(235,246,255,${b.a * .58})`],
+            [.58, `rgba(170,205,255,${b.a * .22})`],
+            [1, 'rgba(255,255,255,0)'],
+          ]);
+        });
+
+        ctx.globalCompositeOperation = 'overlay';
+        radial(w * (.52 + Math.sin(t * .12) * .03), h * .18, w * .26, [
+          [0, 'rgba(255,255,255,.42)'],
+          [.45, 'rgba(255,255,255,.14)'],
+          [1, 'rgba(255,255,255,0)'],
+        ]);
+
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.lineWidth = Math.max(1, w * .0012);
+        sparks.forEach((spark, i) => {
+          const pulse = .18 + Math.sin(t * .8 + spark.p) * .12;
+          const x = ((spark.x + Math.sin(t * .03 + i) * .015) % 1) * w;
+          const y = spark.y * h * .86;
+          ctx.strokeStyle = `rgba(255,255,255,${Math.max(.05, pulse)})`;
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x + spark.s * 3, y - spark.s * 1.4);
+          ctx.stroke();
+        });
+      }
+
+      function loop(now) {
+        if (!document.hidden && now - lastFrame >= 1000 / fps) {
+          drawClouds(now);
+          lastFrame = now;
+        }
+        window.requestAnimationFrame(loop);
+      }
+
+      resizeCanvas();
+      if (!reduceMotion) window.requestAnimationFrame(loop);
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(resizeCanvas, 160);
+      }, { passive: true });
+    }
+
+    function syncHeaderState() {
+      if (!navbar) return;
+      navbar.classList.toggle('is-scrolled', window.scrollY > 12);
+    }
+
+    function initSocialPreview() {
+      const tabs = document.querySelectorAll('[data-social-tab]');
+      const panels = document.querySelectorAll('[data-social-panel]');
+      if (!tabs.length || !panels.length) return;
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const target = tab.dataset.socialTab;
+          tabs.forEach((item) => item.classList.toggle('active', item === tab));
+          panels.forEach((panel) => {
+            panel.classList.toggle('active', panel.dataset.socialPanel === target);
+          });
+        });
+      });
+    }
+
     document.querySelectorAll('[data-mega]').forEach((item) => {
+      item.addEventListener('pointerenter', () => showMega(item.dataset.mega));
       item.addEventListener('mouseenter', () => showMega(item.dataset.mega));
       item.addEventListener('focus', () => showMega(item.dataset.mega));
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        showMega(item.dataset.mega);
+      });
     });
 
     megaAction.addEventListener('click', () => {
@@ -2511,7 +5981,11 @@
     });
 
     megaBlur.addEventListener('mouseenter', hideMega);
+    megaBlur.addEventListener('click', hideMega);
     desktopMega.addEventListener('mouseleave', hideMega);
+    desktopMega.addEventListener('click', (e) => {
+      if (e.target === desktopMega) hideMega();
+    });
     document.querySelectorAll('.js-search-open').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -2539,8 +6013,51 @@
       });
     });
 
+    document.querySelectorAll('[data-info-page]').forEach((item) => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        openInfoPage(item.dataset.infoPage);
+      });
+    });
+
+    if (siteAiForm && siteAiInput) {
+      siteAiForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        sendSiteAiMessage();
+      });
+      siteAiInput.addEventListener('input', () => {
+        siteAiInput.style.height = 'auto';
+        siteAiInput.style.height = `${Math.min(siteAiInput.scrollHeight, 130)}px`;
+      });
+      siteAiInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendSiteAiMessage();
+        }
+      });
+    }
+
+    if (languageToggle && languageMenu) {
+      languageToggle.addEventListener('click', () => {
+        const isOpen = languageMenu.classList.toggle('open');
+        languageToggle.setAttribute('aria-expanded', String(isOpen));
+      });
+      document.addEventListener('click', (e) => {
+        if (!languageMenu.contains(e.target)) {
+          languageMenu.classList.remove('open');
+          languageToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    if (languageList) {
+      languageList.querySelectorAll('[data-lang]').forEach((btn) => {
+        btn.addEventListener('click', () => applyLanguage(btn.dataset.lang || 'ru'));
+      });
+    }
+
     document.querySelectorAll('[data-open-game]').forEach((item) => {
-      item.addEventListener('click', () => openGame(item.dataset.openGame));
+      item.addEventListener('click', () => startInterview(item.dataset.openGame));
     });
 
     document.querySelectorAll('[data-auth-trigger]').forEach((item) => {
@@ -2558,6 +6075,9 @@
       gameFrame.src = '';
       openRoute('city');
     });
+    gameFrame.addEventListener('load', translateGameFrame);
+
+    interviewOpenGame.addEventListener('click', () => openGame(interviewRecommendation));
 
     careerStartBtn.addEventListener('click', () => openRoute('city'));
 
@@ -2566,6 +6086,7 @@
     profileClose.addEventListener('click', closeAuthOverlay);
     profileSave.addEventListener('click', updateProfileData);
     profileLogout.addEventListener('click', logout);
+    profilePageLogout.addEventListener('click', logout);
 
     authNick.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') loginOrRegister();
@@ -2626,10 +6147,18 @@
       .then(() => {
         renderAuthButtons();
         if (profileCard.classList.contains('show')) renderProfile();
+        if (currentScreen === 'profile') renderProfilePage();
       });
 
     moveRobotEyes();
     setInterval(moveRobotEyes, 1200);
+    syncDownloadButtons();
+    syncMacDownloadAvailability();
+    syncHeaderState();
+    initSocialPreview();
+    applyLanguage(currentLanguage);
+    window.addEventListener('resize', syncDownloadButtons);
+    window.addEventListener('scroll', syncHeaderState, { passive: true });
   </script>
 
   <script>
@@ -2793,6 +6322,14 @@
     // Следить за сменой auth-состояния (хук на localStorage)
     const _origSetSession = window.setSessionNick;
     window.addEventListener('storage', updateReviewFormVisibility);
+
+    document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const enabled = document.body.classList.toggle('light-theme');
+        localStorage.setItem('skillland-site-theme', enabled ? 'light' : 'dark');
+        if (typeof syncHeaderState === 'function') syncHeaderState();
+      });
+    });
   </script>
 </body>
 </html>
